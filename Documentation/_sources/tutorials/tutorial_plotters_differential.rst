@@ -12,14 +12,14 @@ Both plotters are initialized similarly and receive the same data.
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\differential_signal_plotter_helper.py
     :language: python
-    :lines: 36-41
+    :lines: 38-43
 
 The single differentials can be calculated as a matrix multiplication between a pre-defined ‘single differential matrix’ and the data.
 The single differential matrix and the differential names are determined based on channel names. See the code snippet for details on the implementation.
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\differential_signal_plotter_helper.py
     :language: python
-    :lines: 126-151
+    :lines: 128-153
 
 Once the channel names are known, the plotters can be constructed. The controls for both plotters are then based on each plotter's specific channel components.
 In order to initialize the channel components, a list of channels needs to be passed, not just channel names. Therefore, the type of the channels' 
@@ -27,7 +27,7 @@ instance is needed. A second instance should be created, where the new channel n
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\differential_signal_plotter_helper.py
     :language: python
-    :lines: 94-103
+    :lines: 97-105
 
 In order to be able to see the action potentials travel across the grid in the single differential mode, a short time range should be used.
 Therefore, the time span of the differential plotter is set to 0.2s and the refresh rate is limited to 1 Hz, 
@@ -35,11 +35,11 @@ instead of the 10 Hz update frequency of the main plotter.
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\differential_signal_plotter_helper.py
     :language: python
-    :lines: 83-90
+    :lines: 85-92
 
 Rather than updating the plotted data in a cycling update, the newest data is now appended to the right side of the plot. As this differs for the signal plotter, 
 a change needs to be made on how the processed data should be passed to the window. After updating this, the single differential calculation can be made and data can be provided to the plot.
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\differential_signal_plotter_helper.py
     :language: python
-    :lines: 65-81
+    :lines: 67-83

@@ -2,7 +2,7 @@
 
 Tutorial Plotters
 =========================
-In V5.0.0.0 of the TMSi Python Interface release, a new structure for the plotters is developed. In this tutorial, a general outline of the plotter structure is
+From V5.0.0.0 onwards of the TMSi Python Interface, a new structure for the plotters is integrated. In this tutorial, a general outline of the plotter structure is
 given. At the end of this page, you can find an :ref:`overview <customize-plotter-label>` of the step-by-step tutorials for specific plotters.
 
 General structure

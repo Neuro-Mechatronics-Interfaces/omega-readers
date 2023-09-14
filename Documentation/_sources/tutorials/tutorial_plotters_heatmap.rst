@@ -12,7 +12,7 @@ The :meth:`__init__` method of the :mod:`FilteredSignalPlotterHelper` can be reu
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\heatmap_plotter_helper.py
     :language: python
-    :lines: 49-55, 65
+    :lines: 51-57, 67
 
 The :mod:`FilteredSignalPlotterHelper` and :mod:`SignalPlotterHelper` can be checked to see what changes are required to go from a signal plotter 
 to a heatmap. Two changes are required: 
@@ -29,7 +29,7 @@ Channel locations, channels displayed in the heatmap and the reordering
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\heatmap_plotter_helper.py
     :language: python
-    :lines: 105-108
+    :lines: 107-110
 
 The callback function is the function that provides  data to the plotter. The callback is called with a response object. This response 
 consists of a buffer object which consists of two parts. The object has a dataset that contains the data, and a pointer_buffer which is the pointer that controls where 
@@ -39,4 +39,4 @@ the channels present in the heatmap is sent to the plotter.
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\heatmap_plotter_helper.py
     :language: python
-    :lines: 74-90
+    :lines: 76-92

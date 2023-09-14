@@ -15,8 +15,8 @@ this interface. Please read it through carefully. The TMSi Python Interface is a
 Drivers to Python.
 
 .. warning:: 
-   This documentation is written for the TMSi Python Interface V5.0.0.0. Please note that there have been **major changes** from V4.1.0.0 to V5.0.0.0.
-   Please find the most important changes :ref:`here <changes-page-label>` to understand how to migrate your code from V4.1.0.0 to V5.0.0.0.
+   This documentation is written for the TMSi Python Interface V5.0.0.0 and higher. Please note that there have been **major changes** from V4.1.0.0 to V5.0.0.0 and higher.
+   Please find the most important changes :ref:`here <changes-page-label>` to understand how to migrate your code from V4.1.0.0 to V5.0.0.0 and higher.
 
 
 .. list-table::

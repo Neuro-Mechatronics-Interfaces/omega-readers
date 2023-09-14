@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    TMSiFrontend.components.dialogs.dialog_confirm
+   TMSiFrontend.components.dialogs.dialog_connect
    TMSiFrontend.components.dialogs.dialog_discover
 
 Module contents

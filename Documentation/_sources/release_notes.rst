@@ -1,6 +1,21 @@
-Release Notes V5.0.0.0
+Release Notes V5.1.0.0
 ============================
 
+**Release date: September 13th, 2023**
+
+The current version (V5.1.0.0) of the TMSi Python Interface includes some new functionalities with respect to the previous version (V5.0.0.0). These changes include:
+
+* Small bug fix for APEX configuration settings
+
+Note that the V5.0.0.0 release was a **major release** and that the changes in SDK and plotters can include breaking changes for applications that were created 
+using versions below V5.0.0.0 of the interface. Please learn about the changes :ref:`here <changes-page-label>`.
+
+
+Previous release Notes
+---------------------------------
+
+V5.0.0.0
+^^^^^^^^^^^^
 **Release date: August 7th, 2023**
 
 The current version (V5.0.0.0) of the TMSi Python Interface includes some new functionalities with respect to the previous version (V4.1.0.0). These changes include:
@@ -14,8 +29,6 @@ Note that the V5.0.0.0 release is a **major release** and that the changes in SD
 using previous versions of the interface. Please learn about the changes :ref:`here <changes-page-label>`.
 
 
-Previous release Notes
----------------------------------
 V4.1.0.0
 ^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -1085,6 +1085,7 @@ class ApexDevice(TMSiDevice):
             live_impedance = live_impedance,
             impedance_limit = impedance_limit
         )
+        self.__load_config_from_device()
         return self.get_device_sampling_config()
 
     @LogPerformances

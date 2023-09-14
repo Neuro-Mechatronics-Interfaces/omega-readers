@@ -13,7 +13,7 @@ from the original classes and get the possibility to make the desired changes, s
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\filtered_signal_plotter_helper.py
     :language: python
-    :lines: 37-39, 48, 49, 81, 82
+    :lines: 39-41, 51, 84
  
 The next step is to use the :mod:`FilteredConsumerThread` when using the :mod:`FilteredSignalPlotterHelper`. This is done by initializing the :mod:`FilteredConsumerThread` in 
 the :mod:`FilteredSignalPlotter` instead of the original :mod:`ConsumerThread`.  To do so we will overwrite the :meth:`__init__` method of the :mod:`SignalPlotterHelper`. 
@@ -23,7 +23,7 @@ This is done using the :meth:`super()` method, which is highlighted in the code 
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\filtered_signal_plotter_helper.py
     :language: python
-    :lines: 49-53
+    :lines: 51-55
     :emphasize-lines: 4
 
 The file can be saved and the new class can be imported in the example file. Here, the :mod:`PlotterHelper` argument of the :mod:`Gui` can be changed 
@@ -31,7 +31,7 @@ to the newly created :mod:`FilteredSignalPlotterHelper`.
 
 .. literalinclude:: ..\..\..\examples_SAGA\example_filter_and_plot.py
     :language: python
-    :lines: 52, 53, 78-80
+    :lines: 51, 52, 82-84
 
 After doing this, the application uses the :mod:`FilteredPlotterHelper` (which uses the :mod:`FilteredConsumerThread`). Next, the functional code of these two new classes can be modified and 
 tailored to our wishes.
@@ -43,14 +43,14 @@ To read out the filtered buffer instead of the original buffer, the monitor func
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\filtered_signal_plotter_helper.py
     :language: python
-    :lines: 78-79
+    :lines: 80-81
 
 In order to control the filter, the desired filter settings need to be passed to the :mod:`FilteredSignalPlotterHelper` as arguments during initialization and stored for 
 usage in the :mod:`FilteredConsumerThread`. 
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\filtered_signal_plotter_helper.py
     :language: python
-    :lines: 49-58
+    :lines: 51-60
 
 The start method of the :mod:`FilteredSignalPlotterHelper` should be overwritten to initialize the filter. As this should be done between the different steps of 
 the start function of the parent, the parent's start method can't be used. Therefore, the start method is overwritten completely and the initialization is done between 
@@ -58,7 +58,7 @@ the different steps.
 
 .. literalinclude:: ..\..\..\TMSiPlotterHelpers\filtered_signal_plotter_helper.py
     :language: python
-    :lines: 60-75
+    :lines: 62-77
     :emphasize-lines: 8
 
 Finally, the desired parameters (such as the filter's cut-off frequencies) are passed when calling the :mod:`FilteredSignalPlotterHelper` from the main script.

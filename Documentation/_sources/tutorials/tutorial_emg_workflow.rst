@@ -71,14 +71,14 @@ Before starting the measurement, it is important to check the impedances. The im
 the better the signal quality. Please note that with HD-EMG grids, if they are not prepared properly, cross-bridges may occur. Ihe following code snippet 
 the impedances are checked by visually inspecting the impedances per electrode. The required graphical user interface (GUI) and plotter were initially 
 imported from *TMSiGui* and *TMSiPlotterHelpers*. (for more information about the plotters, please read the 
-:ref:`Plotters Tutorial <TMSi Plotter tutorial>`). In this case, the ImpedancePlotterHelper is initialized in lines 81 to 83. Three parameters can be specified for the impedance plotter. The 
+:ref:`Plotters Tutorial <TMSi Plotter tutorial>`). In this case, the ImpedancePlotterHelper is initialized in lines 86 to 88. Three parameters can be specified for the impedance plotter. The 
 first parameter is the device that is passed to the Helper. The second variable, the layout variable, defines if the electrode impedances should
 be visualized as a head (for EEG) or in a Grid form (for HD-EMG). Finally, the impedances can be stored in a file: the third parameter defines the 
 location and name of the file.
 
 .. literalinclude:: ..\..\..\examples_SAGA\example_EMG_workflow.py
     :language: python
-    :lines: 78-91
+    :lines: 78-92
     :linenos:
     :lineno-start: 78
 
@@ -86,32 +86,32 @@ Writing measurement to file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The TMSi Python interface allows to record data in either .poly5 or .xdf format. Therefore, the user is asked to provide a desired file format 
-(line 94). Lines 97 to 103 ensures that the specified file format is initialized. Here, it is also possible to specify the 
+(line 99). Lines 102 to 108 ensure that the specified file format is initialized. Here, it is also possible to specify the 
 directory in which the recordings are stored. The default is set to the *measurement_dir* (defined earlier) located inside the TMSi Python interface folder.
-Please note, if neither .poly5 nor .xdf is given as input, the data will be saved as .poly5 (lines 101 to 103).
-Moreover, it is required for the *file_writer* to get a handle to the device specified in the *discoveryList*, which is done in line 106.
-The default file name is *example_EMG_workflow*. If the user wishes to change the file name, lines 97-103 can be edited. 
+Please note, if neither .poly5 nor .xdf is given as input, the data will be saved as .poly5 (lines 106 to 108).
+Moreover, it is required for the *file_writer* to get a handle to the device specified in the *discoveryList*, which is done in line 111.
+The default file name is *example_EMG_workflow*. If the user wishes to change the file name, lines 102-108 can be edited. 
 
 
 .. literalinclude:: ..\..\..\examples_SAGA\example_EMG_workflow.py
     :language: python
-    :lines: 93-106
+    :lines: 98-111
     :linenos:
-    :lineno-start: 93
+    :lineno-start: 98
 
 The plotter: heatmap plotter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Once that the file format is chosen, a new plotter is initialized in line 111. In this case, a heatmap is created from the raw data. Therefore, the 
+Once that the file format is chosen, a new plotter is initialized in line 116. In this case, a heatmap is created from the raw data. Therefore, the 
 HeatmapPlotterHelper is initialized. Four parameters can be given to this Helper: the device should be passed, the layout of the grid that was specified
 in the beginning of the file is needed and the filter variables (order and cut-off frequency). In this case, a first-order high-pass filter with a cut-off frequency of 5 Hz is applied to the data. 
-The plotter is opened when the GUI is initialized and the event loop has been started, which is done in line 115.
+The plotter is opened when the GUI is initialized and the event loop has been started, which is done in line 120.
 
 .. literalinclude:: ..\..\..\examples_SAGA\example_EMG_workflow.py
     :language: python
-    :lines: 108-115
+    :lines: 113-120
     :linenos:
-    :lineno-start: 108
+    :lineno-start: 113
 
 Closing the application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -120,18 +120,18 @@ After the measurement is performed and the plotter window is closed, the *file_w
 
 .. literalinclude:: ..\..\..\examples_SAGA\example_EMG_workflow.py
     :language: python
-    :lines: 117-121
+    :lines: 122-126
     :linenos:
-    :lineno-start: 117
+    :lineno-start: 122
 
-In case of any error, the *Finally* statement in line 127 properly closes the connection to the device if this has not been done before. Afterwards, it is 
+In case of any error, the *Finally* statement in line 132 properly closes the connection to the device if this has not been done before. Afterwards, it is 
 possible to use SAGA again for a different application or a new measurement.
 
 .. literalinclude:: ..\..\..\examples_SAGA\example_EMG_workflow.py
     :language: python
-    :lines: 127-131
+    :lines: 132-136
     :linenos:
-    :lineno-start: 127
+    :lineno-start: 132
 
 Summary
 ^^^^^^^^^^^^^^^^^^

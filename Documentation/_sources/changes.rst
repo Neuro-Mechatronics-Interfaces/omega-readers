@@ -1,9 +1,9 @@
 .. _changes-page-label:
 
-Changes from V4.1.0.0 to V5.0.0.0
-==================================
+Changes from V4.1.0.0 to V5.1.0.0
+===============================================
 
-The TMSi Python Interface release V5.0.0.0 is a major release, introducing breaking changes with older versions of the TMSi Python Interface. 
+The TMSi Python Interface release V5.0.0.0 was a major release, introducing breaking changes with older versions of the TMSi Python Interface. 
 Most changes are related to either the SAGA SDK, as this received a major overhaul to align with the APEX SDK. Another important change is the way that Plotters are provided.
 This page describes the most important changes that you should be aware of, gives code snippets to highlight changes and refers to relevant additional documentation pages. 
 
@@ -20,7 +20,7 @@ The first change is related to device discovery, as the :meth:`TMSiSDK.discover(
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
           TMSiSDK().discover(DeviceType.apex, DeviceInterfaceType.usb)
@@ -43,7 +43,7 @@ Changes are made to the way plotters are handled. For a complete tutorial on how
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             # Initialise the plotter application
@@ -88,7 +88,7 @@ Discovery has changed, as explicit initialization of the SDK is not required any
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             tmsi_device.initialize()
@@ -118,7 +118,7 @@ For a complete list, please refer to the :mod:`SagaDevice <TMSiSDK.device.device
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             # Import device configuration from xml-file
@@ -173,7 +173,7 @@ Please see the changes below.
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             ch_name = ch.name
@@ -211,7 +211,7 @@ Rather than calling a specific method to start a card recording based on a butto
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             # Retrieve active card configuration
@@ -263,7 +263,7 @@ Changes are made to the way plotters are handled. For a complete tutorial on how
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             # Initialise the plotter application
@@ -303,7 +303,7 @@ rather than by accessing the “configuration” property of the device, which o
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             dev.config.set_interface_type(DeviceInterfaceType.wifi)
@@ -325,7 +325,7 @@ Based on the processing requirements and available computation capacities of the
    :header-rows: 1
 
    * - V4.1.0.0
-     - V5.0.0.0
+     - V5.1.0.0
    * - .. code-block:: python
 
             # Start a regular signal acquisition

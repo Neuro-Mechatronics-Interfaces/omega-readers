@@ -77,7 +77,7 @@ as variable. The GUI opens the defined plotter and shows the signals. For more i
 
 .. literalinclude:: ..\..\..\examples_APEX\example_change_channel_list.py
     :language: python
-    :lines: 68-74
+    :lines: 68-79
     :linenos:
     :lineno-start: 68
 
@@ -87,8 +87,8 @@ Once the GUI is closed by the user, the event loop is stopped. Next, the connect
 
 .. literalinclude:: ..\..\..\examples_APEX\example_change_channel_list.py
     :language: python
-    :lines: 76-77
+    :lines: 81-82
     :linenos:
-    :lineno-start: 76
+    :lineno-start: 81
 
 

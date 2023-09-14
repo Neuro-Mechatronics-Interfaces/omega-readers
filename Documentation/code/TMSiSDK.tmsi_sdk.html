@@ -45,7 +45,7 @@
     <link rel="icon" href="../_static/SAGA shape.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Release Notes V5.0.0.0" href="../release_notes.html" />
+    <link rel="next" title="Release Notes V5.1.0.0" href="../release_notes.html" />
     <link rel="prev" title="&lt;no title&gt;" href="TMSiSDK.tmsi_utilities.tmsi_logger.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -191,7 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/tutorial_changing_configuration.html">Tutorial changing configuration (APEX)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes from V4.1.0.0 to V5.0.0.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes from V4.1.0.0 to V5.1.0.0</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">tmsi_python_interface</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="TMSiFrontend.html">TMSiFrontend package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="TMSiFrontend.charts.html">TMSiFrontend.charts package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -289,7 +289,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes V5.0.0.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes V5.1.0.0</a></li>
 </ul>
 
     </div>
@@ -493,8 +493,8 @@ limitations under the License.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dev_type</strong> (<a class="reference internal" href="TMSiSDK.device.tmsi_device_enums.html#TMSiSDK.device.tmsi_device_enums.DeviceType" title="TMSiSDK.device.tmsi_device_enums.DeviceType"><em>DeviceType</em></a>) – device type to search</p></li>
-<li><p><strong>dr_interface</strong> (<a class="reference internal" href="TMSiSDK.device.tmsi_device_enums.html#TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType" title="TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType"><em>DeviceInterfaceType</em></a><em>, </em><em>optional</em>) – data recorder interface, defaults to DeviceInterfaceType.none. See <a class="reference internal" href="TMSiSDK.device.devices.saga.saga_device.html#TMSiSDK.device.devices.saga.saga_device.SagaDevice.discover" title="TMSiSDK.device.devices.saga.saga_device.SagaDevice.discover"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SagaDevice.discover()</span></code></a> and <a class="reference internal" href="TMSiSDK.device.devices.apex.apex_device.html#TMSiSDK.device.devices.apex.apex_device.ApexDevice.discover" title="TMSiSDK.device.devices.apex.apex_device.ApexDevice.discover"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ApexDevice.discover()</span></code></a> for more details.</p></li>
-<li><p><strong>ds_interface</strong> (<a class="reference internal" href="TMSiSDK.device.tmsi_device_enums.html#TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType" title="TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType"><em>DeviceInterfaceType</em></a><em>, </em><em>optional</em>) – docking station interface (if needed), defaults to DeviceInterfaceType.none. See <a class="reference internal" href="TMSiSDK.device.devices.saga.saga_device.html#TMSiSDK.device.devices.saga.saga_device.SagaDevice.discover" title="TMSiSDK.device.devices.saga.saga_device.SagaDevice.discover"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SagaDevice.discover()</span></code></a> for more details.</p></li>
+<li><p><strong>dr_interface</strong> (<a class="reference internal" href="TMSiSDK.device.tmsi_device_enums.html#TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType" title="TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType"><em>DeviceInterfaceType</em></a><em>, </em><em>optional</em>) – datarecorder interface, defaults to DeviceInterfaceType.none. See SagaDevice.discover and ApexDevice.discover for more details.</p></li>
+<li><p><strong>ds_interface</strong> (<a class="reference internal" href="TMSiSDK.device.tmsi_device_enums.html#TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType" title="TMSiSDK.device.tmsi_device_enums.DeviceInterfaceType"><em>DeviceInterfaceType</em></a><em>, </em><em>optional</em>) – docking station interface (if needed), defaults to DeviceInterfaceType.none. See SagaDevice.discover for more details.</p></li>
 <li><p><strong>num_retries</strong> (<em>int</em><em>, </em><em>optional</em>) – number of retry if nothing found</p></li>
 </ul>
 </dd>
@@ -587,7 +587,7 @@ limitations under the License.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Release Notes V5.0.0.0</p>
+        <p class="prev-next-title">Release Notes V5.1.0.0</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
