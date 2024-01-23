@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023, 2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,7 +38,10 @@ modules_dir = join(Plugin_dir, '..', '..') # directory with all modules
 measurements_dir = join(Plugin_dir, '../../measurements') # directory with all measurements
 configs_dir = join(Plugin_dir, '../../TMSiSDK\\tmsi_resources') # directory with configurations
 sys.path.append(modules_dir)
+
 import os
+os.environ["PYQTGRAPH_QT_LIB"] = 'PySide2'
+
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
 from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
 
@@ -47,10 +50,34 @@ from TMSiGui.gui import Gui
 from TMSiPlotterHelpers.impedance_plotter_helper import ImpedancePlotterHelper
 from TMSiPlotterHelpers.signal_plotter_helper import SignalPlotterHelper
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
-from experiment_psychopy import PsychopyExperimentSetup
+from TMSiPlugins.PsychoPy.experiment_psychopy import PsychopyExperimentSetup
+from TMSiPlugins.PsychoPy.erp_training_routine import PsychopyTrainingSetup
 from TMSiPlugins.external_devices.usb_ttl_device import TTLError
+from TMSiSDK.device.tmsi_device_enums import MeasurementType
 import time
 from threading import Thread
+import easygui 
+from PIL import Image
+
+def display_background_image(image_path):
+    # Open and display the image using PIL
+    image = Image.open(image_path)
+    image.show()
+    easygui.msgbox("Click 'OK' to continue once you see the image.")
+    
+
+# Check whether the sound level on laptop is set to 40 ~ corresponding to 60 dB
+while True:
+    sound_choice = easygui.buttonbox("Is the laptop sound turned on at volume 40?", choices=["Yes","No"])
+    
+    if sound_choice == "Yes":
+        easygui.msgbox("Well done, you can continue")
+        break
+    elif sound_choice == "No":
+        easygui.msgbox("Adjust the volume please")
+        continue
+    else:
+        break        
 
 try:
     # Execute a device discovery. This returns a list of device-objects for every discovered device.
@@ -72,13 +99,21 @@ try:
         # Load the EEG channel set and configuration (in this case for 32 channels)
         print("load EEG config")
         dev.import_configuration(join(configs_dir, 'APEX_config_EEG32.xml'))
-        
     
         # Initialize PsychoPy Experiment, for arguments description see class
         print('\n Initializing PsychoPy experiment and TTL module \n')
         print('\n  Please check if red and green LEDs are turned on ... \n')
+
+        # Experiment settings
+        n_trials = 20
+        interval = 1.5 
+        duration = 0.05
+        probability = 0.2
+
         # !! NOTE: Available options for the (non)target_value inputs are all EVEN numbers between 2 and 30 for APEX
-        experiment = PsychopyExperimentSetup(TMSiDevice="APEX", COM_port = 'COM3', n_trials = 3, target_value = 16, nontarget_value= 2)
+        # Check COM_port on which the USB-TTL module can be found and change accordingly. 
+        experiment = PsychopyExperimentSetup(TMSiDevice="APEX", COM_port = 'COM8', n_trials = n_trials, target_value = 16, nontarget_value= 2,
+                                             interval = interval, probability = probability, duration = duration)
         
         # Check if there is already a plotter application in existence
         app = QApplication.instance()
@@ -93,30 +128,73 @@ try:
                                                 file_storage = join(measurements_dir,"Example_PsychoPy_ERP_experiment"))
         # Define the GUI object and show it 
         gui = Gui(plotter_helper = plotter_helper)
-            # Enter the event loop
+        # Enter the event loop
         app.exec_()
         
         # Pause for a while to properly close the GUI after completion
-        print('\n Wait for a bit while we close the plot... \n')
         time.sleep(1)
+        
+        # Set up background image 
+        background_image_path = join(Plugin_dir, 'psychopy_resources', 'cross.png')
+
+        while True:
+            # are you ready for the training?
+            ready_choice = easygui.buttonbox("Are you ready for the training?", choices=["Yes", "No"])
+            
+            if ready_choice == "Yes":
+                
+                # Display the background image
+                display_background_image(background_image_path)
+        
+                # Create an instance of the PsychopyTrainingSetup class with the background image
+                training_setup = PsychopyTrainingSetup(background_image_path)
+                
+                # Run the training
+                training_setup.runTraining()
+            
+                # Ask the participant if they want to do it again or continue
+                choice = easygui.buttonbox("Do you want to do the training again?", choices=["Yes", "No"])
+
+                if choice == "No":
+                    break  # Exit the loop if the participant chooses "No"
+            elif ready_choice == "No":
+                continue
+            else:
+                break
         
         # Initialise a file-writer class (Poly5-format) and state its file path
         file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"Example_PsychoPy_ERP_experiment.poly5"))
+        
+        # Check to see if the participant is ready for the experiment
+        while True:
+            exp_choice = easygui.buttonbox("Are you ready for the experiment?", choices=["Yes","No"])
             
-        # # Define the handle to the device
+            if exp_choice == "Yes":
+                easygui.msgbox("Alright, the experiment will start in a bit. \n\nPlease make the image fullscreen after clicking 'OK' ")
+                break
+            elif exp_choice == "No":
+                easygui.msgbox("Alright take your time")
+                continue
+            else:
+                break   
+            
+        # Define the handle to the device
         file_writer.open(dev)
         
         # Define thread to run the experiment
         thread = Thread(target=experiment.runExperiment)
         
-
-        # Initialise the new plotter helper
-        plotter_helper = SignalPlotterHelper(device=dev)
-        # Define the GUI object and show it 
-        gui = Gui(plotter_helper = plotter_helper)
-        # Open the plot window, start the PsychoPy thread and show the signals
+        # Start a measurement on APEX
+        dev.start_measurement(MeasurementType.APEX_SIGNAL)       
+        
+        # Start the PsychoPy thread
         thread.start()
-        app.exec_()
+        
+        # Acquisition time, based on experiment timing (with some additional time at the end)
+        time.sleep(n_trials * (interval + duration) + 10)
+        
+        # Stop the measurement on APEX
+        dev.stop_measurement()
 
         # Close the file writer after GUI termination
         file_writer.close()
@@ -130,7 +208,6 @@ except TMSiError as e:
 
 except TTLError as e:
    raise TTLError("Is the TTL module connected? Please try again")
-
         
 finally:
     if 'dev' in locals():

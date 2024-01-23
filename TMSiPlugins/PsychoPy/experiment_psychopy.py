@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023, 2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,21 +32,23 @@ limitations under the License.
 
 '''
 
-from psychopy import sound
 from numpy.random import choice
-# import random
 import numpy as np
 from PySide2 import  QtGui, QtCore, QtWidgets
 from PySide2.QtCore import Qt
 import time
-
 import sys
 from os.path import join, dirname, realpath, normpath, exists
-Plugins_dir = dirname(realpath(__file__)) # directory of this file
-measurements_dir = join(Plugins_dir, '../measurements') # directory with all measurements
-modules_dir = normpath(join(Plugins_dir, '../')) # directory with all modules
+Plugin_dir = dirname(realpath(__file__)) # directory of this file
+modules_dir = join(Plugin_dir, '..', '..') # directory with all modules
+measurements_dir = join(Plugin_dir, '../../measurements') # directory with all measurements
+configs_dir = join(Plugin_dir, '../../TMSiSDK\\tmsi_resources') # directory with configurations
+sys.path.append(modules_dir)
 
 from TMSiPlugins.external_devices.usb_ttl_device import USB_TTL_device, TTLError
+from psychopy import prefs
+prefs.hardware['audioLib'] = ['PTB'] # using PTB sound back-end - ['PTB', 'sounddevice', 'pyo', 'pysoundcard', 'pygame']
+from psychopy.sound import Sound
 
 
 class PsychopyExperimentSetup():
@@ -54,7 +56,7 @@ class PsychopyExperimentSetup():
         library and initializes the trigger setup for an oddball experiment
     """
     
-    def __init__(self, TMSiDevice, COM_port, n_trials, target_value, nontarget_value, interval = 3, probability = 0.5, duration = 0.3):
+    def __init__(self, TMSiDevice, COM_port, n_trials, target_value, nontarget_value, interval = 1.5, probability = 0.2, duration = 0.05):        
         """ 
             Setting up the initial variables for an oddball auditory PsychoPy experiment
             with simultaneous triggers to TMSi SAGA or APEX
@@ -68,9 +70,9 @@ class PsychopyExperimentSetup():
                 nontarget_value: define the value of the trigger for the non-target stimuli
                 
             Parameters (optional):
-                interval: define time interval between stimuli, defaults to 3 s
-                duration: define length of trigger that is stored in TMSiDevice, defaults to 0.3 s
-                probability: define the ratio between target/nontarget stimuli, defaults to 0.5 s
+                interval: define time interval between stimuli, defaults to 1.5 s
+                duration: define length of trigger that is stored in TMSiDevice, defaults to 0.05 s
+                probability: define the ratio between target/nontarget stimuli, defaults to 0.2
         """
         
         # Set trigger values for target and nontarget stimuli
@@ -112,7 +114,6 @@ class PsychopyExperimentSetup():
         
         # Set up threads for the stimuli and the ttl module
         self.setupThreads()
-            
         
     def setupThreads(self):
         """ Set up the threads to send triggers and cues simoultaneously
@@ -155,31 +156,33 @@ class PsychopyExperimentSetup():
         self.worker_play_cues.stop()
         self.thread_play_cues.quit()
         self.thread_play_cues.wait()
-
         
     def setupExperiment(self):
         """ Function to set up the cues of the (auditory) experiment
-        """
-        
-        # Non-target sound
-        self.non_target_sound = sound.Sound(value="A", secs=self.duration)
-        
+        """       
+        # Non-target sound, value sets the frequency
+        self.non_target_sound = Sound(value=1000, secs=self.duration, hamming=True)
+                
         # Target sound
-        self.target_sound = sound.Sound(value="B", secs=self.duration)
-    
+        self.target_sound = Sound(value=2000, secs=self.duration, hamming=True)
+
+            
     def runExperiment(self):
         """ Run the auditory oddball experiment with triggers and cues
         """
         # Start threads
         self.startThreads()
+        
         # Wait for the threads to start
-        time.sleep(0.1)
+        time.sleep(5.0)
+        
         # Perform the experiment with the different cues
         for i in range(self.n_trials):
             # Empty & initialize the con variable
             con = []
-            # Define the con variable: a target or a non-target cue
+            # # Define the con variable: a target or a non-target cue
             con = choice(self.conditions, 1, p = [self.probability_nontarget, self.probability_target])
+                        
             if con[0] == 'non-target':
                 # Give non-target cue & write non-target value
                 self.writeTriggerNontarget()
@@ -188,6 +191,7 @@ class PsychopyExperimentSetup():
                 self.writeTriggerTarget()
             # After the stimulus, wait for a predefined amount of time
             time.sleep(self.interval)
+            
         # When the experiment is done, wait for a bit
         time.sleep(0.5)
         
@@ -199,7 +203,6 @@ class PsychopyExperimentSetup():
         
         # Notify the researcher that the experiment is done
         print('Experiment is done, all trials are performed')
-
     
     def writeTriggerTarget(self):
         # Send signal to the trigger thread to write a target trigger to TMSi device
@@ -207,16 +210,12 @@ class PsychopyExperimentSetup():
         # Send signal to cue thread to play target sound
         self.worker_play_cues.target_cue = True
         
-        
     def writeTriggerNontarget(self):
         # Send signal to the trigger thread to write a nontarget trigger to TMSi device
         self.worker_triggers.nontarget = True
         # Send signal to cue thread to play a nontarget sound
         self.worker_play_cues.nontarget_cue = True
         
-        
-
-
 
 class triggerThread((QtCore.QObject)):
     """  Class to write triggers to the TMSi device when a signal from the main thread is given
@@ -235,21 +234,26 @@ class triggerThread((QtCore.QObject)):
         self.ttl_module = main_class.ttl_module
         self.target_value = main_class.target_value
         self.nontarget_value = main_class.nontarget_value
+        self.duration = main_class.duration
 
     @QtCore.Slot()
     def writeTrigger(self):
         while self.triggering:
-            if self.target == True:
+            if self.target:
+                    
                 # Write trigger target
-                self.ttl_module.write_trigger(trigger_value = self.target_value, duration = 0.2)
+                self.ttl_module.write_trigger(trigger_value=self.target_value, duration = self.duration)
+        
                 # Stop writing trigger target
                 self.target = False
-            elif self.nontarget == True:
-                # Write non trigger target
-                self.ttl_module.write_trigger(trigger_value = self.nontarget_value, duration = 0.2)
-                # Stop writing non trigger target
+            elif self.nontarget:
+    
+                # Write non-trigger target
+                self.ttl_module.write_trigger(trigger_value=self.nontarget_value, duration = self.duration)
+    
+                # Stop writing non-trigger target
                 self.nontarget = False
-            # Put some time to perform the actions
+            # Put some time to perform the actions        
             time.sleep(0.0001)
                 
     def stop(self):
@@ -278,29 +282,35 @@ class cueThread((QtCore.QObject)):
         """ Function to give the auditory cues on the computer based on the 
         input of the main thread
 
-        """
+        """        
         while self.triggering:
             if self.target_cue == True:
                 # Play target sound
-                self.target_sound.play()
-                time.sleep(self.duration)
+                self.target_sound.play()                
+                time.sleep(self.duration+0.05)
+                
                 # Stop target sound
                 self.target_sound.stop()
+                
                 # Make variable false again
                 self.target_cue = False
+                                
             elif self.nontarget_cue == True:
                 # Play nontarget sound
-                self.non_target_sound.play()
-                time.sleep(self.duration)
+                self.non_target_sound.play()                
+                time.sleep(self.duration+0.05)
+                
                 # Stop nontarget sound
                 self.non_target_sound.stop()
+                
                 # Make variable false again
-                self.nontarget_cue = False
+                self.nontarget_cue = False                                
+                
             time.sleep(0.0001)
+                    
                 
     def stop(self):
         """ Method that is executed when the thread is terminated. 
             This stop event stops the cues.
         """
         self.triggering = False
-

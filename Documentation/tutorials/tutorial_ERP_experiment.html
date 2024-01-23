@@ -1,0 +1,863 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Tutorial 1: ERP Experiment &#8212; TMSi Python Interface V5.1.1.0 Documentatation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/tutorial_ERP_experiment';</script>
+    <link rel="icon" href="../_static/SAGA shape.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 2: ERP Analysis" href="tutorial_ERP_analysis.html" />
+    <link rel="prev" title="Tutorial Event-Related Potentials" href="tutorial_ERP.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/TMSi_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/TMSi_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitlab.com/tmsi/tmsi-python-examples" title="Examples GitLab" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-square-gitlab"></i></span>
+            <label class="sr-only">Examples GitLab</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://knowledge.tmsi.com/" title="Knowledge Base" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src=".././_static/SAGA_kb.png" class="icon-link-image" alt="Knowledge Base"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.tmsi.com/distributors/?continent=18" title="Questions" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-solid fa-circle-question"></i></span>
+            <label class="sr-only">Questions</label></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/index_gs.html">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html">Installing the interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/features.html">Features</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_apex.html">Examples APEX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_saga.html">Examples SAGA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_data.html">Examples reading and analyzing data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/plugins.html">Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/faq.html">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="tutorial_plotters.html">Tutorial Plotters</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_filtered.html">Tutorial 1: Filtered data plotter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_heatmap.html">Tutorial 2: Heatmap plotter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_differential.html">Tutorial 3: Differential plotter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_eeg_workflow.html">Tutorial EEG Workflow (APEX)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_emg_workflow.html">Tutorial HD-EMG Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_changing_configuration.html">Tutorial changing configuration (APEX)</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="tutorial_ERP.html">Tutorial Event-Related Potentials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Tutorial 1: ERP Experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ERP_analysis.html">Tutorial 2: ERP Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes with respect to previous versions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../code/modules.html">tmsi_python_interface</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../code/TMSiFrontend.html">TMSiFrontend package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.html">TMSiFrontend.acquisitions package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.heatmap_acquisition.html">TMSiFrontend.acquisitions.heatmap_acquisition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.impedance_acquisition.html">TMSiFrontend.acquisitions.impedance_acquisition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.signal_acquisition.html">TMSiFrontend.acquisitions.signal_acquisition module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.charts.html">TMSiFrontend.charts package</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.charts.heatmap_chart.html">TMSiFrontend.charts.heatmap_chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.charts.impedance_chart.html">TMSiFrontend.charts.impedance_chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.charts.signal_chart.html">TMSiFrontend.charts.signal_chart module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.components.html">TMSiFrontend.components package</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.designer.html">TMSiFrontend.components.designer package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.dialogs.html">TMSiFrontend.components.dialogs package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.channel_component.html">TMSiFrontend.components.channel_component module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.dialog.html">TMSiFrontend.components.dialog module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.table_impedance_values.html">TMSiFrontend.components.table_impedance_values module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.designer.html">TMSiFrontend.designer package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.legends.html">TMSiFrontend.legends package</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.legends.impedance_legend.html">TMSiFrontend.legends.impedance_legend module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.plotters.html">TMSiFrontend.plotters package</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.plotters.heatmap_plotter.html">TMSiFrontend.plotters.heatmap_plotter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.plotters.impedance_plotter.html">TMSiFrontend.plotters.impedance_plotter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.plotters.signal_plotter.html">TMSiFrontend.plotters.signal_plotter module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.utilities.html">TMSiFrontend.utilities package</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.plotting_support_functions.html">TMSiFrontend.utilities.plotting_support_functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.singleton.html">TMSiFrontend.utilities.singleton module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.tmsi_grids.html">TMSiFrontend.utilities.tmsi_grids module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.tmsi_headcaps.html">TMSiFrontend.utilities.tmsi_headcaps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.tmsi_style.html">TMSiFrontend.utilities.tmsi_style module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.acquisition.html">TMSiFrontend.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.chart.html">TMSiFrontend.chart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.plotter.html">TMSiFrontend.plotter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.viewer.html">TMSiFrontend.viewer module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../code/TMSiSDK.html">TMSiSDK package</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.device.html">TMSiSDK.device package</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.devices.html">TMSiSDK.device.devices package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_channel.html">TMSiSDK.device.tmsi_channel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_device.html">TMSiSDK.device.tmsi_device module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_device_enums.html">TMSiSDK.device.tmsi_device_enums module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_dongle.html">TMSiSDK.device.tmsi_dongle module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_event_reader.html">TMSiSDK.device.tmsi_event_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_impedance_channel.html">TMSiSDK.device.tmsi_impedance_channel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_measurement.html">TMSiSDK.device.tmsi_measurement module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_thread.html">TMSiSDK.device.tmsi_thread module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.html">TMSiSDK.sample_data_server package</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.event_data.html">TMSiSDK.sample_data_server.event_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.sample_data.html">TMSiSDK.sample_data_server.sample_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.sample_data_server.html">TMSiSDK.sample_data_server.sample_data_server module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.tmsi_errors.html">TMSiSDK.tmsi_errors package</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_errors.error.html">TMSiSDK.tmsi_errors.error module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiSDK.tmsi_resources.html">TMSiSDK.tmsi_resources package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.html">TMSiSDK.tmsi_utilities package</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.apex.html">TMSiSDK.tmsi_utilities.apex package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.saga.html">TMSiSDK.tmsi_utilities.saga package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.decorators.html">TMSiSDK.tmsi_utilities.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.logger_filter.html">TMSiSDK.tmsi_utilities.logger_filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.mask_type.html">TMSiSDK.tmsi_utilities.mask_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.singleton.html">TMSiSDK.tmsi_utilities.singleton module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.support_functions.html">TMSiSDK.tmsi_utilities.support_functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.tmsi_logger.html">TMSiSDK.tmsi_utilities.tmsi_logger module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiSDK.tmsi_sdk.html">TMSiSDK.tmsi_sdk module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes V5.1.1.0</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://gitlab.com/tmsi/tmsi-python-interface/-/releases" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-gitlab"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorials/tutorial_ERP_experiment.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Tutorial 1: ERP Experiment</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-the-correct-directory-of-files">Adding the correct directory of files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-the-required-classes-and-functions">Importing the required classes and functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-a-function-to-set-the-background-image">Defining a function to set the background image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-the-sound-level">Checking the sound level</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-paired-device-for-bluetooth-connection">Finding the paired device for Bluetooth connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-desired-device-configuration">Loading desired device configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initializing-psychopy-experiment">Initializing PsychoPy experiment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initializing-impedance-plotter">Initializing impedance plotter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-the-training-round">Start the training round</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-auditory-oddball-experiment">Running the auditory oddball experiment</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="tutorial-1-erp-experiment">
+<span id="tmsi-erp-experiment-tutorial"></span><h1>Tutorial 1: ERP Experiment<a class="headerlink" href="#tutorial-1-erp-experiment" title="Permalink to this heading">#</a></h1>
+<p><em>Corresponding file for this tutorial: TMSiPlugins/PsychoPy/experiment_psychopy_erp_experiment_apex.py</em></p>
+<p>An ERP experiment consists of two phases which are data collection (stimulus presentation occurs at this phase) and data analysis.
+This tutorial covers the first phase only. The second phase is explained in <a class="reference internal" href="tutorial_ERP_analysis.html#tmsi-erp-analysis-tutorial"><span class="std std-ref">Tutorial ERP Analysis</span></a>.</p>
+<p>This tutorial is a step-by-step guide on running the <em>example_psychopy_erp_experiment_apex.py</em> located inside the <em>TMSiPlugins/PsychoPy</em> folder.
+This example contains all you need to run an auditory oddball experiment in Psychopy using TMSi APEX amplifier.
+Before reading this tutorial it’s highly recommended to have a basic knowledge about electroencephalography (EEG), TMSi Python interface, and TMSi APEX amplifier.
+More information about Event Related Potentials (ERPs) can be found on <a class="reference external" href="https://info.tmsi.com/blog/event-related-potentials">TMSi’s website</a>.
+Before getting started, please ensure that you have Python 3.8 installed on your PC as this is a requirement of PsychoPy.
+Furthermore, please ensure you have a USB-TTL module (<em>REF 95-8650-0001-0</em>) available.</p>
+<section id="adding-the-correct-directory-of-files">
+<h2>Adding the correct directory of files<a class="headerlink" href="#adding-the-correct-directory-of-files" title="Permalink to this heading">#</a></h2>
+<p>To use the TMSi Python interface folder, which is necessary for running the examples, your Python interpreter needs to know the corresponding path.
+Therefore, the first lines of code add this information. If you wish to store the recordings in a different folder than the default one,
+you can change the directory specified in the highlighted code line 38 below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">34</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos">35</span><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">realpath</span>
+<span class="linenos">36</span><span class="n">Plugin_dir</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="c1"># directory of this file</span>
+<span class="linenos">37</span><span class="n">modules_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span> <span class="c1"># directory with all modules</span>
+<span class="hll"><span class="linenos">38</span><span class="n">measurements_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;../../measurements&#39;</span><span class="p">)</span> <span class="c1"># directory with all measurements</span>
+</span><span class="linenos">39</span><span class="n">configs_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;../../TMSiSDK</span><span class="se">\\</span><span class="s1">tmsi_resources&#39;</span><span class="p">)</span> <span class="c1"># directory with configurations</span>
+<span class="linenos">40</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="importing-the-required-classes-and-functions">
+<h2>Importing the required classes and functions<a class="headerlink" href="#importing-the-required-classes-and-functions" title="Permalink to this heading">#</a></h2>
+<p>The next lines import all the libraries which are required for the example script to work. Line 43 is needed so that PsychoPy uses the correct graphics library.
+They are used for purposes such as handling errors, writing recording files on PC, interacting with the USB-TTL module, and using the PsychoPy package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">42</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="hll"><span class="linenos">43</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYQTGRAPH_QT_LIB&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PySide2&#39;</span>
+</span><span class="linenos">44</span>
+<span class="linenos">45</span><span class="kn">from</span> <span class="nn">TMSiSDK.tmsi_sdk</span> <span class="kn">import</span> <span class="n">TMSiSDK</span><span class="p">,</span> <span class="n">DeviceType</span><span class="p">,</span> <span class="n">DeviceInterfaceType</span><span class="p">,</span> <span class="n">DeviceState</span>
+<span class="linenos">46</span><span class="kn">from</span> <span class="nn">TMSiSDK.tmsi_errors.error</span> <span class="kn">import</span> <span class="n">TMSiError</span><span class="p">,</span> <span class="n">TMSiErrorCode</span><span class="p">,</span> <span class="n">DeviceErrorLookupTable</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos">49</span><span class="kn">from</span> <span class="nn">TMSiGui.gui</span> <span class="kn">import</span> <span class="n">Gui</span>
+<span class="linenos">50</span><span class="kn">from</span> <span class="nn">TMSiPlotterHelpers.impedance_plotter_helper</span> <span class="kn">import</span> <span class="n">ImpedancePlotterHelper</span>
+<span class="linenos">51</span><span class="kn">from</span> <span class="nn">TMSiPlotterHelpers.signal_plotter_helper</span> <span class="kn">import</span> <span class="n">SignalPlotterHelper</span>
+<span class="linenos">52</span><span class="kn">from</span> <span class="nn">TMSiFileFormats.file_writer</span> <span class="kn">import</span> <span class="n">FileWriter</span><span class="p">,</span> <span class="n">FileFormat</span>
+<span class="linenos">53</span><span class="kn">from</span> <span class="nn">TMSiPlugins.PsychoPy.experiment_psychopy</span> <span class="kn">import</span> <span class="n">PsychopyExperimentSetup</span>
+<span class="linenos">54</span><span class="kn">from</span> <span class="nn">TMSiPlugins.PsychoPy.erp_training_routine</span> <span class="kn">import</span> <span class="n">PsychopyTrainingSetup</span>
+<span class="linenos">55</span><span class="kn">from</span> <span class="nn">TMSiPlugins.external_devices.usb_ttl_device</span> <span class="kn">import</span> <span class="n">TTLError</span>
+<span class="linenos">56</span><span class="kn">from</span> <span class="nn">TMSiSDK.device.tmsi_device_enums</span> <span class="kn">import</span> <span class="n">MeasurementType</span>
+<span class="linenos">57</span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos">58</span><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="linenos">59</span><span class="kn">import</span> <span class="nn">easygui</span> 
+<span class="linenos">60</span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-a-function-to-set-the-background-image">
+<h2>Defining a function to set the background image<a class="headerlink" href="#defining-a-function-to-set-the-background-image" title="Permalink to this heading">#</a></h2>
+<p>Using an auditory oddball paradigm, it’s common to display an image on the screen so that the participant remains focused.
+This section of the example script defines a function which gets the directory of an image as an input (line 62) and then shows that image on the screen.
+This function is defined at the beginning as it will be called in several steps of the experiment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="linenos">62</span><span class="k">def</span> <span class="nf">display_background_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+</span><span class="linenos">63</span>    <span class="c1"># Open and display the image using PIL</span>
+<span class="linenos">64</span>    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+<span class="linenos">65</span>    <span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">66</span>    <span class="n">easygui</span><span class="o">.</span><span class="n">msgbox</span><span class="p">(</span><span class="s2">&quot;Click &#39;OK&#39; to continue once you see the image.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="checking-the-sound-level">
+<h2>Checking the sound level<a class="headerlink" href="#checking-the-sound-level" title="Permalink to this heading">#</a></h2>
+<p>As sound intensity is important for auditory oddball paradigms to be reproducible, it should be set before starting the experiment.
+Therefore, this section of the script is implemented to check if the sound level of user’s PC is set to the desired volume
+(in this case 40 as it corresponds to 60 dB, please check the paradigm settings in the <a class="reference external" href="https://info.tmsi.com/blog/what-is-the-p300-in-event-related-potentials-erps">P300 blog</a>).</p>
+<p>This is done by displaying a dialogue box. Please note that the displayed message and the text shown on both buttons can be changed (line 71).
+The same block of code can be used if more user confirmations need to be defined during the experiment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">69</span><span class="c1"># Check whether the sound level on laptop is set to 40 ~ corresponding to 60 dB</span>
+<span class="linenos">70</span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="hll"><span class="linenos">71</span>    <span class="n">sound_choice</span> <span class="o">=</span> <span class="n">easygui</span><span class="o">.</span><span class="n">buttonbox</span><span class="p">(</span><span class="s2">&quot;Is the laptop sound turned on at volume 40?&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Yes&quot;</span><span class="p">,</span><span class="s2">&quot;No&quot;</span><span class="p">])</span>
+</span><span class="linenos">72</span>    
+<span class="linenos">73</span>    <span class="k">if</span> <span class="n">sound_choice</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+<span class="linenos">74</span>        <span class="n">easygui</span><span class="o">.</span><span class="n">msgbox</span><span class="p">(</span><span class="s2">&quot;Well done, you can continue&quot;</span><span class="p">)</span>
+<span class="linenos">75</span>        <span class="k">break</span>
+<span class="linenos">76</span>    <span class="k">elif</span> <span class="n">sound_choice</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span>
+<span class="linenos">77</span>        <span class="n">easygui</span><span class="o">.</span><span class="n">msgbox</span><span class="p">(</span><span class="s2">&quot;Adjust the volume please&quot;</span><span class="p">)</span>
+<span class="linenos">78</span>        <span class="k">continue</span>
+<span class="linenos">79</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">80</span>        <span class="k">break</span>        
+</pre></div>
+</div>
+</section>
+<section id="finding-the-paired-device-for-bluetooth-connection">
+<h2>Finding the paired device for Bluetooth connection<a class="headerlink" href="#finding-the-paired-device-for-bluetooth-connection" title="Permalink to this heading">#</a></h2>
+<p>As it’s possible to have more than one device connected, it’s necessary to specify the type of connected device as well as the interface via which the device
+is connected to the PC (line 84). The interface type for APEX can be set to either <em>usb</em> or <em>bluetooth</em> (line 84).
+When choosing <em>bluetooth</em>, it’s required to assign a variable (<em>dongle</em>) to the Bluetooth dongle that is connected to the PC (line 85).
+Next, a list of connected devices is stored inside the variable <em>discoveryList</em>.</p>
+<p>The next line of code (line 89) is a check to ensure that at least one device has been discovered.
+When one or multiple devices are found, the device which is paired to the Bluetooth dongle is selected.
+The handle to this discovered device is stored in the variable <em>dev</em> and a connection to the device is opened (line 97).
+The dongle ID is used to ensure that the connection is made to the device which is paired to that specific dongle.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">83</span>    <span class="c1"># Execute a device discovery. This returns a list of device-objects for every discovered device.</span>
+<span class="hll"><span class="linenos">84</span>    <span class="n">TMSiSDK</span><span class="p">()</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">apex</span><span class="p">,</span> <span class="n">DeviceInterfaceType</span><span class="o">.</span><span class="n">bluetooth</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">85</span>    <span class="n">dongle</span> <span class="o">=</span> <span class="n">TMSiSDK</span><span class="p">()</span><span class="o">.</span><span class="n">get_dongle_list</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">apex</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span><span class="linenos">86</span>    <span class="n">discoveryList</span> <span class="o">=</span> <span class="n">TMSiSDK</span><span class="p">()</span><span class="o">.</span><span class="n">get_device_list</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">apex</span><span class="p">)</span>
+<span class="linenos">87</span>
+<span class="linenos">88</span>    <span class="c1"># Set up device</span>
+<span class="hll"><span class="linenos">89</span>    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">discoveryList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+</span><span class="linenos">90</span>        <span class="c1"># Get the handle to the paired device.</span>
+<span class="linenos">91</span>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dev_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">discoveryList</span><span class="p">):</span>
+<span class="linenos">92</span>            <span class="k">if</span> <span class="n">dev_i</span><span class="o">.</span><span class="n">get_dongle_serial_number</span><span class="p">()</span> <span class="o">==</span> <span class="n">dongle</span><span class="o">.</span><span class="n">get_serial_number</span><span class="p">():</span>
+<span class="linenos">93</span>                <span class="n">dev_id</span> <span class="o">=</span> <span class="n">i</span>   
+<span class="linenos">94</span>        <span class="n">dev</span> <span class="o">=</span> <span class="n">discoveryList</span><span class="p">[</span><span class="n">dev_id</span><span class="p">]</span>
+<span class="linenos">95</span>        
+<span class="linenos">96</span>        <span class="c1"># Open a connection to the APEX-system</span>
+<span class="hll"><span class="linenos">97</span>        <span class="n">dev</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dongle_id</span> <span class="o">=</span> <span class="n">dongle</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+</span></pre></div>
+</div>
+</section>
+<section id="loading-desired-device-configuration">
+<h2>Loading desired device configuration<a class="headerlink" href="#loading-desired-device-configuration" title="Permalink to this heading">#</a></h2>
+<p>The pre-defined configuration files are located inside the configs folder of the TMSi Python interface (<em>TMSiSDK/tmsi_resources</em>).
+It is also possible to create custom configurations and save these as .xml files.
+In this example, a 32-channel configuration with EEG labeling is loaded to the device (line 101).
+Obviously, other configuration files could be imported given the corresponding directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 99</span>        <span class="c1"># Load the EEG channel set and configuration (in this case for 32 channels)</span>
+<span class="linenos">100</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;load EEG config&quot;</span><span class="p">)</span>
+<span class="hll"><span class="linenos">101</span>        <span class="n">dev</span><span class="o">.</span><span class="n">import_configuration</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">configs_dir</span><span class="p">,</span> <span class="s1">&#39;APEX_config_EEG32.xml&#39;</span><span class="p">))</span>
+</span></pre></div>
+</div>
+</section>
+<section id="initializing-psychopy-experiment">
+<h2>Initializing PsychoPy experiment<a class="headerlink" href="#initializing-psychopy-experiment" title="Permalink to this heading">#</a></h2>
+<p>The first two lines of this section are meant to give feedback to the end-user.
+Next, settings used for the experiment are defined.
+These settings include number of trials, interval between stimulus presentation, tone duration, and probability of target stimulus occurrence.
+Users can set these values based on the desired auditory paradigm.
+This part of the code is where the experiment can be tailored to the user’s liking (assuming an auditory odd-ball experiment is desired).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">103</span>        <span class="c1"># Initialize PsychoPy Experiment, for arguments description see class</span>
+<span class="linenos">104</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Initializing PsychoPy experiment and TTL module </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="linenos">105</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  Please check if red and green LEDs are turned on ... </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span>        <span class="c1"># Experiment settings</span>
+<span class="linenos">108</span>        <span class="n">n_trials</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="linenos">109</span>        <span class="n">interval</span> <span class="o">=</span> <span class="mf">1.5</span> 
+<span class="linenos">110</span>        <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="linenos">111</span>        <span class="n">probability</span> <span class="o">=</span> <span class="mf">0.2</span>
+</pre></div>
+</div>
+<p>Once the settings are defined, they will need to be passed on to the <em>PsychopyExperimentSetup</em> class that is created by TMSi to set up the experiment properties
+needed to use the PsychoPy library and to initialize the trigger setup for an oddball experiment.</p>
+<p>Please note, when APEX is used available input options for both target and non-target values are only <strong>even</strong> numbers between <strong>2</strong> and <strong>30</strong>.
+These numbers are assigned to ensure that the user can distinguish target and non-target values when looking at the STATUS channel of APEX.</p>
+<p>It’s important to specify the correct COM_port on which the USB-TTL module is to be found. This should be checked prior to the experiment,
+which can be done via Windows’ <em>Device manager - Ports (COM &amp; LPT)</em>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">115</span>        <span class="n">experiment</span> <span class="o">=</span> <span class="n">PsychopyExperimentSetup</span><span class="p">(</span><span class="n">TMSiDevice</span><span class="o">=</span><span class="s2">&quot;APEX&quot;</span><span class="p">,</span> <span class="n">COM_port</span> <span class="o">=</span> <span class="s1">&#39;COM5&#39;</span><span class="p">,</span> <span class="n">n_trials</span> <span class="o">=</span> <span class="n">n_trials</span><span class="p">,</span> <span class="n">target_value</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">nontarget_value</span><span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="linenos">116</span>                                             <span class="n">interval</span> <span class="o">=</span> <span class="n">interval</span><span class="p">,</span> <span class="n">probability</span> <span class="o">=</span> <span class="n">probability</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="initializing-impedance-plotter">
+<h2>Initializing impedance plotter<a class="headerlink" href="#initializing-impedance-plotter" title="Permalink to this heading">#</a></h2>
+<p>In most EEG measurements, it is common to monitor impedances prior to signal acquisition.
+Therefore, once the device configuration is set, a real-time plotter is initialized.
+As shown, the required graphical user interface (GUI) and plotter helper were initially imported from <code class="xref py py-mod docutils literal notranslate"><span class="pre">TMSiGui</span></code> and <code class="xref py py-mod docutils literal notranslate"><span class="pre">TMSiPlotterHelpers</span></code>.
+The plotter helper defines which plotter is shown by the GUI (for more information about the plotters, please read the <a class="reference internal" href="tutorial_plotters.html#tmsi-plotter-tutorial"><span class="std std-ref">Tutorial Plotters</span></a>).
+In this case, the <code class="xref py py-mod docutils literal notranslate"><span class="pre">ImpedancePlotterHelper</span></code> is initialized in line 126. Three parameters can be specified for the impedance plotter.
+The first parameter is the device that is passed to the Helper. The second variable, the layout variable, defines if the electrode impedances should be visualized
+as a head (for EEG) or in a Grid form (for HD-EMG). Finally, the impedances can be stored in a file: the third parameter defines the location and name of the file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">118</span>        <span class="c1"># Check if there is already a plotter application in existence</span>
+<span class="linenos">119</span>        <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+<span class="linenos">120</span>        
+<span class="linenos">121</span>        <span class="c1"># Initialise the plotter application if there is no other plotter application</span>
+<span class="linenos">122</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">app</span><span class="p">:</span>
+<span class="linenos">123</span>            <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="linenos">124</span>        
+<span class="linenos">125</span>        <span class="c1"># Initialise the helper</span>
+<span class="hll"><span class="linenos">126</span>        <span class="n">plotter_helper</span> <span class="o">=</span> <span class="n">ImpedancePlotterHelper</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">dev</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">127</span>                                                <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;head&#39;</span><span class="p">,</span> 
+</span><span class="hll"><span class="linenos">128</span>                                                <span class="n">file_storage</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">measurements_dir</span><span class="p">,</span><span class="s2">&quot;Example_PsychoPy_ERP_experiment&quot;</span><span class="p">))</span>
+</span><span class="linenos">129</span>        <span class="c1"># Define the GUI object and show it </span>
+<span class="linenos">130</span>        <span class="n">gui</span> <span class="o">=</span> <span class="n">Gui</span><span class="p">(</span><span class="n">plotter_helper</span> <span class="o">=</span> <span class="n">plotter_helper</span><span class="p">)</span>
+<span class="linenos">131</span>        <span class="c1"># Enter the event loop</span>
+<span class="linenos">132</span>        <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Once the impedance plotter is closed by the user, a training round of the ERP experiment will start.</p>
+</section>
+<section id="start-the-training-round">
+<h2>Start the training round<a class="headerlink" href="#start-the-training-round" title="Permalink to this heading">#</a></h2>
+<p>To familiarize the participant with the oddball paradigm, a training round is designed which can be run more than one time if required.
+In the beginning, line 138 defines the directory that contains the background image (in this case a black cross).
+Next, a <em>while loop</em> is defined so that the participant can practice the experiment as long as he/she clicks on <em>yes</em> on the dialogue boxes shown.
+During this practice session, no data acquisition takes place.</p>
+<p>Please note that the <em>display_background_image</em> function which was defined earlier is used in this section (line 147).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">137</span>        <span class="c1"># Set up background image </span>
+<span class="linenos">138</span>        <span class="n">background_image_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;psychopy_resources&#39;</span><span class="p">,</span> <span class="s1">&#39;cross.png&#39;</span><span class="p">)</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">141</span>            <span class="c1"># are you ready for the training?</span>
+<span class="linenos">142</span>            <span class="n">ready_choice</span> <span class="o">=</span> <span class="n">easygui</span><span class="o">.</span><span class="n">buttonbox</span><span class="p">(</span><span class="s2">&quot;Are you ready for the training?&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">])</span>
+<span class="linenos">143</span>            
+<span class="linenos">144</span>            <span class="k">if</span> <span class="n">ready_choice</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+<span class="linenos">145</span>                
+<span class="linenos">146</span>                <span class="c1"># Display the background image</span>
+<span class="hll"><span class="linenos">147</span>                <span class="n">display_background_image</span><span class="p">(</span><span class="n">background_image_path</span><span class="p">)</span>
+</span><span class="linenos">148</span>        
+<span class="linenos">149</span>                <span class="c1"># Create an instance of the PsychopyTrainingSetup class with the background image</span>
+<span class="linenos">150</span>                <span class="n">training_setup</span> <span class="o">=</span> <span class="n">PsychopyTrainingSetup</span><span class="p">(</span><span class="n">background_image_path</span><span class="p">)</span>
+<span class="linenos">151</span>                
+<span class="linenos">152</span>                <span class="c1"># Run the training</span>
+<span class="linenos">153</span>                <span class="n">training_setup</span><span class="o">.</span><span class="n">runTraining</span><span class="p">()</span>
+<span class="linenos">154</span>            
+<span class="linenos">155</span>                <span class="c1"># Ask the participant if they want to do it again or continue</span>
+<span class="linenos">156</span>                <span class="n">choice</span> <span class="o">=</span> <span class="n">easygui</span><span class="o">.</span><span class="n">buttonbox</span><span class="p">(</span><span class="s2">&quot;Do you want to do the training again?&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">])</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span>                <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span>
+<span class="linenos">159</span>                    <span class="k">break</span>  <span class="c1"># Exit the loop if the participant chooses &quot;No&quot;</span>
+<span class="linenos">160</span>            <span class="k">elif</span> <span class="n">ready_choice</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span>
+<span class="linenos">161</span>                <span class="k">continue</span>
+<span class="linenos">162</span>            <span class="k">else</span><span class="p">:</span>
+<span class="linenos">163</span>                <span class="k">break</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-auditory-oddball-experiment">
+<h2>Running the auditory oddball experiment<a class="headerlink" href="#running-the-auditory-oddball-experiment" title="Permalink to this heading">#</a></h2>
+<p>Before running the experiment, a file writer ensures that the acquired data will be saved to disk.
+Here, it is also possible to specify the directory in which the recordings are stored.
+The default is set to the <em>measurement_dir</em> (defined earlier) located inside the TMSi Python interface folder (line 166).
+Next a while loop is defined to check whether the participant is ready to start the experiment.
+The dialogue boxes which appear on the screen are self-explanatory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">165</span>        <span class="c1"># Initialise a file-writer class (Xdf-format) and state its file path</span>
+<span class="hll"><span class="linenos">166</span>        <span class="n">file_writer</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="p">(</span><span class="n">FileFormat</span><span class="o">.</span><span class="n">xdf</span><span class="p">,</span> <span class="n">join</span><span class="p">(</span><span class="n">measurements_dir</span><span class="p">,</span><span class="s2">&quot;Example_PsychoPy_ERP_experiment.xdf&quot;</span><span class="p">))</span>
+</span><span class="linenos">167</span>        
+<span class="linenos">168</span>        <span class="c1"># Check to see if the participant is ready for the experiment</span>
+<span class="linenos">169</span>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">170</span>            <span class="n">exp_choice</span> <span class="o">=</span> <span class="n">easygui</span><span class="o">.</span><span class="n">buttonbox</span><span class="p">(</span><span class="s2">&quot;Are you ready for the experiment?&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Yes&quot;</span><span class="p">,</span><span class="s2">&quot;No&quot;</span><span class="p">])</span>
+<span class="linenos">171</span>            
+<span class="linenos">172</span>            <span class="k">if</span> <span class="n">exp_choice</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+<span class="linenos">173</span>                <span class="n">easygui</span><span class="o">.</span><span class="n">msgbox</span><span class="p">(</span><span class="s2">&quot;Alright, the experiment will start in a bit. </span><span class="se">\n\n</span><span class="s2">Please make the image fullscreen after clicking &#39;OK&#39; &quot;</span><span class="p">)</span>
+<span class="linenos">174</span>                <span class="k">break</span>
+<span class="linenos">175</span>            <span class="k">elif</span> <span class="n">exp_choice</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span>
+<span class="linenos">176</span>                <span class="n">easygui</span><span class="o">.</span><span class="n">msgbox</span><span class="p">(</span><span class="s2">&quot;Alright take your time&quot;</span><span class="p">)</span>
+<span class="linenos">177</span>                <span class="k">continue</span>
+<span class="linenos">178</span>            <span class="k">else</span><span class="p">:</span>
+<span class="linenos">179</span>                <span class="k">break</span>   
+</pre></div>
+</div>
+<p>It is required for the <em>file_writer</em> to get the handle to the device specified earlier in the <em>discoveryList</em> (line 182).
+Further, a thread (a separate flow of execution) is defined to run the oddball experiment.
+As soon as the measurement starts on APEX (line 188), the experiment will be started (line 191).
+The experiment runs until a certain time that is given according to the defined settings (line 194).
+Please note, some additional time (in this example 10 seconds) is added at the end of the experiment.</p>
+<p>No pause is included in this experiment. Therefore, it is advised to keep the number of trials limited or to edit the code to include such a pause.</p>
+<p>Finally, the measurement will be stopped, the <em>file_writer</em> will be closed, and the connection to APEX will be closed too.
+The data will be saved to the <em>measurements</em> directory which is specified in the very beginning.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">181</span>        <span class="c1"># Define the handle to the device</span>
+<span class="hll"><span class="linenos">182</span>        <span class="n">file_writer</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span>
+</span><span class="linenos">183</span>        
+<span class="linenos">184</span>        <span class="c1"># Define thread to run the experiment</span>
+<span class="linenos">185</span>        <span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">experiment</span><span class="o">.</span><span class="n">runExperiment</span><span class="p">)</span>
+<span class="linenos">186</span>        
+<span class="linenos">187</span>        <span class="c1"># Start a measurement on APEX</span>
+<span class="hll"><span class="linenos">188</span>        <span class="n">dev</span><span class="o">.</span><span class="n">start_measurement</span><span class="p">(</span><span class="n">MeasurementType</span><span class="o">.</span><span class="n">APEX_SIGNAL</span><span class="p">)</span>       
+</span><span class="linenos">189</span>        
+<span class="linenos">190</span>        <span class="c1"># Start the PsychoPy thread</span>
+<span class="hll"><span class="linenos">191</span>        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span class="linenos">192</span>        
+<span class="linenos">193</span>        <span class="c1"># Acquisition time, based on experiment timing (with some additional time at the end)</span>
+<span class="hll"><span class="linenos">194</span>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">n_trials</span> <span class="o">*</span> <span class="p">(</span><span class="n">interval</span> <span class="o">+</span> <span class="n">duration</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+</span><span class="linenos">195</span>        
+<span class="linenos">196</span>        <span class="c1"># Stop the measurement on APEX</span>
+<span class="linenos">197</span>        <span class="n">dev</span><span class="o">.</span><span class="n">stop_measurement</span><span class="p">()</span>
+<span class="linenos">198</span>
+<span class="linenos">199</span>        <span class="c1"># Close the file writer after GUI termination</span>
+<span class="linenos">200</span>        <span class="n">file_writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">201</span>        
+<span class="linenos">202</span>        <span class="c1"># Close the connection to APEX</span>
+<span class="linenos">203</span>        <span class="n">dev</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To learn how to analyze your ERP data, please refer to the tutorial for <a class="reference internal" href="tutorial_ERP_analysis.html#tmsi-erp-analysis-tutorial"><span class="std std-ref">example_erp_analysis.py</span></a></p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tutorial_ERP.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorial Event-Related Potentials</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tutorial_ERP_analysis.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorial 2: ERP Analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-the-correct-directory-of-files">Adding the correct directory of files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-the-required-classes-and-functions">Importing the required classes and functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-a-function-to-set-the-background-image">Defining a function to set the background image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-the-sound-level">Checking the sound level</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-paired-device-for-bluetooth-connection">Finding the paired device for Bluetooth connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-desired-device-configuration">Loading desired device configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initializing-psychopy-experiment">Initializing PsychoPy experiment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initializing-impedance-plotter">Initializing impedance plotter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-the-training-round">Start the training round</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-auditory-oddball-experiment">Running the auditory oddball experiment</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TMSi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2024, TMSi.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

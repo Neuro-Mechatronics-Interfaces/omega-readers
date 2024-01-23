@@ -1,0 +1,1122 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Tutorial 2: ERP Analysis &#8212; TMSi Python Interface V5.1.1.0 Documentatation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/tutorial_ERP_analysis';</script>
+    <link rel="icon" href="../_static/SAGA shape.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changes with respect to previous versions" href="../changes.html" />
+    <link rel="prev" title="Tutorial 1: ERP Experiment" href="tutorial_ERP_experiment.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/TMSi_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/TMSi_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitlab.com/tmsi/tmsi-python-examples" title="Examples GitLab" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-square-gitlab"></i></span>
+            <label class="sr-only">Examples GitLab</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://knowledge.tmsi.com/" title="Knowledge Base" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src=".././_static/SAGA_kb.png" class="icon-link-image" alt="Knowledge Base"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.tmsi.com/distributors/?continent=18" title="Questions" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-solid fa-circle-question"></i></span>
+            <label class="sr-only">Questions</label></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/index_gs.html">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html">Installing the interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/features.html">Features</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_apex.html">Examples APEX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_saga.html">Examples SAGA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_data.html">Examples reading and analyzing data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/plugins.html">Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/faq.html">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="tutorial_plotters.html">Tutorial Plotters</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_filtered.html">Tutorial 1: Filtered data plotter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_heatmap.html">Tutorial 2: Heatmap plotter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_differential.html">Tutorial 3: Differential plotter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_eeg_workflow.html">Tutorial EEG Workflow (APEX)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_emg_workflow.html">Tutorial HD-EMG Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_changing_configuration.html">Tutorial changing configuration (APEX)</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="tutorial_ERP.html">Tutorial Event-Related Potentials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ERP_experiment.html">Tutorial 1: ERP Experiment</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Tutorial 2: ERP Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes with respect to previous versions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../code/modules.html">tmsi_python_interface</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../code/TMSiFrontend.html">TMSiFrontend package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.html">TMSiFrontend.acquisitions package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.heatmap_acquisition.html">TMSiFrontend.acquisitions.heatmap_acquisition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.impedance_acquisition.html">TMSiFrontend.acquisitions.impedance_acquisition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.acquisitions.signal_acquisition.html">TMSiFrontend.acquisitions.signal_acquisition module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.charts.html">TMSiFrontend.charts package</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.charts.heatmap_chart.html">TMSiFrontend.charts.heatmap_chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.charts.impedance_chart.html">TMSiFrontend.charts.impedance_chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.charts.signal_chart.html">TMSiFrontend.charts.signal_chart module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.components.html">TMSiFrontend.components package</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.designer.html">TMSiFrontend.components.designer package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.dialogs.html">TMSiFrontend.components.dialogs package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.channel_component.html">TMSiFrontend.components.channel_component module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.dialog.html">TMSiFrontend.components.dialog module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.components.table_impedance_values.html">TMSiFrontend.components.table_impedance_values module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.designer.html">TMSiFrontend.designer package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.legends.html">TMSiFrontend.legends package</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.legends.impedance_legend.html">TMSiFrontend.legends.impedance_legend module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.plotters.html">TMSiFrontend.plotters package</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.plotters.heatmap_plotter.html">TMSiFrontend.plotters.heatmap_plotter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.plotters.impedance_plotter.html">TMSiFrontend.plotters.impedance_plotter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.plotters.signal_plotter.html">TMSiFrontend.plotters.signal_plotter module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiFrontend.utilities.html">TMSiFrontend.utilities package</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.plotting_support_functions.html">TMSiFrontend.utilities.plotting_support_functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.singleton.html">TMSiFrontend.utilities.singleton module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.tmsi_grids.html">TMSiFrontend.utilities.tmsi_grids module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.tmsi_headcaps.html">TMSiFrontend.utilities.tmsi_headcaps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiFrontend.utilities.tmsi_style.html">TMSiFrontend.utilities.tmsi_style module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.acquisition.html">TMSiFrontend.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.chart.html">TMSiFrontend.chart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.plotter.html">TMSiFrontend.plotter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiFrontend.viewer.html">TMSiFrontend.viewer module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../code/TMSiSDK.html">TMSiSDK package</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.device.html">TMSiSDK.device package</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.devices.html">TMSiSDK.device.devices package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_channel.html">TMSiSDK.device.tmsi_channel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_device.html">TMSiSDK.device.tmsi_device module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_device_enums.html">TMSiSDK.device.tmsi_device_enums module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_dongle.html">TMSiSDK.device.tmsi_dongle module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_event_reader.html">TMSiSDK.device.tmsi_event_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_impedance_channel.html">TMSiSDK.device.tmsi_impedance_channel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_measurement.html">TMSiSDK.device.tmsi_measurement module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.device.tmsi_thread.html">TMSiSDK.device.tmsi_thread module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.html">TMSiSDK.sample_data_server package</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.event_data.html">TMSiSDK.sample_data_server.event_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.sample_data.html">TMSiSDK.sample_data_server.sample_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.sample_data_server.sample_data_server.html">TMSiSDK.sample_data_server.sample_data_server module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.tmsi_errors.html">TMSiSDK.tmsi_errors package</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_errors.error.html">TMSiSDK.tmsi_errors.error module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiSDK.tmsi_resources.html">TMSiSDK.tmsi_resources package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.html">TMSiSDK.tmsi_utilities package</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.apex.html">TMSiSDK.tmsi_utilities.apex package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.saga.html">TMSiSDK.tmsi_utilities.saga package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.decorators.html">TMSiSDK.tmsi_utilities.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.logger_filter.html">TMSiSDK.tmsi_utilities.logger_filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.mask_type.html">TMSiSDK.tmsi_utilities.mask_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.singleton.html">TMSiSDK.tmsi_utilities.singleton module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.support_functions.html">TMSiSDK.tmsi_utilities.support_functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../code/TMSiSDK.tmsi_utilities.tmsi_logger.html">TMSiSDK.tmsi_utilities.tmsi_logger module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../code/TMSiSDK.tmsi_sdk.html">TMSiSDK.tmsi_sdk module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes V5.1.1.0</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://gitlab.com/tmsi/tmsi-python-interface/-/releases" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-gitlab"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorials/tutorial_ERP_analysis.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Tutorial 2: ERP Analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-the-correct-directory-of-files">Adding the correct directory of files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-the-required-classes-and-functions">Importing the required classes and functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-plots-interactive">Making plots interactive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-device-type">Setting the device type</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-a-flag-variable">Defining a flag variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-an-erp-measurement">Importing an ERP measurement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-the-eeg-data-from-mne-object">Accessing the EEG data from MNE object</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-channel-types">Defining channel types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing">Pre-processing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-independent-component-analysis">Applying independent component analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieving-epochs-of-data">Retrieving epochs of data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-erps">Plotting ERPs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-average-erps-over-trials-for-selected-channels">Plotting the average ERPs over trials for selected channels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-differences-between-target-and-non-target-responses">Plotting the differences between target and non-target responses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-peak-values">Finding peak values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latency-amplitude-and-mean-voltage-calculations">Latency, amplitude and mean voltage calculations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="tutorial-2-erp-analysis">
+<span id="tmsi-erp-analysis-tutorial"></span><h1>Tutorial 2: ERP Analysis<a class="headerlink" href="#tutorial-2-erp-analysis" title="Permalink to this heading">#</a></h1>
+<p><em>Corresponding file for this tutorial: TMSiPlugins/PsychoPy/example_erp_analysis.py</em></p>
+<p>This tutorial covers the second phase of an ERP experiment, i.e. data analysis, and is a step-by-step guide on running the <em>example_erp_analysis.py</em> located inside the
+<em>TMSiPlugins/PsychoPy</em> folder.</p>
+<p>This example script is provided to import and analyze EEG data recorded (in <em>.poly5</em> format) during an auditory odd-ball ERP experiment.
+To try-out the script, <em>sample_data_erp_experiment.poly5</em> has to be downloaded (available on <a class="reference external" href="https://gitlab.com/tmsi/tmsi-python-examples">TMSi’s Python examples page</a>).</p>
+<p>Before reading this tutorial, it’s highly recommended to have a basic knowledge about electroencephalography (EEG), TMSi Python interface, and TMSi amplifiers.
+More information about Event Related Potentials (ERPs) can be found on <a class="reference external" href="https://info.tmsi.com/blog/event-related-potentials">TMSi’s website</a>.
+To read more about the data collection and stimulus presentation phase, please refer to <a class="reference internal" href="tutorial_ERP_experiment.html#tmsi-erp-experiment-tutorial"><span class="std std-ref">Tutorial ERP experiment</span></a>.
+Before getting started, please ensure that you have Python 3.8 installed on your PC.</p>
+<section id="adding-the-correct-directory-of-files">
+<h2>Adding the correct directory of files<a class="headerlink" href="#adding-the-correct-directory-of-files" title="Permalink to this heading">#</a></h2>
+<p>To use the TMSi Python interface folder, which is necessary for running the examples, your Python interpreter needs to know the corresponding path.
+Therefore, the first lines of code add this information.
+If you wish to store the recordings in a different folder than the default one, you can change the directory specified in line 39.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">35</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos">36</span><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">realpath</span>
+<span class="linenos">37</span><span class="n">Plugin_dir</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="c1"># directory of this file</span>
+<span class="linenos">38</span><span class="n">modules_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span> <span class="c1"># directory with all modules</span>
+<span class="hll"><span class="linenos">39</span><span class="n">measurements_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;../../measurements&#39;</span><span class="p">)</span> <span class="c1"># directory with all measurements</span>
+</span><span class="linenos">40</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="importing-the-required-classes-and-functions">
+<h2>Importing the required classes and functions<a class="headerlink" href="#importing-the-required-classes-and-functions" title="Permalink to this heading">#</a></h2>
+<p>The next lines import all the libraries which are required for the example script to work.
+They are used for purposes such as performing an independent component analysis (ICA), plotting data, and creating a simple graphical user interface.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">41</span><span class="kn">import</span> <span class="nn">mne</span>
+<span class="linenos">42</span><span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">get_ipython</span>
+<span class="linenos">43</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">44</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">45</span><span class="kn">from</span> <span class="nn">TMSiFileFormats.file_readers</span> <span class="kn">import</span> <span class="n">Poly5Reader</span>
+<span class="linenos">46</span><span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="linenos">47</span><span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">filedialog</span>
+<span class="linenos">48</span><span class="kn">from</span> <span class="nn">mne.preprocessing</span> <span class="kn">import</span> <span class="n">ICA</span>
+<span class="linenos">49</span><span class="kn">import</span> <span class="nn">easygui</span>
+<span class="linenos">50</span><span class="kn">from</span> <span class="nn">mne.preprocessing</span> <span class="kn">import</span> <span class="n">peak_finder</span>
+<span class="linenos">51</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</section>
+<section id="making-plots-interactive">
+<h2>Making plots interactive<a class="headerlink" href="#making-plots-interactive" title="Permalink to this heading">#</a></h2>
+<p>These two lines of code are only relevant for Spyder users.
+If a different integrated development environment (IDE) is used to run the script, these lines have to be silenced.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">53</span><span class="n">ipython</span> <span class="o">=</span> <span class="n">get_ipython</span><span class="p">()</span>
+<span class="linenos">54</span><span class="n">ipython</span><span class="o">.</span><span class="n">magic</span><span class="p">(</span><span class="s2">&quot;matplotlib qt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-device-type">
+<h2>Setting the device type<a class="headerlink" href="#setting-the-device-type" title="Permalink to this heading">#</a></h2>
+<p>Due to differences in the number of channels and trigger options, the device which was used to run the ERP experiment
+must be specified. <em>‘APEX’</em> or <em>‘SAGA’</em> are the two possible options (line 57).
+Furthermore, the trigger values which were assigned to the target and non-target stimulus during the ERP experiment need to be set by the user. For APEX, these values are stored in the STATUS channel.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">56</span><span class="c1">#%% Set variables by user</span>
+<span class="linenos">57</span><span class="n">device_type</span> <span class="o">=</span> <span class="s1">&#39;APEX&#39;</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="c1"># Event values</span>
+<span class="linenos">60</span><span class="n">target_value</span> <span class="o">=</span> <span class="mi">16</span>       <span class="c1"># Stored value in STATUS channel for target stimulus</span>
+<span class="linenos">61</span><span class="n">nontarget_value</span> <span class="o">=</span> <span class="mi">2</span>   <span class="c1"># Stored value in STATUS channel for nontarget stimulus</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-a-flag-variable">
+<h2>Defining a flag variable<a class="headerlink" href="#defining-a-flag-variable" title="Permalink to this heading">#</a></h2>
+<p>Users can choose between a full analysis including additional plots or a short version in which only essential plots
+are displayed. This is done by defining a flag variable which is an input from the user.
+The purpose of the following lines of code is to display a dialog box for the user to choose the desired version.
+Based on the user’s choice, the flag variable is set to <em>True</em> or <em>False</em>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">63</span><span class="n">full_version</span> <span class="o">=</span> <span class="n">easygui</span><span class="o">.</span><span class="n">buttonbox</span><span class="p">(</span><span class="s2">&quot;Would you like to run the full version?&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Yes&quot;</span><span class="p">,</span><span class="s2">&quot;No&quot;</span><span class="p">])</span>
+<span class="linenos">64</span><span class="k">if</span> <span class="n">full_version</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+<span class="linenos">65</span>    <span class="n">a_flag</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">66</span><span class="k">elif</span> <span class="n">full_version</span> <span class="o">==</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span>
+<span class="linenos">67</span>    <span class="n">a_flag</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">68</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">69</span>    <span class="n">a_flag</span><span class="o">=</span><span class="kc">False</span>
+</pre></div>
+</div>
+</section>
+<section id="importing-an-erp-measurement">
+<h2>Importing an ERP measurement<a class="headerlink" href="#importing-an-erp-measurement" title="Permalink to this heading">#</a></h2>
+<p>Although this example script is written to import <em>.Poly5</em> files, it’s possible to modify the following block of code
+in case the ERP experiment was stored in <em>.xdf</em> or <em>.edf</em>  format
+(for more information please check the <em>example_file_reader.py</em> located inside the <em>examples_reading_data</em> folder).</p>
+<p>Next, the imported data is converted to an mne object (line 81).
+This is because the <a class="reference external" href="https://mne.tools/stable/index.html">mne library</a> provides many useful signal analysis and
+visualization options which are used in the next stages of this example script.
+Lines 83 to 86 are written to inform the user in case no file or a measurement file in a different format was selected.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">77</span>    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;poly5&#39;</span><span class="p">):</span>
+<span class="linenos">78</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">Poly5Reader</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="linenos">79</span>
+<span class="linenos">80</span>        <span class="c1"># Conversion to MNE raw array</span>
+<span class="linenos">81</span>        <span class="n">mne_object</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read_data_MNE</span><span class="p">()</span> 
+<span class="linenos">82</span>
+<span class="linenos">83</span>    <span class="k">elif</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+<span class="linenos">84</span>        <span class="n">tk</span><span class="o">.</span><span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;No file selected&#39;</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No data file selected.&#39;</span><span class="p">)</span>
+<span class="linenos">85</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">86</span>        <span class="n">tk</span><span class="o">.</span><span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Could not open file&#39;</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;File format not supported. Could not open file.&#39;</span><span class="p">)</span>
+<span class="linenos">87</span>
+</pre></div>
+</div>
+</section>
+<section id="accessing-the-eeg-data-from-mne-object">
+<h2>Accessing the EEG data from MNE object<a class="headerlink" href="#accessing-the-eeg-data-from-mne-object" title="Permalink to this heading">#</a></h2>
+<p>The four variables assigned in lines 94 to 97 are essential for analyzing ERPs.
+Please note, two channels (CP6 and POz) are marked as ‘<em>bads</em>’ (lines 89 to 91) as they were disconnected when <em>‘sample_data_erp_experiment.poly5’</em> was recorded.
+Following the same logic, it’s possible to exclude disconnected channels when importing any other data file.</p>
+<p>The next step is to plot the raw EEG data and power spectral density (PSD) values (lines 105 to 110).
+These plots provide the first insight into the quality of the measurement and amount of mains interference.
+Please note, these plots only appear if the user chose for the full analysis version. In this step, a <em>for</em>-loop is defined to exclude the channels that do not contain signals (lines 100 to 103).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 88</span>    <span class="k">if</span> <span class="n">mne_object</span><span class="p">:</span>
+<span class="linenos"> 89</span>        <span class="k">if</span> <span class="n">filename</span><span class="p">[</span><span class="o">-</span><span class="mi">32</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;sample_data_erp_experiment.poly5&quot;</span><span class="p">:</span>
+<span class="linenos"> 90</span>            <span class="c1"># Channels CP6 and POz were not connected in this file. </span>
+<span class="linenos"> 91</span>            <span class="n">mne_object</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;bads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;CP6&#39;</span><span class="p">,</span> <span class="s1">&#39;POz&#39;</span><span class="p">])</span>
+<span class="linenos"> 92</span>        
+<span class="linenos"> 93</span>        <span class="c1"># Retrieve the MNE RawArray info, channel names, sample data, and sampling frequency [Hz]</span>
+<span class="linenos"> 94</span>        <span class="n">info_mne</span> <span class="o">=</span> <span class="n">mne_object</span><span class="o">.</span><span class="n">info</span>
+<span class="linenos"> 95</span>        <span class="n">ch_names</span> <span class="o">=</span> <span class="n">mne_object</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">]</span>
+<span class="linenos"> 96</span>        <span class="n">samples_mne</span> <span class="o">=</span> <span class="n">mne_object</span><span class="o">.</span><span class="n">_data</span>
+<span class="linenos"> 97</span>        <span class="n">fs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sample_rate</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span>        <span class="c1"># Do not show disconnected channels</span>
+<span class="linenos">100</span>        <span class="n">show_chs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">101</span>        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mne_object</span><span class="o">.</span><span class="n">_data</span><span class="p">):</span>
+<span class="linenos">102</span>            <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+<span class="linenos">103</span>                <span class="n">show_chs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">show_chs</span><span class="p">,</span><span class="n">mne_object</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]))</span>
+<span class="linenos">104</span>        <span class="n">data_object</span> <span class="o">=</span> <span class="n">mne_object</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="n">show_chs</span><span class="p">)</span>
+<span class="linenos">105</span>        <span class="k">if</span> <span class="n">a_flag</span><span class="p">:</span> <span class="c1"># To display raw EEG time series and PSD plot of raw EEG signals.</span>
+<span class="linenos">106</span>            <span class="n">fig_psd</span><span class="p">,</span> <span class="n">ax_psd</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="linenos">107</span>            <span class="n">raw_data_psd</span> <span class="o">=</span> <span class="n">data_object</span><span class="o">.</span><span class="n">compute_psd</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="linenos">108</span>            <span class="n">raw_data_psd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">average</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="s2">&quot;eeg&quot;</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s2">&quot;bads&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax_psd</span><span class="p">)</span>
+<span class="linenos">109</span>            <span class="n">ax_psd</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Average PSD plot of raw EEG data of all non-zero channels.&quot;</span><span class="p">)</span>
+<span class="linenos">110</span>            <span class="n">data_object</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scalings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">eeg</span> <span class="o">=</span> <span class="mf">250e-6</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span> <span class="n">block</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-channel-types">
+<h2>Defining channel types<a class="headerlink" href="#defining-channel-types" title="Permalink to this heading">#</a></h2>
+<p>Depending on which TMSi device was used and how many channels were connected during the ERP experiment, channel types need to be manually specified.
+This is because the <em>.Poly5</em> file does not contain this information.
+The code in lines 114 to 153 ensures the correct channel types are set in the <em>mne_object</em>. The comments are self-explanatory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">114</span><span class="c1"># Poly5 dataformat cannot store the channeltypes. Therefore, the researcher should manually</span>
+<span class="linenos">115</span><span class="c1"># enter the types of data each channel holds. Channels are always ordered in the same way:</span>
+<span class="linenos">116</span>    <span class="c1"># First channel is common reference, if enabled (&#39;misc&#39; channel)</span>
+<span class="linenos">117</span>    <span class="c1"># all UNI channels that are enabled (&#39;eeg&#39; channels by default)</span>
+<span class="linenos">118</span>    <span class="c1"># BIP channels (channel type depends on research)</span>
+<span class="linenos">119</span>    <span class="c1"># TRIGGER channel (&#39;misc&#39; channel)</span>
+<span class="linenos">120</span>    <span class="c1"># Status &amp; counter channel (&#39;misc&#39; channels)</span>
+<span class="linenos">121</span>
+<span class="linenos">122</span><span class="c1"># Define channels in use (1 = enabled, 0 = disabled)</span>
+<span class="linenos">123</span><span class="n">CREF_used</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c1"># If measured with a common reference, set to 1,  otherwise 0</span>
+<span class="linenos">124</span><span class="n">BIP1_used</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c1"># If BIP channel 1 is used, set to 1, otherwise 0</span>
+<span class="linenos">125</span><span class="n">BIP2_used</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c1"># If BIP channel 2 is used, set to 1, otherwise 0</span>
+<span class="linenos">126</span><span class="n">BIP3_used</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c1"># If BIP channel 3 is used, set to 1, otherwise 0</span>
+<span class="linenos">127</span><span class="n">BIP4_used</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c1"># If BIP channel 4 is used, set to 1, otherwise 0</span>
+<span class="linenos">128</span><span class="n">TRIGGER_used</span> <span class="o">=</span> <span class="mi">1</span>    <span class="c1"># If TRIGGER channel was enabled, set to 1, otherwise 0</span>
+<span class="linenos">129</span>
+<span class="linenos">130</span><span class="c1"># Fill out the number of EEG channels</span>
+<span class="linenos">131</span><span class="n">number_eeg</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="linenos">132</span>
+<span class="linenos">133</span><span class="c1"># Channel type for undefined channels</span>
+<span class="linenos">134</span><span class="c1"># Possible channel options include &#39;eog&#39;, &#39;eeg&#39;, &#39;ecg&#39;, &#39;emg&#39;, &#39;misc&#39;</span>
+<span class="linenos">135</span><span class="n">BIP1_type</span> <span class="o">=</span> <span class="s1">&#39;eog&#39;</span>     <span class="c1"># Signal type for BIP channel 1</span>
+<span class="linenos">136</span><span class="n">BIP2_type</span> <span class="o">=</span> <span class="s1">&#39;eog&#39;</span>     <span class="c1"># Signal type for BIP channel 2</span>
+<span class="linenos">137</span><span class="n">BIP3_type</span> <span class="o">=</span> <span class="s1">&#39;ecg&#39;</span>     <span class="c1"># Signal type for BIP channel 3</span>
+<span class="linenos">138</span><span class="n">BIP4_type</span> <span class="o">=</span> <span class="s1">&#39;emg&#39;</span>     <span class="c1"># Signal type for BIP channel 4</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span>
+<span class="linenos">141</span><span class="c1"># Define a variable for MNE that includes all channel types and all channels that are used in the correct order</span>
+<span class="linenos">142</span><span class="k">if</span> <span class="n">device_type</span> <span class="o">==</span> <span class="s1">&#39;SAGA&#39;</span><span class="p">:</span>
+<span class="linenos">143</span>    <span class="n">channel_types</span> <span class="o">=</span> <span class="n">CREF_used</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">number_eeg</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;eeg&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">BIP1_used</span> <span class="o">*</span> <span class="p">[</span><span class="n">BIP1_type</span><span class="p">]</span> <span class="o">+</span> <span class="n">BIP2_used</span> <span class="o">*</span> <span class="p">[</span><span class="n">BIP2_type</span><span class="p">]</span> <span class="o">+</span> <span class="n">BIP3_used</span> <span class="o">*</span> <span class="p">[</span><span class="n">BIP3_type</span><span class="p">]</span> <span class="o">+</span> <span class="n">BIP4_used</span> <span class="o">*</span> <span class="p">[</span><span class="n">BIP4_type</span><span class="p">]</span> <span class="o">+</span> <span class="n">TRIGGER_used</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span>
+<span class="linenos">144</span><span class="k">elif</span> <span class="n">device_type</span> <span class="o">==</span> <span class="s1">&#39;APEX&#39;</span><span class="p">:</span>
+<span class="linenos">145</span>    <span class="n">channel_types</span> <span class="o">=</span> <span class="n">number_eeg</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;eeg&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">TRIGGER_used</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">[</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span>
+<span class="linenos">146</span>
+<span class="linenos">147</span><span class="c1"># Add montage &amp; electrode location information to the MNE object</span>
+<span class="linenos">148</span><span class="n">info_mne</span><span class="o">.</span><span class="n">set_montage</span><span class="p">(</span><span class="s1">&#39;standard_1020&#39;</span><span class="p">)</span>
+<span class="linenos">149</span><span class="c1"># Create the new object</span>
+<span class="linenos">150</span><span class="n">mne_object</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">RawArray</span><span class="p">(</span><span class="n">mne_object</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">info_mne</span><span class="p">)</span>
+<span class="linenos">151</span>
+<span class="linenos">152</span><span class="c1"># Create a mask to identify EEG channels</span>
+<span class="linenos">153</span><span class="n">eeg_mask</span> <span class="o">=</span> <span class="p">[</span><span class="n">ch_type</span> <span class="o">==</span> <span class="s1">&#39;eeg&#39;</span> <span class="k">for</span> <span class="n">ch_type</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="pre-processing">
+<span id="id1"></span><h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this heading">#</a></h2>
+<p>Pre-processing includes re-referencing the EEG data, selecting a subset of channels, and filtering the EEG data.</p>
+<ul class="simple">
+<li><p>Re-referencing; it is common practice to re-reference the EEG data to the average of signals  recorded from both mastoids (channel names M1 and M2). This can be done by calling the <em>set_eeg_reference</em> method of the <em>mne_object</em> (line 156). Similarly, it’s possible to select any other (sub) set of channels as reference channels.</p></li>
+<li><p>Selection of channels; in this example a subset of 9 channels is selected for simplicity (line 159). If the full analysis version is chosen by the user, PSD values for the unfiltered and re-referenced EEG data will be plotted for the selected subset of channels (line 162 to 168).</p></li>
+<li><p>Filtering EEG data; a band-pass filter is applied to the EEG data. This is done to remove the DC offset and drifts and the high-frequency components from the EEG signal. Filter parameters can be specified by the user (lines 170 to 175).</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">155</span><span class="c1"># Re-referencing to the mastoids</span>
+<span class="linenos">156</span><span class="n">EEGraw_reref</span> <span class="o">=</span> <span class="n">mne_object</span><span class="o">.</span><span class="n">set_eeg_reference</span><span class="p">(</span><span class="n">ref_channels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;M1&#39;</span><span class="p">,</span> <span class="s1">&#39;M2&#39;</span><span class="p">])</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span><span class="c1">#%% Preprocessing</span>
+<span class="linenos">159</span><span class="n">selected_channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Fz&#39;</span><span class="p">,</span><span class="s1">&#39;F3&#39;</span><span class="p">,</span><span class="s1">&#39;F4&#39;</span><span class="p">,</span><span class="s1">&#39;Pz&#39;</span><span class="p">,</span> <span class="s1">&#39;P3&#39;</span><span class="p">,</span> <span class="s1">&#39;P4&#39;</span><span class="p">,</span><span class="s1">&#39;Cz&#39;</span><span class="p">,</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="s1">&#39;C4&#39;</span><span class="p">]</span>
+<span class="linenos">160</span><span class="n">reref_psd</span> <span class="o">=</span> <span class="n">EEGraw_reref</span><span class="o">.</span><span class="n">compute_psd</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="linenos">161</span><span class="c1"># Show unfiltered data</span>
+<span class="linenos">162</span><span class="k">if</span> <span class="n">a_flag</span><span class="p">:</span>
+<span class="linenos">163</span>    <span class="n">EEGraw_reref</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scalings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">eeg</span> <span class="o">=</span> <span class="mf">100e-6</span><span class="p">),</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Re-refrenced, unfiltered EEG&quot;</span><span class="p">)</span>
+<span class="linenos">164</span>    <span class="c1">#PSD plot of re-referenced unflitered EEG. Only for selected channels.</span>
+<span class="linenos">165</span>    <span class="n">fig_psd2</span><span class="p">,</span> <span class="n">ax_psd2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="linenos">166</span>    <span class="n">reref_psd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">average</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">selected_channels</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s2">&quot;bads&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax_psd2</span><span class="p">)</span>
+<span class="linenos">167</span>    <span class="n">ax_psd2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;PSD plot of re-referenced unfiltered EEG for selected channels.&quot;</span><span class="p">)</span>
+<span class="linenos">168</span>    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">169</span>
+<span class="linenos">170</span><span class="c1"># Filter variables</span>
+<span class="linenos">171</span><span class="n">f_l</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>           <span class="c1"># Lower frequency of band-pass (thus, high-pass filter)</span>
+<span class="linenos">172</span><span class="n">f_h</span> <span class="o">=</span> <span class="mi">35</span>             <span class="c1"># Higher frequency of band-pass (thus, low-pass filter)</span>
+<span class="linenos">173</span>
+<span class="linenos">174</span><span class="c1"># Filter the data (high pass + lowpass)</span>
+<span class="linenos">175</span><span class="n">preprocessed_data</span><span class="o">=</span> <span class="n">EEGraw_reref</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="o">=</span><span class="n">f_l</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="n">f_h</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;iir&#39;</span><span class="p">,</span><span class="n">phase</span> <span class="o">=</span> <span class="s1">&#39;zero-double&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="applying-independent-component-analysis">
+<h2>Applying independent component analysis<a class="headerlink" href="#applying-independent-component-analysis" title="Permalink to this heading">#</a></h2>
+<p>To remove eye movement artifacts from EEG data, an ICA is applied to pre-processed data.
+For more information about ICA please refer to our <a class="reference external" href="https://info.tmsi.com/blog/removing-eeg-artifacts-with-independent-component-analysis-ica">blog</a>.</p>
+<p>First, a copy of pre-processed data is created (line 178).
+This is done to have both the pre-processed data and the ICA-applied data available.
+The number of independent components used during fitting are to be specified by the user (line 179).</p>
+<p>Please note if an integer is given it must be within the following range:
+1 &lt; <em>number_components</em> &lt; number of channels in pre-processed data</p>
+<p>Next, ICA fitting is performed to run the ICA decomposition on pre-processed data (lines 180 and 181).</p>
+<p>As visualizing the independent components is essential for selecting the undesired components,
+two plots appear on the screen: a scalp dipole topography map, and time series of all components (lines 184 and 185).</p>
+<p>When analyzing the sample data provided by TMSi (<em>‘sample_data_erp_experiment.poly5’</em>),
+<em>ICA component 1</em> and <em>ICA component 2</em> contain eye movements and should be excluded.
+This can be done by selecting those components for exclusion in an interactive window (please check lines 189 to 202)
+which appears on the screen.</p>
+<p>Finally, ICA is applied (line 205) to remove eye movement artifacts from the pre-processed EEG data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">177</span><span class="c1">#%% Applying ICA to remove ocular artefacts</span>
+<span class="linenos">178</span><span class="n">ICAapplied_data</span> <span class="o">=</span> <span class="n">preprocessed_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="linenos">179</span><span class="n">number_components</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="linenos">180</span><span class="n">ica</span> <span class="o">=</span> <span class="n">ICA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">number_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">97</span><span class="p">)</span>
+<span class="linenos">181</span><span class="n">ica</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">ICAapplied_data</span><span class="p">)</span>
+<span class="linenos">182</span>
+<span class="linenos">183</span><span class="c1"># Plot ICA sources and components to analyse them by hand</span>
+<span class="linenos">184</span><span class="n">ica</span><span class="o">.</span><span class="n">plot_sources</span><span class="p">(</span><span class="n">ICAapplied_data</span><span class="p">)</span>
+<span class="linenos">185</span><span class="n">ica</span><span class="o">.</span><span class="n">plot_components</span><span class="p">()</span>
+<span class="linenos">186</span>
+<span class="linenos">187</span><span class="c1"># Based on visual inspection, manually exclude components to remove EOG artefacts</span>
+<span class="linenos">188</span><span class="c1"># Display a dialog for component exclusion</span>
+<span class="linenos">189</span><span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Select ICA components to exclude&quot;</span>
+<span class="linenos">190</span><span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;ICA component </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_components</span><span class="p">)]</span>
+<span class="linenos">191</span><span class="n">selected_choices</span> <span class="o">=</span> <span class="n">easygui</span><span class="o">.</span><span class="n">multchoicebox</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;ICA Component Exclusion&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+<span class="linenos">192</span>
+<span class="linenos">193</span><span class="k">if</span> <span class="n">selected_choices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">194</span>    <span class="n">excluded_components</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># No components selected</span>
+<span class="linenos">195</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">196</span>    <span class="n">excluded_components</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">selected_choices</span> <span class="k">if</span> <span class="n">choice</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ICA component&quot;</span><span class="p">)]</span>
+<span class="linenos">197</span>
+<span class="linenos">198</span><span class="k">if</span> <span class="n">excluded_components</span><span class="p">:</span>
+<span class="linenos">199</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excluded ICA components: </span><span class="si">{</span><span class="n">excluded_components</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">200</span>    <span class="n">ica</span><span class="o">.</span><span class="n">exclude</span> <span class="o">=</span> <span class="n">excluded_components</span>
+<span class="linenos">201</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">202</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No ICA components selected for exclusion.&quot;</span><span class="p">)</span>
+<span class="linenos">203</span>    
+<span class="linenos">204</span><span class="c1"># Reconstruct original signals with artefacts removed</span>
+<span class="linenos">205</span><span class="n">ica</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ICAapplied_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="retrieving-epochs-of-data">
+<h2>Retrieving epochs of data<a class="headerlink" href="#retrieving-epochs-of-data" title="Permalink to this heading">#</a></h2>
+<p>In an ERP experiment, it’s essential to analyze the EEG data within a certain time window that includes stimulus presentation.
+In this example, epochs of -200 <em>ms</em> to 800 <em>ms</em> (stimulus presentation at 0 <em>ms</em>) are retrieved.
+Depending on the type of TMSi amplifier, stimuli presentation moments are stored in either <em>‘TRIGGER’</em> or <em>‘STATUS’</em> channel (given as input by the user in line 211).
+In lines 210 to 212 a <em>for</em>-loop is used to find the index of the abovementioned channel.</p>
+<p>The <em>‘STATUS’</em> channel of APEX contains a baseline value of 32 (please check chapter 5.5 of the user manual for more information),
+which needs to be removed (line 215) so that the target and non-target stimuli match the way <a class="reference internal" href="tutorial_ERP_experiment.html#tmsi-erp-experiment-tutorial"><span class="std std-ref">ERP data was collected</span></a>.
+To define epochs of EEG data, it’s crucial to identify the moments at which stimuli were presented to the participant
+(in other words, events). This is done using the <em>find_event</em> function from the <em>mne</em> library (line 220).
+Please note, the name of the channel containing events and the start/end of events are to be set by users
+(via the <em>stim_channel</em> and <em>output</em> parameter in line 219). Possibilities for output parameter are <em>‘onset’</em> <strong>or</strong> <em>‘offset’</em> <strong>or</strong> <em>‘step’</em>.</p>
+<p>Once events are identified, epochs are defined for both target and non-target stimuli using the <em>Epochs</em> class from
+the <em>mne</em> library (line 228). Please note, the time window before and after stimulus presentation is determined by the
+user via the <em>tmin</em> and <em>tmax</em> parameters. For more information about all other parameters please visit
+<a class="reference external" href="https://mne.tools/stable/generated/mne.Epochs.html">the documentation page of mne</a>.
+Finally, if the full analysis version is selected, a plot of all epochs found in EEG data appears on the screen.
+The scaling of this plot can be set by the user (line 232).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">207</span><span class="c1">#%% Retrieving epoched data</span>
+<span class="linenos">208</span>
+<span class="linenos">209</span><span class="c1"># Find the index of the TRIGGER channel (for APEX, change to STATUS to find stored triggers)</span>
+<span class="linenos">210</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mne_object</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)):</span>    
+<span class="linenos">211</span>     <span class="k">if</span> <span class="n">mne_object</span><span class="o">.</span><span class="n">ch_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;STATUS&#39;</span><span class="p">:</span>
+<span class="linenos">212</span>         <span class="n">trigger_chan_num</span> <span class="o">=</span> <span class="n">i</span>
+<span class="linenos">213</span>
+<span class="linenos">214</span><span class="c1"># Find the samples of the TRIGGER channel</span>
+<span class="linenos">215</span><span class="n">trigger_chan_data</span> <span class="o">=</span> <span class="n">samples_mne</span><span class="p">[</span><span class="n">trigger_chan_num</span><span class="p">]</span> <span class="o">-</span><span class="mi">32</span> <span class="c1"># removing baseline</span>
+<span class="linenos">216</span><span class="n">trigger_chan_data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">30</span> <span class="k">else</span> <span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">trigger_chan_data</span><span class="p">]</span> <span class="c1"># remove synchronisation issue</span>
+<span class="linenos">217</span>
+<span class="linenos">218</span><span class="c1"># Find events in the data</span>
+<span class="linenos">219</span><span class="n">ICAapplied_data</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">trigger_chan_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">trigger_chan_data</span>
+<span class="linenos">220</span><span class="n">events</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">find_events</span><span class="p">(</span><span class="n">ICAapplied_data</span><span class="p">,</span> <span class="n">stim_channel</span> <span class="o">=</span> <span class="s1">&#39;STATUS&#39;</span><span class="p">,</span> <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;onset&#39;</span><span class="p">)</span>
+<span class="linenos">221</span>
+<span class="linenos">222</span><span class="c1"># Assign target and non-target value</span>
+<span class="linenos">223</span><span class="n">event_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;target stimulus&#39;</span><span class="p">:</span> <span class="n">target_value</span><span class="p">,</span> <span class="s1">&#39;non-target stimulus&#39;</span><span class="p">:</span> <span class="n">nontarget_value</span><span class="p">}</span>
+<span class="linenos">224</span>
+<span class="linenos">225</span><span class="c1"># Epoch data based on events found (-200 ms to +800 ms)</span>
+<span class="linenos">226</span><span class="n">epochs_nobaseline_noICA</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">Epochs</span><span class="p">(</span><span class="n">preprocessed_data</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="n">event_dict</span><span class="p">,</span> <span class="n">tmin</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">baseline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="linenos">227</span>                    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># only needed for counting ocular artefacts per epoch</span>
+<span class="linenos">228</span><span class="n">epochs</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">Epochs</span><span class="p">(</span><span class="n">ICAapplied_data</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="n">event_dict</span><span class="p">,</span> <span class="n">tmin</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">baseline</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="linenos">229</span>                    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">230</span>
+<span class="linenos">231</span><span class="k">if</span> <span class="n">a_flag</span><span class="p">:</span>
+<span class="linenos">232</span>    <span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_epochs</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Individual Epochs&#39;</span><span class="p">,</span> <span class="n">scalings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">eeg</span> <span class="o">=</span> <span class="mf">30e-6</span><span class="p">))</span>  
+</pre></div>
+</div>
+</section>
+<section id="plotting-erps">
+<h2>Plotting ERPs<a class="headerlink" href="#plotting-erps" title="Permalink to this heading">#</a></h2>
+<p>At this step, ERPs are plotted for both target and non-target stimuli.
+For each channel, the average of EEG data over all the specified epochs is plotted (line 237-238).
+A topographic map of ERPs for all EEG channels will appear on the screen (line 241).
+Please note, the topographic map is interactive. Thus, it is possible to click on each channel’s plot and see more details.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">234</span><span class="c1">#%% Plot ERPs</span>
+<span class="linenos">235</span>
+<span class="linenos">236</span><span class="c1"># Average epochs per channel</span>
+<span class="linenos">237</span><span class="n">erp_target</span> <span class="o">=</span>  <span class="n">epochs</span><span class="p">[</span><span class="s1">&#39;target stimulus&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+<span class="linenos">238</span><span class="n">erp_nontarget</span> <span class="o">=</span>  <span class="n">epochs</span><span class="p">[</span><span class="s1">&#39;non-target stimulus&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">average</span><span class="p">()</span> 
+<span class="linenos">239</span>
+<span class="linenos">240</span><span class="c1"># Plot the results for both events per location of electrode</span>
+<span class="linenos">241</span><span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_evoked_topo</span><span class="p">([</span><span class="n">erp_target</span><span class="p">,</span> <span class="n">erp_nontarget</span><span class="p">],</span><span class="n">scalings</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Topological overview target and nontarget&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-the-average-erps-over-trials-for-selected-channels">
+<h2>Plotting the average ERPs over trials for selected channels<a class="headerlink" href="#plotting-the-average-erps-over-trials-for-selected-channels" title="Permalink to this heading">#</a></h2>
+<p>To provide a comparison between ERPs recorded after presentation of target versus non-target stimuli,
+these two plots are generated for the selected <a class="reference internal" href="#pre-processing"><span class="std std-ref">subset of channels</span></a>.
+The code below (lines 247 to 263) creates a figure containing two subplots.
+Please note that y-axis limits are the same for both subplots.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">244</span><span class="c1"># Get the channel indices corresponding to the selected channel names</span>
+<span class="linenos">245</span><span class="n">channel_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">epochs</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">selected_channels</span><span class="p">]</span>
+<span class="linenos">246</span>
+<span class="linenos">247</span><span class="c1"># Plot the average ERPS for the selected channels of interest</span>
+<span class="linenos">248</span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># figure with two subplots</span>
+<span class="linenos">249</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Average over trials for selected channels&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="linenos">250</span>
+<span class="linenos">251</span><span class="c1"># Target stimulus in the first subplot average of trials</span>
+<span class="linenos">252</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">253</span><span class="n">erp_target</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spatial_colors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">scalings</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">channel_indices</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">254</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Average ERP - Target Stimulus&#39;</span><span class="p">)</span>
+<span class="linenos">255</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude (μV)&#39;</span><span class="p">)</span>
+<span class="linenos">256</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="linenos">257</span><span class="c1"># Non-target stimulus in the second subplot average of trials</span>
+<span class="linenos">258</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">259</span><span class="n">erp_nontarget</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spatial_colors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">scalings</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">channel_indices</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">260</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Average ERP - Non-Target Stimulus&#39;</span><span class="p">)</span>
+<span class="linenos">261</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude (μV)&#39;</span><span class="p">)</span>  
+<span class="linenos">262</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="linenos">263</span><span class="n">fig</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-the-differences-between-target-and-non-target-responses">
+<h2>Plotting the differences between target and non-target responses<a class="headerlink" href="#plotting-the-differences-between-target-and-non-target-responses" title="Permalink to this heading">#</a></h2>
+<p>If the full analysis version is selected by the user, the difference between target and non-target ERPs are plotted (line 272 to 278).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">272</span><span class="c1"># #%% Subtracting nontarget ERP from target ERP</span>
+<span class="linenos">273</span><span class="n">erp_diff</span>  <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">combine_evoked</span><span class="p">([</span><span class="n">erp_target</span><span class="p">,</span> <span class="n">erp_nontarget</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">274</span><span class="k">if</span> <span class="n">a_flag</span><span class="p">:</span> <span class="c1"># plots the difference between target and non-target values</span>
+<span class="linenos">275</span>    <span class="n">fig_diff</span><span class="p">,</span> <span class="n">ax_diff</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="linenos">276</span>    <span class="n">erp_diff</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spatial_colors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">scalings</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">channel_indices</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax_diff</span><span class="p">)</span>
+<span class="linenos">277</span>    <span class="n">ax_diff</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Non-target values are subtracted from target values.&quot;</span><span class="p">)</span>
+<span class="linenos">278</span>    <span class="n">ax_diff</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="finding-peak-values">
+<h2>Finding peak values<a class="headerlink" href="#finding-peak-values" title="Permalink to this heading">#</a></h2>
+<p>The code in lines 281 to 345 is written to detect the peak values of the ERPs for the selected subset of channels, as it’s needed to calculate the <a class="reference external" href="https://info.tmsi.com/blog/what-is-the-p300-in-event-related-potentials-erps">P300 amplitude</a>.
+The peaks are detected within a specific time range (lines 283 to 286) after stimulus presentation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">281</span><span class="c1">#%% Finding P300 peak</span>
+<span class="linenos">282</span>
+<span class="linenos">283</span><span class="c1"># Define the time range of interest in seconds</span>
+<span class="linenos">284</span><span class="n">start_time</span> <span class="o">=</span> <span class="mf">0.25</span>  
+<span class="linenos">285</span><span class="n">end_time</span> <span class="o">=</span> <span class="mf">0.5</span>    
+<span class="linenos">286</span><span class="n">start_baseline</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
+<span class="linenos">287</span><span class="n">stop_baseline</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">288</span>
+<span class="linenos">289</span><span class="c1"># Initialize lists to store peak information for each channel and epoch</span>
+<span class="linenos">290</span><span class="n">P300_indx</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">selected_channels</span><span class="p">]</span>         <span class="c1"># P300 index</span>
+<span class="linenos">291</span><span class="n">P300_mags</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">selected_channels</span><span class="p">]</span>         <span class="c1"># P300 magnitude</span>
+<span class="linenos">292</span><span class="n">P300_latency</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">selected_channels</span><span class="p">]</span>      <span class="c1"># P300 latency</span>
+<span class="linenos">293</span><span class="n">P300_amplitude</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">selected_channels</span><span class="p">]</span>    <span class="c1"># P300 amplitude</span>
+<span class="linenos">294</span><span class="n">P300_meanvoltage</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">selected_channels</span><span class="p">]</span>  <span class="c1"># P300 mean voltage</span>
+<span class="linenos">295</span>
+<span class="linenos">296</span><span class="c1"># Loop over all channels</span>
+<span class="linenos">297</span><span class="k">for</span> <span class="n">channel_idx</span><span class="p">,</span><span class="n">channel_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">selected_channels</span><span class="p">):</span>
+<span class="linenos">298</span>    <span class="c1"># Loop over all epochs    </span>
+<span class="linenos">299</span>    <span class="k">for</span> <span class="n">epoch_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">erp_diff</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
+<span class="linenos">300</span>        <span class="n">epoch_peak_amplitudes</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Initialize a list for this epoch&#39;s peak amplitudes</span>
+<span class="linenos">301</span>    
+<span class="linenos">302</span>        <span class="c1"># Select epoch data for the channel</span>
+<span class="linenos">303</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">epochs</span><span class="p">[</span><span class="n">epoch_idx</span><span class="p">]</span><span class="o">.</span><span class="n">pick</span><span class="p">([</span><span class="n">channel_name</span><span class="p">])</span>
+<span class="linenos">304</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;uV&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">305</span>
+<span class="linenos">306</span>        <span class="c1"># Select the time range of interest</span>
+<span class="linenos">307</span>        <span class="n">time_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">epochs</span><span class="o">.</span><span class="n">times</span> <span class="o">&gt;=</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">epochs</span><span class="o">.</span><span class="n">times</span> <span class="o">&lt;=</span> <span class="n">end_time</span><span class="p">))</span>  <span class="c1"># selecting time indices of time range</span>
+<span class="linenos">308</span>        <span class="n">channel_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">time_indices</span><span class="p">]</span> <span class="c1"># selecting data points in time range</span>
+<span class="linenos">309</span>        <span class="n">time_data</span> <span class="o">=</span> <span class="n">epochs</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="n">time_indices</span><span class="p">]</span>  <span class="c1"># selecting time data points in time range</span>
+<span class="linenos">310</span>        
+<span class="linenos">311</span>        <span class="c1"># Select time range of pre-stimulus baseline </span>
+<span class="linenos">312</span>        <span class="n">time_idx_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">epochs</span><span class="o">.</span><span class="n">times</span> <span class="o">&gt;=</span> <span class="n">start_baseline</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">epochs</span><span class="o">.</span><span class="n">times</span> <span class="o">&lt;=</span> <span class="n">stop_baseline</span><span class="p">))</span>
+<span class="linenos">313</span>        <span class="n">baseline_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">time_idx_base</span><span class="p">]</span>
+<span class="linenos">314</span>        
+<span class="linenos">315</span>        <span class="c1"># Compute the mean voltage</span>
+<span class="linenos">316</span>        <span class="n">mean_voltage_baseline</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">baseline_data</span><span class="p">)</span>  <span class="c1"># mean voltage pre-stimulus baseline</span>
+<span class="linenos">317</span>        <span class="n">mean_voltage_timerange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">channel_data</span><span class="p">)</span>  <span class="c1"># mean voltage P300 time range</span>
+<span class="linenos">318</span>        
+<span class="linenos">319</span>        <span class="c1"># Find peaks</span>
+<span class="linenos">320</span>        <span class="n">locs</span><span class="p">,</span> <span class="n">mags</span> <span class="o">=</span> <span class="n">peak_finder</span><span class="p">(</span><span class="n">channel_data</span><span class="p">,</span> <span class="n">extrema</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">321</span>        
+<span class="linenos">322</span>        <span class="c1"># Determine the highest peak</span>
+<span class="linenos">323</span>        <span class="n">highest_peak_mags</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mags</span><span class="p">)</span>  <span class="c1"># magnitude</span>
+<span class="linenos">324</span>        <span class="n">highest_peak_loc</span> <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">mags</span><span class="p">)]</span> <span class="c1"># index</span>
+<span class="linenos">325</span>        <span class="n">highest_peak_lat</span> <span class="o">=</span> <span class="n">time_data</span><span class="p">[</span><span class="n">highest_peak_loc</span><span class="p">]</span><span class="o">*</span><span class="mi">1000</span> <span class="c1"># latency in ms</span>
+<span class="linenos">326</span>        <span class="n">highest_peak_amp</span> <span class="o">=</span> <span class="n">highest_peak_mags</span> <span class="o">-</span> <span class="n">mean_voltage_baseline</span> 
+<span class="linenos">327</span>        
+<span class="linenos">328</span>        <span class="c1"># Removing end-point detected &quot;peaks&quot;</span>
+<span class="linenos">329</span>        <span class="k">if</span> <span class="n">highest_peak_lat</span> <span class="o">==</span> <span class="mi">500</span><span class="p">:</span>
+<span class="linenos">330</span>            <span class="n">highest_peak_lat</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">331</span>            <span class="n">highest_peak_amp</span> <span class="o">=</span> <span class="mi">0</span> 
+<span class="linenos">332</span>        <span class="k">if</span> <span class="n">highest_peak_lat</span> <span class="o">==</span> <span class="mi">250</span><span class="p">:</span>
+<span class="linenos">333</span>            <span class="n">highest_peak_lat</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">334</span>            <span class="n">highest_peak_amp</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">335</span>
+<span class="linenos">336</span>        <span class="c1"># Append the locations and magnitudes for this epoch to the respective lists</span>
+<span class="linenos">337</span>        <span class="n">P300_indx</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">highest_peak_loc</span><span class="p">)</span>
+<span class="linenos">338</span>        <span class="n">P300_mags</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">highest_peak_mags</span><span class="p">)</span>
+<span class="linenos">339</span>        
+<span class="linenos">340</span>        <span class="n">P300_latency</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">highest_peak_lat</span><span class="p">)</span>
+<span class="linenos">341</span>        <span class="n">P300_amplitude</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">highest_peak_amp</span><span class="p">)</span>
+<span class="linenos">342</span>        <span class="n">P300_meanvoltage</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_voltage_timerange</span><span class="p">)</span>
+<span class="linenos">343</span>        
+<span class="linenos">344</span>        <span class="c1"># Save all peak data</span>
+<span class="linenos">345</span>        <span class="n">epoch_peak_amplitudes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>  <span class="c1"># Store the peak amplitude and time for this channel</span>
+</pre></div>
+</div>
+</section>
+<section id="latency-amplitude-and-mean-voltage-calculations">
+<h2>Latency, amplitude and mean voltage calculations<a class="headerlink" href="#latency-amplitude-and-mean-voltage-calculations" title="Permalink to this heading">#</a></h2>
+<p>Lines 347 to 420 provide a table including mean and standard deviation values for the P300 amplitudes, latency, and mean voltage, which are characteristics of the P300 response.
+To get more information about these quality measures, please refer to our <a class="reference external" href="https://info.tmsi.com/blog/what-is-the-p300-in-event-related-potentials-erps">blog</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">347</span><span class="c1">#%% Quality measures - mean + std P300 latency, amplitude, mean voltage</span>
+<span class="linenos">348</span><span class="c1"># Initialize lists for mean and standard deviation</span>
+<span class="linenos">349</span><span class="n">mean_P300_latency</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">350</span><span class="n">std_P300_latency</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">351</span><span class="n">mean_P300_amplitude</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">352</span><span class="n">std_P300_amplitude</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">353</span><span class="n">mean_P300_meanvoltage</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">354</span><span class="n">std_P300_meanvoltage</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">355</span>
+<span class="linenos">356</span><span class="k">for</span> <span class="n">latency_list</span><span class="p">,</span> <span class="n">amplitude_list</span><span class="p">,</span> <span class="n">meanvoltage_list</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">P300_latency</span><span class="p">,</span> <span class="n">P300_amplitude</span><span class="p">,</span> <span class="n">P300_meanvoltage</span><span class="p">):</span>
+<span class="linenos">357</span>    <span class="c1"># Convert the lists to NumPy arrays for calculations</span>
+<span class="linenos">358</span>    <span class="n">latency_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">latency_list</span><span class="p">)</span>
+<span class="linenos">359</span>    <span class="n">amplitude_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">amplitude_list</span><span class="p">)</span>
+<span class="linenos">360</span>    <span class="n">meanvoltage_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meanvoltage_list</span><span class="p">)</span>
+<span class="linenos">361</span>    
+<span class="linenos">362</span>    <span class="c1"># Calculate mean and standard deviation for latency</span>
+<span class="linenos">363</span>    <span class="n">mean_latency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">latency_array</span><span class="p">)</span>
+<span class="linenos">364</span>    <span class="n">std_latency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">latency_array</span><span class="p">)</span>
+<span class="linenos">365</span>    
+<span class="linenos">366</span>    <span class="c1"># Calculate mean and standard deviation for amplitude</span>
+<span class="linenos">367</span>    <span class="n">mean_amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">amplitude_array</span><span class="p">)</span>
+<span class="linenos">368</span>    <span class="n">std_amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">amplitude_array</span><span class="p">)</span>
+<span class="linenos">369</span>    
+<span class="linenos">370</span>    <span class="c1"># Calculate mean and standard deviation for mean voltage</span>
+<span class="linenos">371</span>    <span class="n">mean_meanvoltage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">meanvoltage_array</span><span class="p">)</span>
+<span class="linenos">372</span>    <span class="n">std_meanvoltage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">meanvoltage_array</span><span class="p">)</span>
+<span class="linenos">373</span>    
+<span class="linenos">374</span>    <span class="c1"># Append the results to the respective lists</span>
+<span class="linenos">375</span>    <span class="n">mean_P300_latency</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_latency</span><span class="p">)</span>
+<span class="linenos">376</span>    <span class="n">std_P300_latency</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">std_latency</span><span class="p">)</span>
+<span class="linenos">377</span>    <span class="n">mean_P300_amplitude</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_amplitude</span><span class="p">)</span>
+<span class="linenos">378</span>    <span class="n">std_P300_amplitude</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">std_amplitude</span><span class="p">)</span>
+<span class="linenos">379</span>    <span class="n">mean_P300_meanvoltage</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_meanvoltage</span><span class="p">)</span>
+<span class="linenos">380</span>    <span class="n">std_P300_meanvoltage</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">std_meanvoltage</span><span class="p">)</span>
+<span class="linenos">381</span>
+<span class="linenos">382</span>
+<span class="linenos">383</span><span class="c1"># Plotting mean, std for P300 latency, amplitude, and mean voltage</span>
+<span class="linenos">384</span><span class="n">num_channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_channels</span><span class="p">)</span>
+<span class="linenos">385</span><span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Latency&#39;</span><span class="p">,</span> <span class="s1">&#39;Amplitude&#39;</span><span class="p">,</span> <span class="s1">&#39;Mean Voltage&#39;</span><span class="p">]</span>
+<span class="linenos">386</span><span class="n">channel_labels</span> <span class="o">=</span> <span class="n">selected_channels</span>
+<span class="linenos">387</span><span class="n">fig2</span><span class="p">,</span> <span class="n">axs2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">categories</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="linenos">388</span>
+<span class="linenos">389</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">category</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+<span class="linenos">390</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">391</span>    <span class="n">mean_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">mean_P300_latency</span><span class="p">,</span> <span class="n">mean_P300_amplitude</span><span class="p">,</span> <span class="n">mean_P300_meanvoltage</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">392</span>    <span class="n">std_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">std_P300_latency</span><span class="p">,</span> <span class="n">std_P300_amplitude</span><span class="p">,</span> <span class="n">std_P300_meanvoltage</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">393</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_channels</span><span class="p">)</span>
+<span class="linenos">394</span>
+<span class="linenos">395</span>    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mean_values</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_values</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span> 
+<span class="linenos">396</span>    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s1"> by Channel&#39;</span><span class="p">)</span>
+<span class="linenos">397</span>    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">398</span>    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">channel_labels</span><span class="p">)</span>
+<span class="linenos">399</span>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="linenos">400</span>
+<span class="linenos">401</span><span class="n">axs2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Latency (ms)&#39;</span><span class="p">)</span>
+<span class="linenos">402</span><span class="n">axs2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude (μV)&#39;</span><span class="p">)</span>
+<span class="linenos">403</span><span class="n">axs2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean Voltage (μV)&#39;</span><span class="p">)</span>
+<span class="linenos">404</span>
+<span class="linenos">405</span><span class="n">fig2</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">406</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">407</span>
+<span class="linenos">408</span><span class="c1"># Create empty DataFrame</span>
+<span class="linenos">409</span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Category&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;Channel&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;Mean&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;Std&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="linenos">410</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="linenos">411</span>
+<span class="linenos">412</span><span class="c1"># Populate the DataFrame with mean and std values</span>
+<span class="linenos">413</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">category</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+<span class="linenos">414</span>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">channel_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">channel_labels</span><span class="p">):</span>
+<span class="linenos">415</span>        <span class="n">mean</span> <span class="o">=</span> <span class="p">[</span><span class="n">mean_P300_latency</span><span class="p">,</span> <span class="n">mean_P300_amplitude</span><span class="p">,</span> <span class="n">mean_P300_meanvoltage</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+<span class="linenos">416</span>        <span class="n">std</span> <span class="o">=</span> <span class="p">[</span><span class="n">std_P300_latency</span><span class="p">,</span> <span class="n">std_P300_amplitude</span><span class="p">,</span> <span class="n">std_P300_meanvoltage</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+<span class="linenos">417</span>        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;Category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span> <span class="s1">&#39;Channel&#39;</span><span class="p">:</span> <span class="n">channel_name</span><span class="p">,</span> <span class="s1">&#39;Mean&#39;</span><span class="p">:</span> <span class="n">mean</span><span class="p">,</span> <span class="s1">&#39;Std&#39;</span><span class="p">:</span> <span class="n">std</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">418</span>
+<span class="linenos">419</span><span class="c1"># Display the DataFrame</span>
+<span class="linenos">420</span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tutorial_ERP_experiment.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorial 1: ERP Experiment</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../changes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Changes with respect to previous versions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-the-correct-directory-of-files">Adding the correct directory of files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-the-required-classes-and-functions">Importing the required classes and functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-plots-interactive">Making plots interactive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-device-type">Setting the device type</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-a-flag-variable">Defining a flag variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-an-erp-measurement">Importing an ERP measurement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-the-eeg-data-from-mne-object">Accessing the EEG data from MNE object</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-channel-types">Defining channel types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing">Pre-processing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-independent-component-analysis">Applying independent component analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieving-epochs-of-data">Retrieving epochs of data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-erps">Plotting ERPs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-average-erps-over-trials-for-selected-channels">Plotting the average ERPs over trials for selected channels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-differences-between-target-and-non-target-responses">Plotting the differences between target and non-target responses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-peak-values">Finding peak values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latency-amplitude-and-mean-voltage-calculations">Latency, amplitude and mean voltage calculations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TMSi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2024, TMSi.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
