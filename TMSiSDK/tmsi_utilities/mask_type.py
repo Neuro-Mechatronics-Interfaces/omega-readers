@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ limitations under the License.
 
 '''
 
-trigger_bits = 0b00000000000000001111111111111110 #bits which contain actual trigger data
+trigger_bits = 0b00000000000000000000000011111111 #bits which contain actual trigger data
 
 def robust_reverse(x):
     """Robust function to revert a list or a tuple given as input
@@ -44,9 +44,9 @@ def robust_reverse(x):
     
     try:
         if isinstance(x, list):
-            return [(~int(i) & trigger_bits)/2 for i in x]
+            return [(~int(i) & trigger_bits) for i in x]
         if isinstance(x, tuple):
-            return ((~int(i) & trigger_bits)/2 for i in x)
+            return ((~int(i) & trigger_bits) for i in x)
         return x
     except:
         return x

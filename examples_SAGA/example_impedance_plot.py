@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ sys.path.append(modules_dir)
 from PySide2.QtWidgets import *
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 
 from TMSiGui.gui import Gui
 from TMSiPlotterHelpers.impedance_plotter_helper import ImpedancePlotterHelper
@@ -51,11 +51,13 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         
         # Check if there is already a plotter application in existence
         app = QApplication.instance()
@@ -66,7 +68,7 @@ try:
             
         # Initialise the helper
         plotter_helper = ImpedancePlotterHelper(device=dev,
-                                                 layout='head', 
+                                                 is_head_layout=True, 
                                                  file_storage = join(measurements_dir,"example_impedance_plot"))
         # Define the GUI object and show it 
         gui = Gui(plotter_helper = plotter_helper)

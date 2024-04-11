@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import os
 
 from TMSiSDK.device.tmsi_device import TMSiDevice
 from TMSiSDK.sample_data_server.sample_data_server import SampleDataServer 
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 from TMSiSDK.device import ChannelType
 from TMSiSDK.device.devices.saga.saga_API_enums import RefMethod
 
@@ -77,7 +77,7 @@ def xml_etree_to_string(elem):
     return rough_string
 
 class XdfWriter:
-    def __init__(self, filename, add_ch_locs):
+    def __init__(self, filename, add_ch_locs, download_file_id = None):
         self.q_sample_sets = queue.Queue(_QUEUE_SIZE_SAMPLE_SETS)
         self.device = None
 
@@ -85,6 +85,7 @@ class XdfWriter:
         self._fp = None
         self._date = None
         self.add_ch_locs=add_ch_locs
+        self._download_file_id = download_file_id
 
     def open(self, device):
         """ Opens and initializes a xdf file-writer session.
@@ -133,7 +134,10 @@ class XdfWriter:
             self._write_file_header_chunk()
 
             # 3. Write the file-header chunk        
-            channels = self.device.get_device_active_channels()
+            if self.device.get_device_type() == "APEX" and self._download_file_id is not None:
+                channels = self.device.get_file_channels(file_id = self._download_file_id)
+            else:
+                channels = self.device.get_device_active_channels()            
             self._write_stream_header_chunk(channels, self._sample_rate, imp_df)
                 
             # 4. Determine the number of sample-sets within one Samples-chunk:
@@ -195,7 +199,7 @@ class XdfWriter:
         _boundary_chunk_counter = 0
         _boundary_chunk_counter_threshold = 10 * self._sample_rate
         n_samp = int(len(streams[0]) * len(streams) / n_ch)
-        n_iter = np.int(np.floor(n_samp/_num_sample_sets_per_sample_data_block))
+        n_iter = int(np.floor(n_samp/_num_sample_sets_per_sample_data_block))
         try:
             for i in range(n_iter):
                 time_range = [j for j in range(i*_num_sample_sets_per_sample_data_block,(i+1)*_num_sample_sets_per_sample_data_block)]
@@ -218,7 +222,7 @@ class XdfWriter:
                     _boundary_chunk_counter = 0
             
             # Store remaining samples for next repetion
-            i = np.int(np.floor(n_samp/_num_sample_sets_per_sample_data_block))
+            i = int(np.floor(n_samp/_num_sample_sets_per_sample_data_block))
             time_range = [j for j in range(i*_num_sample_sets_per_sample_data_block,n_samp)]
             self._sample_sets_in_block = [streams[n_channel][n_sample] for n_sample in time_range for n_channel in range(len(streams))]
             XdfWriter._write_sample_chunk(self._fp,\
@@ -318,7 +322,7 @@ class XdfWriter:
             item_type.text = channel["type"][0]
             # measurement unit (strongly preferred unit: microvolts)
             item_unit = ET.SubElement(item_channel, 'unit')
-            item_unit.text = "-"
+            item_unit.text = ['V' if ((channel["unit"][0] == "µVolt") or  (channel["unit"][0]  == "uVolt") or (channel["unit"][0]  == '\u03BCVolt')) else channel["unit"][0]][0]
             if channel["impedance"]:
                 item_impedance = ET.SubElement(item_channel, 'impedance')
                 if len(channel["impedance"]) > 0:
@@ -669,7 +673,7 @@ class ConsumerThread(threading.Thread):
                 try:
                     # Collect the sample-sets:
                     # When collected enough to fill a sample-data-block, write it to a Samples-chunk
-                    for i in range(np.int(np.floor(n_samp / self._num_sample_sets_per_sample_data_block))):
+                    for i in range(int(np.floor(n_samp / self._num_sample_sets_per_sample_data_block))):
                         self._sample_sets_in_block=samples[i*self._num_sample_sets_per_sample_data_block*sd.num_samples_per_sample_set:(i+1)*self._num_sample_sets_per_sample_data_block*sd.num_samples_per_sample_set]
                         XdfWriter._write_sample_chunk(self._fw._fp,\
                                                     self._sample_sets_in_block,\
@@ -687,7 +691,7 @@ class ConsumerThread(threading.Thread):
                             self._boundary_chunk_counter = 0
                     
                     # Store remaining samples for next repetion
-                    i = np.int(np.floor(n_samp/self._num_sample_sets_per_sample_data_block))
+                    i = int(np.floor(n_samp/self._num_sample_sets_per_sample_data_block))
                     ind = np.arange(i*self._num_sample_sets_per_sample_data_block*sd.num_samples_per_sample_set, n_samp*sd.num_samples_per_sample_set)
                     if ind.any:
                         self._remaining_samples=samples[ind]

@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,7 +50,31 @@ class HeatmapPlotter(Plotter):
         self.chart = HeatmapChart(self.chart)
         if is_headcap:
             self.chart.draw_headcap()
-    
+
+    def rotate_chart(self):
+        rotation_angle = int(self.cb_rotation_angles.currentIndex() * 90)
+        if rotation_angle >= 360:
+            rotation_angle = 0
+        if rotation_angle == 0:
+            rotated_coordinates = self._reordered_grid
+        else:
+            rotated_coordinates = {}
+            for key in self._reordered_grid:
+                x = self._reordered_grid[key][0]
+                y = self._reordered_grid[key][1]
+                if rotation_angle == 90:
+                    new_x = -y
+                    new_y = x
+                elif rotation_angle == 180:
+                    new_x = -x
+                    new_y = -y
+                elif rotation_angle == 270:
+                    new_x = y
+                    new_y = -x
+                rotated_coordinates[key] = (new_x, new_y)
+        
+        self.chart.place_electrodes(channels=self._reordered_channels, coordinates=rotated_coordinates)
+        
     def set_electrode_position(self, channels, coordinates, reordered_indices = None):
         """Set position of the electode on the chart
 
@@ -70,6 +94,7 @@ class HeatmapPlotter(Plotter):
         self.chart.place_electrodes(channels=self._reordered_channels, coordinates=self._reordered_grid)
 
     def _local_setup_ui(self):
+        super()._local_setup_ui()
         self.spin_amplitude.setValue(100)
         self.spin_amplitude.valueChanged.connect(self._slider_value_changed)
         self.frame_colormap = QtWidgets.QFrame(self.frame_sidebar)
@@ -99,6 +124,14 @@ class HeatmapPlotter(Plotter):
         self.group_channels.setVisible(False)
         self.group_channels.setEnabled(False)
         self.scrollArea.setStyleSheet("border: none;")
+        self.group_rotation.setEnabled(True)
+        self.group_rotation.setVisible(True)
+        self.cb_rotation_angles.addItem("Left")
+        self.cb_rotation_angles.addItem("Down")
+        self.cb_rotation_angles.addItem("Right")
+        self.cb_rotation_angles.addItem("Up")
+        self.cb_rotation_angles.setCurrentIndex(0)
+        self.cb_rotation_angles.currentIndexChanged.connect(self.rotate_chart)
         
     def _colormap_style_changed(self, style, radio):
         if radio.isChecked():

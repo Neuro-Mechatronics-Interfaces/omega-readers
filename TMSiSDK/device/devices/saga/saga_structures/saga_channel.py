@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -62,7 +62,10 @@ class SagaChannel(TMSiChannel):
         self._exp = channel_description.Exp
         self._unit_name = channel_description.UnitName.decode('windows-1252')
         self._def_name = channel_description.DefChanName.decode('windows-1252')
-        self._alt_name = channel_description.AltChanName.decode('windows-1252')
+        if self._type == ChannelType.AUX:
+            self._alt_name = self._def_name
+        else:
+            self._alt_name = channel_description.AltChanName.decode('windows-1252')
 
     def set_sensor_information(self, sensor, bipolar = False):
         """Set sensor information on Saga channel
@@ -74,5 +77,6 @@ class SagaChannel(TMSiChannel):
         """
         self._sensor = sensor
         if not bipolar:
+            self._exp = 0
             self._alt_name = sensor.get_sensor_name()
             self._unit_name = sensor.get_sensor_unit_name()

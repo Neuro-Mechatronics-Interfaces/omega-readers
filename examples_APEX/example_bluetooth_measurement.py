@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ limitations under the License.
 /**
  * @file ${example_bluetooth_measurement.py} 
  * @brief This example shows how to discover and connect to a device over the 
- * bluetooth interface
+ * bluetooth interface, as well as displaying recorded data using this interface.
  */
 
 
@@ -41,7 +41,7 @@ configs_dir = join(Example_dir, '../TMSiSDK\\tmsi_resources') # directory with c
 sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 
 from TMSiGui.gui import Gui
 from TMSiPlotterHelpers.signal_plotter_helper import SignalPlotterHelper

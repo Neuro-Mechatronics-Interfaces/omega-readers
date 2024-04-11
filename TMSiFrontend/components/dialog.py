@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,8 +29,10 @@ limitations under the License.
 
 
 '''
-from PySide2.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
+from PySide2.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QLabel
 from PySide2 import QtCore
+
+from ..utilities.tmsi_style import TMSiStyle
 
 class Dialog(QDialog):
     """Dialog object to communicate with the user
@@ -46,14 +48,18 @@ class Dialog(QDialog):
         :type parent: QWidget, optional
         """
         super().__init__(parent)
-
+        self.setStyleSheet(TMSiStyle)
         self.setWindowTitle(title)
         self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowContextHelpButtonHint)
         QBtn = QDialogButtonBox.Ok
         self.buttonBox = QDialogButtonBox(QBtn)
         self.buttonBox.accepted.connect(self.accept)
+        button_layout = QHBoxLayout()
+        button_layout.addStretch(1)  # Add stretch to left side
+        button_layout.addWidget(self.buttonBox)
+        button_layout.addStretch(1)  # Add stretch to right side
         self.layout = QVBoxLayout()
         message = QLabel(message)
         self.layout.addWidget(message)
-        self.layout.addWidget(self.buttonBox)
+        self.layout.addLayout(button_layout)  # Add the button layout to the main layout
         self.setLayout(self.layout)

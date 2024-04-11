@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ from .filtered_signal_plotter_helper import FilteredSignalPlotterHelper, Filtere
 
 
 class HeatmapPlotterHelper(FilteredSignalPlotterHelper):
-    def __init__(self,  device, layout = '4-8-L', hpf = 5, lpf = 0, order = 1):
+    def __init__(self, device, grid_type = None, is_head_layout = False, hpf = 5, lpf = 0, order = 1):
         # call super of SignalAcquisitionHelper, initializing acquisition details
         super(SignalPlotterHelper, self).__init__(device = device, monitor_class = Monitor, consumer_thread_class = FilteredConsumerThread )
         
@@ -61,19 +61,17 @@ class HeatmapPlotterHelper(FilteredSignalPlotterHelper):
         elif self.device.get_device_type() == 'APEX':
             self.measurement_type = MeasurementType.APEX_SIGNAL
 
-        if layout=='head':
-            self.main_plotter = HeatmapPlotter(device_type=device.get_device_type(), is_headcap=True)
-        else:
-            self.main_plotter = HeatmapPlotter(device_type=device.get_device_type(), is_headcap=False)
+        self.head_layout = is_head_layout
+        self.grid_type = grid_type
+        self.main_plotter = HeatmapPlotter(device_type=device.get_device_type(), is_headcap=is_head_layout)
         
-        self.layout = layout
-
         # filter settings
         self.hpf = hpf
         self.lpf = lpf
         self.order = order
 
-    def callback(self, response):
+    def callback(self, callback_object):
+        response = callback_object["buffer"]
         # The function that provides the plotter from data
         pointer = response.pointer_buffer
         # Wait for data to come in
@@ -99,10 +97,13 @@ class HeatmapPlotterHelper(FilteredSignalPlotterHelper):
         coordinates = self._get_coordinates()
         original_channels = []
         self.heatmap_channels = []
+        self.n_unfiltered_channels = 0
         for idx,channel in enumerate(self.active_channels):
             if channel.get_channel_type() == ChannelType.UNI and channel.get_channel_index() > 0:
                 original_channels.append(channel)
                 self.heatmap_channels.append(idx)
+            elif channel.get_channel_type() != ChannelType.UNI and channel.get_channel_type() != ChannelType.BIP:
+                self.n_unfiltered_channels +=1
         
         if hasattr(self, 'conversion_list'): 
             self.main_plotter.set_electrode_position(channels = original_channels, coordinates = coordinates, reordered_indices = self.conversion_list.tolist())
@@ -124,7 +125,7 @@ class HeatmapPlotterHelper(FilteredSignalPlotterHelper):
             print("Couldn't load HD-EMG conversion file. Default channel order is used.")
 
     def _get_coordinates(self):
-        if self.layout == 'head':
+        if self.head_layout:
             if len(self.channels_default) < 32:
                 coordinates = TMSiHeadcaps().headcaps["eeg24"]
             elif len(self.channels_default) <64:
@@ -133,26 +134,26 @@ class HeatmapPlotterHelper(FilteredSignalPlotterHelper):
                 coordinates = TMSiHeadcaps().headcaps["eeg64"]
         else: 
             self._read_grid_info()             
-            if self.layout in self.conversion_data:
-                self.conversion_list= np.array(self.conversion_data[self.layout]['channel_conversion'])
+            if self.grid_type in self.conversion_data:
+                self.conversion_list= np.array(self.conversion_data[self.grid_type]['channel_conversion'])
             if len(self.channels_default)<64:
-                if '6' in self.layout:
-                    if self.layout[-1]=='2':
+                if '6' in self.grid_type:
+                    if self.grid_type[-1]=='2':
                         coordinates = TMSiGrids().grids["6-11-2"]
                     else:
                         coordinates = TMSiGrids().grids["6-11-1"]
                 else:
                     coordinates = TMSiGrids().grids["4-8"]
             else:
-                if '6' in self.layout:
-                    if self.layout[-1]=='2':
+                if '6' in self.grid_type:
+                    if self.grid_type[-1]=='2':
                         coordinates = TMSiGrids().grids["6-11-2"]
-                    elif self.layout[-1]=='1':
+                    elif self.grid_type[-1]=='1':
                         coordinates = TMSiGrids().grids["6-11-1"]
                     else:
                         coordinates = TMSiGrids().grids["6-11"]
                 else:
-                    if (self.layout[-1]=='1' or self.layout[-1]=='2') or '4' in self.layout:
+                    if (self.grid_type[-1]=='1' or self.grid_type[-1]=='2') or '4' in self.grid_type:
                         coordinates = TMSiGrids().grids["4-8"]
                     else:
                         coordinates = TMSiGrids().grids["8-8"]

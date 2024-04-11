@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ limitations under the License.
 
 /**
  * @file ${example_SD_card_get_list_of_files.py} 
- * @brief This example shows how to retrieve all files that are currently 
+ * @brief This example starts by recording three separate files. 
+ * Next, the example shows how to retrieve all files that are currently 
  * stored on SAGA’s onboard memory.
  *
  */
@@ -40,7 +41,7 @@ modules_dir = join(Example_dir, '..')  # directory with all modules
 sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 from TMSiSDK.device.tmsi_device_enums import MeasurementType
 
 try:
@@ -49,12 +50,25 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
     
+        # Control if there are data saved on the device
+        file_list = dev.get_device_card_file_list()
+        if len(file_list) > 0:
+            import warnings
+            warnings.warn("\n\n!!! \nThere is/are recordings stored on the onboard memory. Changing the configuration will clear the device's SD card!\nDo you want to continue? ('yes'/'y' continue, all others abort opening)\n!!!\n", stacklevel = 1)
+            abort = input('Continue?\n')
+            if abort.lower() == 'yes' or abort.lower() == 'y':
+                pass
+            else:
+                raise TMSiError(error_code = TMSiErrorCode.general_error)
+
         # Enable backup logging of the device
         dev.set_device_backup_logging(prefix_filename='Example')
         
@@ -77,7 +91,10 @@ try:
         recordings_list = dev.get_device_card_file_list()
         for rec_id in range(len(recordings_list)):
             print("{} - {}".format(rec_id, recordings_list[rec_id].RecFileName.decode('utf-8')))
-            
+
+        # Disable backup logging of the device
+        dev.set_device_backup_logging(enable = False, prefix_filename='Example')
+
         # Close the connection to the device
         dev.close()
     

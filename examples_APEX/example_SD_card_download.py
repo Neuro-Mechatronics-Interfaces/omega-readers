@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ limitations under the License.
 /**
  * @file ${example_SD_card_download.py} 
  * @brief This example shows how to download card recordings that are stored on 
- * the onboard memory. 
+ * the onboard memory. In this example, the last recording is downloaded. 
  *
  */
 
@@ -39,7 +39,7 @@ measurements_dir = join(Example_dir, '../measurements') # directory with all mea
 sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 
 
@@ -66,7 +66,7 @@ try:
         filename = dev.get_device_card_file_info(rec_id)[1].RecFileName.decode('utf-8')
         
         # Create a file writer object to download the onboard recording (if there is any)
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir, filename), download = True)
+        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir, filename), download = True, download_file_id=rec_id)
         file_writer.open(dev)
 
         # Start downloading the file from the onboard memory

@@ -1,0 +1,1392 @@
+<?xml version="1.0" ?>
+<SagaConfig>
+  
+  
+  <Device>
+    
+    
+    <BaseSampleRateHz>4000</BaseSampleRateHz>
+    
+    
+    <ConfiguredInterface>4</ConfiguredInterface>
+    
+    
+    <Triggers>0</Triggers>
+    
+    
+    <ReferenceMethod>0</ReferenceMethod>
+    
+    
+    <AutoReferenceMethod>0</AutoReferenceMethod>
+    
+    
+    <DRSyncOutDiv>-1</DRSyncOutDiv>
+    
+    
+    <DRSyncOutDutyCycl>500</DRSyncOutDutyCycl>
+    
+    
+    <RepairLogging>0</RepairLogging>
+    
+  
+  </Device>
+  
+  
+  <Channels>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>0</ChanNr>
+      
+      
+      <AltChanName>CREF</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>1</ChanNr>
+      
+      
+      <AltChanName>R1C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>2</ChanNr>
+      
+      
+      <AltChanName>R1C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>3</ChanNr>
+      
+      
+      <AltChanName>R1C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>4</ChanNr>
+      
+      
+      <AltChanName>R1C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>5</ChanNr>
+      
+      
+      <AltChanName>R1C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>6</ChanNr>
+      
+      
+      <AltChanName>R1C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>7</ChanNr>
+      
+      
+      <AltChanName>R1C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>8</ChanNr>
+      
+      
+      <AltChanName>R1C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>9</ChanNr>
+      
+      
+      <AltChanName>R2C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>10</ChanNr>
+      
+      
+      <AltChanName>R2C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>11</ChanNr>
+      
+      
+      <AltChanName>R2C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>12</ChanNr>
+      
+      
+      <AltChanName>R2C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>13</ChanNr>
+      
+      
+      <AltChanName>R2C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>14</ChanNr>
+      
+      
+      <AltChanName>R2C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>15</ChanNr>
+      
+      
+      <AltChanName>R2C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>16</ChanNr>
+      
+      
+      <AltChanName>R2C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>17</ChanNr>
+      
+      
+      <AltChanName>R3C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>18</ChanNr>
+      
+      
+      <AltChanName>R3C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>19</ChanNr>
+      
+      
+      <AltChanName>R3C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>20</ChanNr>
+      
+      
+      <AltChanName>R3C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>21</ChanNr>
+      
+      
+      <AltChanName>R3C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>22</ChanNr>
+      
+      
+      <AltChanName>R3C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>23</ChanNr>
+      
+      
+      <AltChanName>R3C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>24</ChanNr>
+      
+      
+      <AltChanName>R3C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>25</ChanNr>
+      
+      
+      <AltChanName>R4C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>26</ChanNr>
+      
+      
+      <AltChanName>R4C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>27</ChanNr>
+      
+      
+      <AltChanName>R4C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>28</ChanNr>
+      
+      
+      <AltChanName>R4C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>29</ChanNr>
+      
+      
+      <AltChanName>R4C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>30</ChanNr>
+      
+      
+      <AltChanName>R4C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>31</ChanNr>
+      
+      
+      <AltChanName>R4C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>32</ChanNr>
+      
+      
+      <AltChanName>R4C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>33</ChanNr>
+      
+      
+      <AltChanName>R5C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>34</ChanNr>
+      
+      
+      <AltChanName>R5C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>35</ChanNr>
+      
+      
+      <AltChanName>R5C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>36</ChanNr>
+      
+      
+      <AltChanName>R5C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>37</ChanNr>
+      
+      
+      <AltChanName>R5C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>38</ChanNr>
+      
+      
+      <AltChanName>R5C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>39</ChanNr>
+      
+      
+      <AltChanName>R5C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>40</ChanNr>
+      
+      
+      <AltChanName>R5C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>41</ChanNr>
+      
+      
+      <AltChanName>R6C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>42</ChanNr>
+      
+      
+      <AltChanName>R6C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>43</ChanNr>
+      
+      
+      <AltChanName>R6C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>44</ChanNr>
+      
+      
+      <AltChanName>R6C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>45</ChanNr>
+      
+      
+      <AltChanName>R6C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>46</ChanNr>
+      
+      
+      <AltChanName>R6C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>47</ChanNr>
+      
+      
+      <AltChanName>R6C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>48</ChanNr>
+      
+      
+      <AltChanName>R6C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>49</ChanNr>
+      
+      
+      <AltChanName>R7C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>50</ChanNr>
+      
+      
+      <AltChanName>R7C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>51</ChanNr>
+      
+      
+      <AltChanName>R7C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>52</ChanNr>
+      
+      
+      <AltChanName>R7C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>53</ChanNr>
+      
+      
+      <AltChanName>R7C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>54</ChanNr>
+      
+      
+      <AltChanName>R7C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>55</ChanNr>
+      
+      
+      <AltChanName>R7C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>56</ChanNr>
+      
+      
+      <AltChanName>R7C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>57</ChanNr>
+      
+      
+      <AltChanName>R8C1</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>58</ChanNr>
+      
+      
+      <AltChanName>R8C2</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>59</ChanNr>
+      
+      
+      <AltChanName>R8C3</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>60</ChanNr>
+      
+      
+      <AltChanName>R8C4</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>61</ChanNr>
+      
+      
+      <AltChanName>R8C5</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>62</ChanNr>
+      
+      
+      <AltChanName>R8C6</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>63</ChanNr>
+      
+      
+      <AltChanName>R8C7</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>64</ChanNr>
+      
+      
+      <AltChanName>R8C8</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>65</ChanNr>
+      
+      
+      <AltChanName>BIP 01</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>66</ChanNr>
+      
+      
+      <AltChanName>BIP 02</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>67</ChanNr>
+      
+      
+      <AltChanName>BIP 03</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>68</ChanNr>
+      
+      
+      <AltChanName>BIP 04</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>69</ChanNr>
+      
+      
+      <AltChanName>AUX 1-1</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>70</ChanNr>
+      
+      
+      <AltChanName>AUX 1-2</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>71</ChanNr>
+      
+      
+      <AltChanName>AUX 1-3</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>72</ChanNr>
+      
+      
+      <AltChanName>AUX 2-1</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>73</ChanNr>
+      
+      
+      <AltChanName>AUX 2-2</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>74</ChanNr>
+      
+      
+      <AltChanName>AUX 2-3</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>75</ChanNr>
+      
+      
+      <AltChanName>AUX 3-1</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>76</ChanNr>
+      
+      
+      <AltChanName>AUX 3-2</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>77</ChanNr>
+      
+      
+      <AltChanName>AUX 3-3</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>78</ChanNr>
+      
+      
+      <AltChanName>PGND</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>79</ChanNr>
+      
+      
+      <AltChanName>DIGI</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>80</ChanNr>
+      
+      
+      <AltChanName>SpO2</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>81</ChanNr>
+      
+      
+      <AltChanName>PLETH</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>82</ChanNr>
+      
+      
+      <AltChanName>HRate</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>83</ChanNr>
+      
+      
+      <AltChanName>Stat</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>84</ChanNr>
+      
+      
+      <AltChanName>X-AXIS</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>85</ChanNr>
+      
+      
+      <AltChanName>Y-AXIS</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>86</ChanNr>
+      
+      
+      <AltChanName>Z-AXIS</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>87</ChanNr>
+      
+      
+      <AltChanName>TRIGGERS</AltChanName>
+      
+      
+      <ChanDivider>-1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>88</ChanNr>
+      
+      
+      <AltChanName>STATUS</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+    
+    <Channel>
+      
+      
+      <ChanNr>89</ChanNr>
+      
+      
+      <AltChanName>COUNTER</AltChanName>
+      
+      
+      <ChanDivider>1</ChanDivider>
+      
+    
+    </Channel>
+    
+  
+  </Channels>
+  
+
+  <Accessory>4-8-L</Accessory>
+</SagaConfig>

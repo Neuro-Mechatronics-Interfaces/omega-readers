@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,9 +29,12 @@ limitations under the License.
 
 
 '''
+import math
 import numpy as np
 
 from PySide2 import QtWidgets
+
+from TMSiSDK import LogPerformances
 
 from ..plotter import Plotter
 from ..charts.signal_chart import SignalChart
@@ -41,7 +44,7 @@ from ..components.channel_component import ChannelComponent
 class SignalPlotter(Plotter):
     """SignalPlotter object
     """
-    def __init__(self, get_data_callback = None, name = "Signal Plotter"):
+    def __init__(self, get_data_callback = None, update_viewer_time_scrollbar_callback = None, name = "Signal Plotter"):
         """Initialize the SignalPlotter object
 
         :param get_data_callback: function to be called when the interface is updated (used in case of offline application), defaults to None
@@ -52,19 +55,95 @@ class SignalPlotter(Plotter):
         super().__init__(name = name)
         self.chart = SignalChart(self.chart)
         self._get_data_callback = get_data_callback
+        self._update_viewer_time_scrollbar_callback = update_viewer_time_scrollbar_callback
         self._update_enabled_disabled = False
         self._update_scales_disabled = False
         self._compute_autoscale = False
+        self._compute_offset = False
         self.window_size = 10
         self.chart.set_time_range(self.window_size)
         self._connect_widgets_to_functions()
 
+    def add_time_marker(self, time_value, key = None, color = "red"):
+        """Add a time marker to the chart
+
+        :param time_value: time coordinate on the chart
+        :type time_value: float
+        :param key: name of the marker, defaults to None
+        :type key: str, optional
+        :param color: color of the marker, defaults to "red"
+        :type color: str, optional
+        """
+        self.chart.add_time_marker(time_value = time_value, key = key, color = color)
+    
     def autoscale(self):
         """Autoscale amplitudes of the channels
         """
         self._compute_autoscale = True
         self._update_data()
-        
+
+    def delete_time_marker(self, key = None):
+        """Delete time marker. If key is not specified, all time markers are cleared.
+
+        :param key: name of the time marker to delete, defaults to None
+        :type key: str, optional
+        """
+        self.chart.delete_time_marker(key = key)
+
+    @LogPerformances
+    def downsample_based_on_screen(self, data_to_plot, time_span):
+        """Downsample data to plot and time span based on screen
+
+        :param data_to_plot: data to plot
+        :type data_to_plot: list of array
+        :param time_span: time coordinates
+        :type time_span: list
+        :return: data to plot and time span
+        :rtype: list of array, list
+        """
+        available_pixels = self.width()
+        decimation_index = math.ceil(len(time_span)/available_pixels)
+        data_to_plot = [array[::decimation_index] for array in data_to_plot]
+        time_span = time_span[::decimation_index]
+        return data_to_plot, time_span
+    
+    @LogPerformances
+    def downsample_based_on_screen_max_min(self, data_to_plot, time_span):
+        """Downsample data to plot and time span based on screen
+
+        :param data_to_plot: data to plot
+        :type data_to_plot: list of array
+        :param time_span: time coordinates
+        :type time_span: list
+        :return: data to plot and time span
+        :rtype: list of array, list
+        """
+        available_pixels = self.width()
+        decimation_index = math.ceil(len(time_span)/available_pixels)
+        time_span = time_span[::decimation_index]
+        time_span = [val for val in time_span for _ in range(2)]
+        available_data = len(data_to_plot)
+        data_to_plot = [self._slice_and_get_maxs_mins(arr=array, N=decimation_index) for array in data_to_plot]
+        return data_to_plot, time_span
+    
+    @LogPerformances
+    def downsample_based_on_screen_mean(self, data_to_plot, time_span):
+        """Downsample data to plot and time span based on screen
+
+        :param data_to_plot: data to plot
+        :type data_to_plot: list of array
+        :param time_span: time coordinates
+        :type time_span: list
+        :return: data to plot and time span
+        :rtype: list of array, list
+        """
+        available_pixels = self.width()
+        decimation_index = math.ceil(len(time_span)/available_pixels)
+        time_span = time_span[::decimation_index]
+        available_data = len(data_to_plot)
+        data_to_plot = [self._slice_and_get_means(arr=array, N=decimation_index) for array in data_to_plot]
+        return data_to_plot, time_span
+    
     def enable_all_channels(self, enabled = True):
         """Enable all channels to be seen
 
@@ -80,6 +159,21 @@ class SignalPlotter(Plotter):
         self._update_enabled_disabled = False
         self.update_enabled_channels()
 
+    def increase_time_window(self, isIncrease):
+        if isIncrease:
+            self.spin_time_window.setValue(self.spin_time_window.value() + 1)
+        else:
+            self.spin_time_window.setValue(self.spin_time_window.value() - 1)
+        self._update_data()
+
+    def get_time_markers(self):
+        """Get time markers
+
+        :return: The dictionary containing all the active time markers.
+        :rtype: dict
+        """
+        return self.chart.get_time_markers()
+    
     def initialize_channels_components(self, channels):
         """Initialize channels components
 
@@ -146,6 +240,22 @@ class SignalPlotter(Plotter):
         self._update_scales_disabled = False
         self.update_scales()
     
+    def remove_offset(self):
+        """Remove offset of the channels
+        """
+        self._compute_offset = True
+        self._update_data()
+        
+    def set_tracks_range(self, min, length):
+        self.chart.set_vertical_range(min = min, length = length)
+    
+    def set_time_ticks(self, time_values, time_ticks):
+        chart_time_ticks = [[]]
+        for i in range(len(time_values)):
+            chart_time_ticks[0].append((time_values[i], str(time_ticks[i])))
+        self.chart.set_time_ticks(chart_time_ticks)
+    
+    @LogPerformances
     def update_chart(self, data_to_plot, time_span = None):
         """Update chart
 
@@ -156,7 +266,7 @@ class SignalPlotter(Plotter):
         """
         if not self.is_chart_update_enabled:
             return
-        if self._compute_autoscale:
+        if self._compute_autoscale or self._compute_offset:
             self._update_scales_disabled = True
             channel_components = [i for i in dir(self) if i.startswith("component_channel_")]
             scales = []
@@ -164,15 +274,17 @@ class SignalPlotter(Plotter):
             for n_channel in range(len(data_to_plot)):
                 max_val = np.nanmax(data_to_plot[n_channel])
                 min_val = np.nanmin(data_to_plot[n_channel])
-                scale = (max_val-min_val)/2.0
-                offset = max_val-scale
-                if scale <= 1e-3:
-                    scale = 1
-                scales.append(scale)
+                if self._compute_autoscale:
+                    scale = (max_val-min_val)/2.0
+                    if scale <= 1e-3:
+                        scale = 1
+                    scales.append(scale)
+                offset = np.nanmean(data_to_plot[n_channel,-int(0.1*np.shape(data_to_plot)[1]):])
                 offsets.append(offset)
             for n_channel in range(len(channel_components)):
                 cmp = getattr(self, channel_components[n_channel])
-                cmp.set_scale(scales[cmp.get_index()])
+                if self._compute_autoscale:
+                    cmp.set_scale(scales[cmp.get_index()])
                 cmp.set_offset(offsets[cmp.get_index()])
             self._update_scales_disabled = False
             self.update_offsets()
@@ -183,9 +295,13 @@ class SignalPlotter(Plotter):
                 list_scales = self._filter_lists_to_plot(self._scales),
                 list_units = self._filter_lists_to_plot(self._channel_units))
             self._compute_autoscale = False
+            self._compute_offset = False
         for i in range(len(data_to_plot)):
             data_to_plot[i] = - (data_to_plot[i] - self._offsets[i]) / self._scales[i]
-        self.chart.update_chart(self._filter_data_to_plot(data_to_plot), time_span)
+        # filter data to plot
+        data_to_plot = self._filter_data_to_plot(data_to_plot)
+        data_to_plot, time_span = self.downsample_based_on_screen(data_to_plot, time_span)
+        self.chart.update_chart(data_to_plot, time_span)
         
     def update_colors(self):
         """Update color of the chart based on the channel component
@@ -218,7 +334,8 @@ class SignalPlotter(Plotter):
                 list_offsets = self._filter_lists_to_plot(self._offsets),
                 list_scales = self._filter_lists_to_plot(self._scales),
                 list_units = self._filter_lists_to_plot(self._channel_units))
-
+        self._update_visible_tracks(new_max=len(self._enabled_channels))
+        
     def update_offsets(self):
         """Update the offset based on channel component
         """
@@ -255,6 +372,16 @@ class SignalPlotter(Plotter):
                 list_scales = self._filter_lists_to_plot(self._scales),
             list_units = self._filter_lists_to_plot(self._channel_units))
 
+    def update_time_marker(self, time_value, key = None):
+        """Update time marker
+
+        :param time_value: position of the marker
+        :type time_value: float
+        :param key: name of the marker, defaults to None
+        :type key: str or float, optional
+        """
+        self.chart.update_time_marker(time_value = time_value, key = key)
+    
     def update_time_ticks(self, start_time, end_time):
         """Update time ticks
 
@@ -265,11 +392,20 @@ class SignalPlotter(Plotter):
         """
         self.chart.update_time_ticks(start_time=start_time, end_time=end_time)
 
+    def update_time_window(self):
+        self.window_size = self.spin_time_window.value()
+        self.chart.set_time_range(self.window_size)
+        if self._update_viewer_time_scrollbar_callback is not None:
+            self._update_viewer_time_scrollbar_callback()
+    
     def _connect_widgets_to_functions(self):
         self.btn_enable_all_channels.clicked.connect(lambda: self.enable_all_channels(True))
         self.btn_disable_all_channels.clicked.connect(lambda: self.enable_all_channels(False))
         self.btn_autoscale.clicked.connect(self.autoscale)
         self.spin_amplitude.valueChanged.connect(self.manual_scale)
+        self.spin_time_window.valueChanged.connect(self.update_time_window)
+        self.btn_time_window_increase.clicked.connect(lambda: self.increase_time_window(True))
+        self.btn_time_window_decrease.clicked.connect(lambda: self.increase_time_window(False))
 
     def _filter_data_to_plot(self, data_to_plot):
         data_to_plot = [data_to_plot[row] for row in range(len(data_to_plot)) if row in self._enabled_channels]
@@ -278,6 +414,62 @@ class SignalPlotter(Plotter):
     def _filter_lists_to_plot(self, list_to_filter):
         return [list_to_filter[i] for i in range(len(list_to_filter)) if i in self._enabled_channels]
     
+    def _local_setup_ui(self):
+        super()._local_setup_ui()
+        self.group_window_size.setVisible(True)
+        self.group_window_size.setEnabled(True)
+        self.scrollbar_tracks.setVisible(False)
+        self.scrollbar_tracks.setEnabled(True)
+        self.group_plotter_zoom.setVisible(True)
+        self.group_plotter_zoom.setEnabled(True)
+        self.spin_plotter_zoom.valueChanged.connect(lambda: self._update_visible_tracks(new_max = None))
+        self.scrollbar_tracks.valueChanged.connect(self._update_tracks_range)
+                        
+    @LogPerformances
+    def _slice_and_get_maxs_mins(self, arr, N):
+        if len(arr) % N == 0:
+            slices = arr.reshape(-1, N)
+        else:
+            available_data = (len(arr) // N) * N
+            slices = arr[:available_data].reshape(-1, N)
+        
+        max_values = np.max(slices, axis=1)
+        min_values = np.min(slices, axis=1)
+        return np.array([x for pair in zip(max_values, min_values) for x in pair])
+    
+    @LogPerformances
+    def _slice_and_get_means(self, arr, N):
+        if len(arr) % N == 0:
+            slices = arr.reshape(-1, N)
+        else:
+            available_data = (len(arr) // N) * N
+            slices = arr[:available_data].reshape(-1, N)
+        
+        mean_values = np.mean(slices, axis=1)
+        return mean_values
+    
     def _update_data(self):
         if self._get_data_callback is not None:
             self._get_data_callback()
+
+    def _update_tracks_range(self):
+        max = self.spin_plotter_zoom.maximum() * 100
+        val = self.spin_plotter_zoom.value() * 100
+        length =  round(max/val)
+        self.set_tracks_range(
+            min = self.scrollbar_tracks.value(),
+            length = length)
+        return
+
+    def _update_visible_tracks(self, new_max = None):
+        if new_max is not None:
+            if new_max < 1:
+                new_max = 1
+            self.spin_plotter_zoom.setMaximum(new_max)
+        max = self.spin_plotter_zoom.maximum()
+        val = self.spin_plotter_zoom.value()
+        visible_tracks =  round(max/val)
+        available_tracks = max
+        self.scrollbar_tracks.setMaximum(available_tracks - visible_tracks)
+        self.scrollbar_tracks.setVisible(self.scrollbar_tracks.maximum() != 0)
+        self._update_tracks_range()

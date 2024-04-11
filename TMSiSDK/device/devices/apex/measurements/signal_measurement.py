@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -91,15 +91,15 @@ class SignalMeasurement(TMSiMeasurement):
         measurement_request.DisableLiveImp = self._disable_live_impedance
         measurement_request.DisableAvrRefCalc = self._disable_average_reference_calculation
         measurement_request.StartStop = SampleControl.StopSampling.value
-        TMSiLoggerActivity().log("{}->>APEX-SDK: set device sampling request OFF".format(self.get_name()))
-        self._dev.set_device_sampling_request(measurement_request)
         TMSiLoggerActivity().log("{}->>Sampling Thread: stop".format(self.get_name()))
         self._sampling_thread.stop()
         self._sampling_thread.join()
         TMSiLoggerActivity().log("{}->>Conversion Thread: stop".format(self.get_name()))
         self._conversion_thread.stop()
         self._conversion_thread.join()
-
+        TMSiLoggerActivity().log("{}->>APEX-SDK: set device sampling request OFF".format(self.get_name()))
+        self._dev.set_device_sampling_request(measurement_request)
+        
     @LogPerformances
     def _conversion_function(self):
         while not self._conversion_queue.empty():

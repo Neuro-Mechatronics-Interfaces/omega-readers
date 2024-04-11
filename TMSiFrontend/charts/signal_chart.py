@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,6 +34,8 @@ import numpy as np
 import pyqtgraph as pg
 from PySide2 import QtCore
 
+from TMSiSDK.tmsi_utilities.tmsi_logger import TMSiLogger
+
 from ..chart import Chart
 
 class SignalChart(Chart):
@@ -50,7 +52,7 @@ class SignalChart(Chart):
         self._plot_offset = 3
         self._default_window_size = 10
         self._plotter_chart.window.disableAutoRange()
-        self._time_marker = None
+        self._time_marker_dict = {}
         
     def initUI(self):
         """Initialize UI
@@ -64,11 +66,55 @@ class SignalChart(Chart):
         self._plotter_chart.window.setEnabled(False)
         self.set_time_range(1)
 
-    def delete_time_marker(self):
-        if self._time_marker:
-            self._time_marker.clear()
-            self._time_marker = None
+    def add_time_marker(self, time_value, key = None, color = "red"):
+        """Add a time marker to the chart
 
+        :param time_value: time coordinate on the chart
+        :type time_value: float
+        :param key: name of the marker, defaults to None
+        :type key: str, optional
+        :param color: color of the marker, defaults to "red"
+        :type color: str, optional
+        """
+        if key is None:
+            key = time_value
+        key = str(key)
+        if key in self._time_marker_dict:
+            TMSiLogger().debug("{} already in use!".format(key))
+            return
+        self._time_marker_dict[key] = {}
+        self._time_marker_dict[key]["key"] = key
+        self._time_marker_dict[key]["time_value"] = time_value
+        self._time_marker_dict[key]["marker"] = pg.PlotCurveItem()
+        self._time_marker_dict[key]["marker"].setPen(color = color, width=2, cosmetic = True, joinStyle = QtCore.Qt.MiterJoin)
+        self._plotter_chart.window.addItem(self._time_marker_dict[key]["marker"])
+        
+    def delete_time_marker(self, key = None):
+        """Delete time marker. If key is not specified, all time markers are cleared.
+
+        :param key: name of the time marker to delete, defaults to None
+        :type key: str, optional
+        """
+        if key is None:
+            for time_marker in self._time_marker_dict.values():
+                time_marker["marker"].clear()
+            self._time_marker_dict = {}
+        else:
+            time_marker = self._time_marker_dict.pop(str(key), None)
+            if time_marker is not None:
+                time_marker["marker"].clear()
+
+    def get_time_markers(self):
+        """Get time markers
+
+        :return: The dictionary containing all the active time markers.
+        :rtype: dict
+        """
+        return self._time_marker_dict
+    
+    def set_vertical_range(self, min, length):
+        self._plotter_chart.window.setYRange(-1.5 + self._plot_offset * min, self._plot_offset * (min + length) - 2 + 0.5, padding = 0)
+    
     def set_time_min_max(self, x_min, x_max):
         """Set time range
 
@@ -85,6 +131,9 @@ class SignalChart(Chart):
         """
         self._time_range = time_value
         self._plotter_chart.window.setXRange(-0.02*self._time_range, 1.03*self._time_range, padding = 0)
+    
+    def set_time_ticks(self, time_ticks):
+        self._plotter_chart.window.getAxis('bottom').setTicks(time_ticks)
     
     def setup_signals(self, n_signals, colors = None):
         """Setup the signals
@@ -128,17 +177,23 @@ class SignalChart(Chart):
             time_span = np.linspace(0, self._time_range, len(signals[0]))
         self._draw_signals(time_span[:len(signals[0])], signals)
 
-    def update_time_marker(self, time_value):
+    def update_time_marker(self, time_value, key = None):
         """Update time marker
 
         :param time_value: position of the marker
         :type time_value: float
+        :param key: name of the marker, defaults to None
+        :type key: str or float, optional
         """
-        if self._time_marker is None:
-            self._time_marker = pg.PlotCurveItem()
-            self._time_marker.setPen(color = "red", cosmetic = True, joinStyle = QtCore.Qt.MiterJoin)
-            self._plotter_chart.window.addItem(self._time_marker)
-        self._time_marker.setData([time_value, time_value], self._plotter_chart.window.viewRange()[1], connect="finite")
+        if key is None:
+            key = time_value
+        if key not in self._time_marker_dict:
+            self.add_time_marker(time_value=time_value, key=key)
+        key = str(key)
+        self._time_marker_dict[key]["time_value"] = time_value
+        self._time_marker_dict[key]["marker"].setData(
+            [self._time_marker_dict[key]["time_value"], self._time_marker_dict[key]["time_value"]],
+            self._plotter_chart.window.viewRange()[1], connect="finite")
     
     def update_time_ticks(self, start_time, end_time):
         """Update ticks of the time axis

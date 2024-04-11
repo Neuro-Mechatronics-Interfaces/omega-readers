@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ try:
         ch_names = data.ch_names
         
         # Conversion to MNE raw array
-        mne_object = data.read_data_MNE() 
+        mne_object = data.read_data_MNE(add_ch_locs = True) 
 
     elif filename.lower().endswith('xdf'):
         reader = Xdf_Reader(filename)

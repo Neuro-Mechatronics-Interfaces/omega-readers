@@ -1,5 +1,5 @@
 '''
-(c) 2022, 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ from PySide2.QtWidgets import *
 import numpy as np
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiSDK.device import ChannelType
 
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
@@ -58,15 +58,17 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
                
-        # Initialise a file-writer class (Poly5-format) and state its file path
+        # Initialise a file-writer class (XDF-format) and state its file path
         # Data is saved without filtering, the filter is only applied in the plotter
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"example_filter_and_plot.poly5"))
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_filter_and_plot.xdf"))
         # Define the handle to the device
         file_writer.open(dev)
         

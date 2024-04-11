@@ -1,5 +1,5 @@
 '''
-(c) 2022, 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import time
 from PySide2.QtWidgets import *
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 from TMSiSDK.device import ChannelType
 from TMSiSDK.device.devices.saga.saga_API_enums import SagaBaseSampleRate, RefMethod
 
@@ -58,11 +58,13 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Create the device object to interface with the SAGA-system.
-        dev = discoveryList[0]
-    
-        # Find and open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         
         # Check the current bandwidth that's in use
         current_bandwidth = dev.get_device_bandwidth()
@@ -103,20 +105,22 @@ try:
 
     
     if (len(discoveryList) > 0):
-        # Create the device object to interface with the SAGA-system.
-        dev = discoveryList[-1]
-        
-        # Find and open the connection to the SAGA-system
-        dev.open()
-        
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.wifi:
+                # Open the connection to SAGA
+                dev.open()
+                break
+
         # Before the measurement starts first a file-writer-object must be created and opened.
         # Upon creation specify :
-        #   - the data-format 'poly5' to be used
+        #   - the data-format 'xdf' to be used
         #   - the filepath/name, where the file must be stored
         # then 'link' the file-writer-instance to the device.
         # The file-writer-object is now ready to capture the measurement-data and
         # write it to the specified file.
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"example_wifi_measurement.poly5"))
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_wifi_measurement.xdf"))
         file_writer.open(dev)
         
         # Enable backup logging of the device
@@ -139,6 +143,9 @@ try:
         # The sample-data of the measurement has been archived into the specified file.
         file_writer.close()
         
+        # Set the DR-DS interface type back to docked
+        dev.set_device_interface(DeviceInterfaceType.docked)
+
         # Close the connection over the current interface
         dev.close()
         
@@ -148,24 +155,38 @@ try:
 
     
     if (len(discoveryList) > 0):
-        # Create the device object to interface with the SAGA-system.
-        dev = discoveryList[0]
-         
-        # Reopen the connection to the device
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         
         # Retrieve the recordings list with the full file on there
-        recordings_list = dev.get_device_card_file_list()
-        
+        file_list = dev.get_device_card_file_list()
+
+        if len(file_list) > 0:
+            import warnings
+            warnings.warn("\n\n!!! \nThere is/are recordings stored on the onboard memory. Changing the configuration will clear the device's SD card!\nDo you want to continue? ('yes'/'y' continue, all others abort opening)\n!!!\n", stacklevel = 1)
+            abort = input('Continue?\n')
+            if abort.lower() == 'yes' or abort.lower() == 'y':
+                pass
+            else:
+                raise TMSiError(error_code = TMSiErrorCode.general_error)
+
         # Configure a file writer to save the backed up data
-        file_writer_backup = FileWriter(FileFormat.poly5, join(measurements_dir,"example_wifi_measurement_backup_logging.poly5"))
+        file_writer_backup = FileWriter(FileFormat.xdf, join(measurements_dir,"example_wifi_measurement_backup_logging.xdf"))
         file_writer_backup.open(dev)
         
         # Get the handle to the latest file and start downloading the data
-        dev.download_file_from_device(file_id= recordings_list[-1].RecFileID)
+        dev.download_file_from_device(file_id= file_list[-1].RecFileID)
     
         # Close the file writer after download completion
         file_writer_backup.close()
+
+        # Disable backup logging of the device
+        dev.set_device_repair_logging(enable_repair_logging = False)
     
         # Close the connection to the SAGA-system
         dev.close()

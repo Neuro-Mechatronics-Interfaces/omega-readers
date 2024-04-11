@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ sys.path.append(modules_dir)
 from PySide2.QtWidgets import *
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceInterfaceType, DeviceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 
 from TMSiGui.gui_2windows import Gui
 from TMSiPlotterHelpers.differential_signal_plotter_helper import DifferentialSignalPlotterHelper
@@ -57,12 +57,13 @@ try:
     discoveryList = TMSiSDK().get_device_list(dev_type=DeviceType.saga)
 
     if len(discoveryList)>0:
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-
-        # Open a connection to the SAGA-system
-        dev.open()
-        print("saga opened")
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
 
         grid_type = '4-8-L'
 

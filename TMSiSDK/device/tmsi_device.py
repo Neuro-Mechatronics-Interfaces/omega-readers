@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -193,6 +193,13 @@ class TMSiDevice():
         """
         raise NotImplementedError('method not available for this device')
 
+    def get_device_name(*args, **kwargs):
+        """Function to be overridden by the child class.
+
+        :raises NotImplementedError: Must be overridden by the child class.
+        """
+        raise NotImplementedError('method not available for this device')
+
     def get_device_power_status(*args, **kwargs):
         """Function to be overridden by the child class.
 
@@ -312,6 +319,13 @@ class TMSiDevice():
         """
         raise NotImplementedError('method not available for this device')
 
+    def get_file_channels(*args, **kwargs):
+        """Function to be overridden by the child class.
+
+        :raises NotImplementedError: Must be overridden by the child class.
+        """
+        raise NotImplementedError('method not available for this device')
+
     def get_id(*args, **kwargs):
         """Function to be overridden by the child class.
 
@@ -404,6 +418,13 @@ class TMSiDevice():
         raise NotImplementedError('method not available for this device')
 
     def reset_device_event_buffer(*args, **kwargs):
+        """Function to be overridden by the child class.
+
+        :raises NotImplementedError: Must be overridden by the child class.
+        """
+        raise NotImplementedError('method not available for this device')
+
+    def reset_masks(*args, **kwargs):
         """Function to be overridden by the child class.
 
         :raises NotImplementedError: Must be overridden by the child class.

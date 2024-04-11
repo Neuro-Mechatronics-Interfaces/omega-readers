@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ limitations under the License.
 from PySide2 import QtWidgets, QtCore
 
 from ..designer._dialog_discover import Ui_DialogDiscover
+from ...utilities.tmsi_style import TMSiStyle
 
 class DialogDiscover(QtWidgets.QMainWindow, Ui_DialogDiscover):
     """DialogDiscover object"""
@@ -45,6 +46,7 @@ class DialogDiscover(QtWidgets.QMainWindow, Ui_DialogDiscover):
         """
         super().__init__()
         self.setupUi(self)
+        self.setStyleSheet(TMSiStyle)
         self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowMinMaxButtonsHint)
         self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.combinations_available = combinations_available
@@ -95,6 +97,8 @@ class DialogDiscover(QtWidgets.QMainWindow, Ui_DialogDiscover):
                         if dr.isChecked():
                             discover_enabled = True
                             break
+                if discover_enabled is False:
+                    break
                 if len(self.list_dss) > 0:
                     discover_enabled = False
                     for ds in self.list_dss:

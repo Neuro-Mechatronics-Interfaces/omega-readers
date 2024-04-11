@@ -1,6 +1,6 @@
 '''
 Copyright 2021 John Veillette (https://gitlab.com/john-veillette)
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ from pylsl import StreamInfo, StreamOutlet, local_clock
 
 from TMSiSDK.device.tmsi_device import TMSiDevice
 from TMSiSDK.sample_data_server.sample_data_server import SampleDataServer 
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 from TMSiSDK.device import ChannelType
 
 class LSLConsumer:
@@ -77,13 +77,15 @@ class LSLWriter:
     that streams data to labstreaminglayer
     '''
 
-    def __init__(self, stream_name = ''):
+    def __init__(self, stream_name = '', download_file_id : int = None, lsl_offset = 0.0335):
 
         self._name = stream_name if stream_name else 'tmsi'
         self._consumer = None
         self.device = None
         self._date = None
         self._outlet = None
+        self._download_file_id = download_file_id
+        self.lsl_offset = lsl_offset
 
 
     def open(self, device):
@@ -118,7 +120,11 @@ class LSLWriter:
                 'tmsi-' + str(self.device.get_device_serial_number()), 
                 ) 
             chns = info.desc().append_child("channels")
-            for idx, ch in enumerate(self.device.get_device_active_channels()): # active channels
+            if self.device.get_device_type() == "APEX" and self._download_file_id is not None:
+                channels = self.device.get_file_channels(file_id = self._download_file_id)
+            else:
+                channels = self.device.get_device_active_channels()
+            for idx, ch in enumerate(channels): # active channels
                  chn = chns.append_child("channel")
                  chn.append_child_value("label", ch.get_channel_name())
                  chn.append_child_value("index", str(idx))
@@ -133,7 +139,7 @@ class LSLWriter:
                      chn.append_child_value("type", '-')
             info.desc().append_child_value("manufacturer", "TMSi")
             sync = info.desc().append_child("synchronization")
-            sync.append_child_value("offset_mean", str(0.0335)) 
+            sync.append_child_value("offset_mean", str(self.lsl_offset)) 
             sync.append_child_value("offset_std", str(0.0008)) # jitter AFTER jitter correction by pyxdf
         
             # start sampling data and pushing to LSL

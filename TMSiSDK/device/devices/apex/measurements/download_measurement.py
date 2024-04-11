@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -84,11 +84,11 @@ class DownloadMeasurement(SignalMeasurement):
         file_request = TMSiDevSetCardFileReq()
         file_request.RecFileID = self._file_id
         file_request.StartStop = SampleControl.StopSampling.value
-        TMSiLoggerActivity().log("{}->>APEX-SDK: set device download request OFF".format(self.get_name()))
-        self._dev.set_device_download_file_request(file_request)
         self._sampling_thread.stop()
         self._sampling_thread.join()
         TMSiLoggerActivity().log("{}->>Sampling Thread: stop".format(self.get_name()))
         self._conversion_thread.stop()
         self._conversion_thread.join()
         TMSiLoggerActivity().log("{}->>Conversion Thread: stop".format(self.get_name()))
+        TMSiLoggerActivity().log("{}->>APEX-SDK: set device download request OFF".format(self.get_name()))
+        self._dev.set_device_download_file_request(file_request)

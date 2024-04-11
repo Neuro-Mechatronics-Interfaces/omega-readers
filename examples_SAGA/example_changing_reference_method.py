@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ limitations under the License.
  * configurable options are RefMethod.common and RefMethod.average.
  * In case of common reference, the reference switch method can be set to 
  * AutoRefMethod.Fixed or AutoRefMethod.Average. In case of 
- * AutoRefMethod.Average, reference method automatically swithces to average 
- * reference when the common reference signal is out of range
+ * AutoRefMethod.Average, reference method automatically switches to average 
+ * reference when the common reference signal is out of range.
  *
  */
 
@@ -45,7 +45,7 @@ import time
 
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiSDK.device import ChannelType
 from TMSiSDK.device.devices.saga.saga_API_enums import SagaBaseSampleRate, RefMethod, AutoRefMethod
 from TMSiSDK.device.tmsi_device_enums import MeasurementType
@@ -56,11 +56,13 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
     
         # Set the sample rate of all channels to 1000 Hz
         dev.set_device_sampling_config(base_sample_rate = SagaBaseSampleRate.Decimal,  channel_type = ChannelType.all_types, channel_divider = 4)
@@ -84,12 +86,12 @@ try:
     
         # Before the measurement starts first a file-writer-object must be created and opened.
         # Upon creation specify :
-        #   - the data-format 'poly5' to be used
+        #   - the data-format 'xdf' to be used
         #   - the filepath/name, where the file must be stored
         # then 'link' the file-writer-instance to the device.
         # The file-writer-object is now ready to capture the measurement-data and
         # write it to the specified file.
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir, "changed_reference_method_measurement.poly5"))
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir, "changed_reference_method_measurement.xdf"))
         file_writer.open(dev)
     
         # Start the measurement and wait 10 seconds. In the mean time the file-writer-instance

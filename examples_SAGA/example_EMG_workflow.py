@@ -1,5 +1,5 @@
 '''
-(c) 2022, 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ from PySide2.QtWidgets import *
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 
 from TMSiGui.gui import Gui
 from TMSiPlotterHelpers.impedance_plotter_helper import ImpedancePlotterHelper
@@ -59,13 +59,15 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         
-        # Open a connection to the SAGA-system
-        dev.open()
-        
-        grid_type = '8-8-S'
+        grid_type = '4-8-L'
         # options:'4-8-L', '6-11-L', '6-11-S', '8-8-L', '8-8-S', '6-11-L-1', '6-11-L-2', '6-11-S-1', '6-11-S-2', '8-8-L-1', '8-8-L-2', '8-8-S-1', '8-8-S-2'
         
         # Load the HD-EMG channel set and configuration
@@ -84,7 +86,7 @@ try:
         
         # Initialise the helper
         plotter_helper = ImpedancePlotterHelper(device=dev,
-                                                 layout=grid_type, 
+                                                 grid_type=grid_type, 
                                                  file_storage = join(measurements_dir,"example_EMG_workflow"))
         # Define the GUI object and show it 
         gui = Gui(plotter_helper = plotter_helper)
@@ -96,16 +98,16 @@ try:
         time.sleep(1)
         
         # Ask for desired file format
-        file_format=input("Which file format do you want to use? (Options: poly5 or xdf)\n")
+        file_format=input("Which file format do you want to use? (Options: xdf or poly5)\n")
         
         # Initialise the desired file-writer class and state its file path
         if file_format.lower()=='poly5':
             file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"example_EMG_workflow.poly5"))
         elif file_format.lower()=='xdf':
-            file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_EMG_workflow.xdf"), add_ch_locs=True)
+            file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_EMG_workflow.xdf"), add_ch_locs=False)
         else:
-            print('File format not supported. File is saved to Poly5-format.')
-            file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"example_EMG_workflow.poly5"))
+            print('File format not supported. File is saved to XDF-format.')
+            file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_EMG_workflow.xdf"))
         
         # Define the handle to the device
         file_writer.open(dev)
@@ -113,7 +115,7 @@ try:
         # Initialise the new plotter helper and filter
         # In case you want to use the signal plotter, use the grid_type argument to order the channels
         # following the order of the channels in the grid, see example_filter_and_plot
-        plotter_helper = HeatmapPlotterHelper(device=dev, layout=grid_type, hpf=5, order=1)
+        plotter_helper = HeatmapPlotterHelper(device=dev, grid_type=grid_type, hpf=5, order=1)
         # Define the GUI object and show it 
         gui = Gui(plotter_helper = plotter_helper)
          # Enter the event loop

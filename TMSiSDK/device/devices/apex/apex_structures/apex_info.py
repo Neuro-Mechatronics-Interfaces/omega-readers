@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ class ApexInfo():
         :param pairing_status: pairing status, defaults to PairingStatus.no_pairing_needed
         :type pairing_status: PairingStatus, optional
         """
+        self.__device_name = "Unknown"
         self.__dr_interface = dr_interface
         self.__dr_serial_number = serial_number
         self.__id = id
@@ -86,6 +87,14 @@ class ApexInfo():
         """
         return self.__id
 
+    def get_name(self):
+        """Get the name of the Apex
+
+        :return: name
+        :rtype: str
+        """
+        return self.__device_name
+    
     def get_num_channels(self):
         """Get the number of channels.
 
@@ -144,6 +153,7 @@ class ApexInfo():
         self.__num_hw_channels = device_info_report.NrOfHWChannels
         self.__num_imp_channels = device_info_report.NrOfImpChannels
         self.__num_cycling_states = device_info_report.NrOfCyclingStates
+        self.__device_name = device_info_report.DeviceName.decode('windows-1252')
         
     def set_dongle_id(self, dongle_id):
         """Set the id of the dongle.

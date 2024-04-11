@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ measurements_dir = join(Example_dir, '../measurements') # directory with all mea
 sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 from TMSiGui.gui import Gui
 from TMSiPlotterHelpers.signal_plotter_helper import SignalPlotterHelper
@@ -58,7 +58,7 @@ try:
         dev.open()
         
         # Initialise the lsl-stream
-        stream = FileWriter(FileFormat.lsl, "APEX")
+        stream = FileWriter(FileFormat.lsl, "APEX", lsl_offset = 0.026)
         
         # Pass the device information to the LSL stream.
         stream.open(dev)

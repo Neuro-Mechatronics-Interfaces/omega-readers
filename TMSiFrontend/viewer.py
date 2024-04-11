@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import numpy as np
 from PySide2 import QtWidgets
 
 from .designer._viewer import Ui_Viewer
+from .utilities.tmsi_style import TMSiStyle
 from . import plotters
 
 SCROLL_RATIO = 10.0
@@ -55,6 +56,7 @@ class Viewer(QtWidgets.QWidget, Ui_Viewer):
         self._name = name
         self.slider_pressed = False
         self.setupUi(self)
+        self.setStyleSheet(TMSiStyle)
         self._local_setup_ui()
         self.main_plotter.btn_freeze.setVisible(False)
         self.main_plotter.initialize_channels_components(self._reader.get_reader_channels())
@@ -83,13 +85,17 @@ class Viewer(QtWidgets.QWidget, Ui_Viewer):
         self._update_time_scroll_bar(new_value = self.time_scrollbar.value() // 2)
         
     def _local_setup_ui(self):
-        self.main_plotter = plotters.SignalPlotter(get_data_callback = self._update_data)
+        self.main_plotter = plotters.SignalPlotter(
+            get_data_callback = self._update_data, 
+            update_viewer_time_scrollbar_callback = self._update_time_scroll_bar)
+        self.main_plotter.downsample_based_on_screen = self.main_plotter.downsample_based_on_screen_max_min
         self.layout_frame_plotter.insertWidget(0, self.main_plotter)
-        self.main_plotter.window_size = 5
+        self.main_plotter.window_size = 10
         self.main_plotter.chart.set_time_range(self.main_plotter.window_size)
-        self.time_scrollbar.valueChanged.connect(self._scroll_value_changed)
+        self.time_scrollbar.valueChanged.connect(self._time_scroll_value_changed)
         self.total_time = self._reader.get_reader_number_of_samples() / self._reader.get_reader_sampling_frequency()
-
+        self.main_plotter.spin_time_window.setMaximum(10)
+        
     def _scroll_slider_pressed(self):
         self.slider_pressed = True
         
@@ -97,7 +103,7 @@ class Viewer(QtWidgets.QWidget, Ui_Viewer):
         self.slider_pressed = False
         self._update_data()
 
-    def _scroll_value_changed(self):
+    def _time_scroll_value_changed(self):
         if self.slider_pressed:
             return
         self._update_data()
@@ -118,10 +124,8 @@ class Viewer(QtWidgets.QWidget, Ui_Viewer):
         
     def _update_time_scroll_bar(self, new_value = None):
         self.time_scrollbar.setMinimum(1)
-        self.time_scrollbar.setMaximum(math.ceil((self.total_time - self.main_plotter.window_size) / self.main_plotter.window_size * SCROLL_RATIO) + 2)
+        self.time_scrollbar.setMaximum(math.ceil(self.total_time - self.main_plotter.window_size) * SCROLL_RATIO / self.main_plotter.window_size + 1)
         if new_value is None:
             self._update_data()
             return
         self.time_scrollbar.setValue(new_value)
-
-    

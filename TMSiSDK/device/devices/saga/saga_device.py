@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ from .saga_structures.saga_channel import SagaChannel
 from .saga_structures.saga_sensor import SagaSensor
 from .saga_API_structures import *
 from .saga_API_enums import *
+from .saga_API_lookup_table import DeviceErrorLookupTable
 
 from .saga_API import *
 
@@ -127,7 +128,7 @@ class SagaDevice(TMSiDevice):
             else:
                 raise TMSiError(
                     error_code = TMSiErrorCode.device_error, 
-                    dll_error_code = self.__last_error_code)
+                    dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
         else:
             raise TMSiError(TMSiErrorCode.device_not_connected)
 
@@ -256,7 +257,8 @@ class SagaDevice(TMSiDevice):
         TMSiLoggerActivity().log("TMSi-SDK->>SAGA-SDK: import configuration")
         if self.__info.get_state() == DeviceState.connected:
             TMSiLoggerActivity().log("SAGA-SDK->>SAGA-API: import configuration")
-            if self.__config.import_from_xml(filename):
+            import_success, import_error = self.__config.import_from_xml(filename)
+            if import_success:
                 self.__set_device_config()
                 TMSiLoggerActivity().log("SAGA-SDK->>SAGA-API: set device configuration")
                 self.__load_config_from_device()
@@ -264,7 +266,7 @@ class SagaDevice(TMSiDevice):
                 return
             else:
                 TMSiLoggerActivity().log("SAGA-API->>SAGA-SDK: import failed general error")
-                raise TMSiError(error_code = TMSiErrorCode.file_import_error)
+                raise TMSiError(error_code = TMSiErrorCode.file_import_error, message = import_error)
         TMSiLoggerActivity().log("SAGA-SDK->>TMSi-SDK: import failed device not connected")
         raise TMSiError(
             error_code = TMSiErrorCode.device_not_connected)
@@ -486,6 +488,15 @@ class SagaDevice(TMSiDevice):
                                ds_serial_number = SagaDevice.__device_info_list[idx].get_ds_serial_number()))
         return device_list
 
+    @LogPerformances
+    def get_device_name(self):
+        """Get name of the device
+
+        :return: name of the device
+        :rtype: str
+        """
+        return self.__info.get_name()
+
     def get_device_power_status(*args, **kwargs):
         """Function to be overridden by the child class.
 
@@ -623,12 +634,14 @@ class SagaDevice(TMSiDevice):
         """
         raise NotImplementedError('method not available for this device')
 
-    def get_dr_interface(*args, **kwargs):
-        """Function to be overridden by the child class.
+    @LogPerformances
+    def get_dr_interface(self) -> DeviceInterfaceType:
+        """Returns the interface of the device.
 
-        :raises NotImplementedError: Must be overridden by the child class.
+        :return: the interface of the device.
+        :rtype: DeviceInterfaceType
         """
-        raise NotImplementedError('method not available for this device')
+        return self.__info.get_dr_interface()
 
     def get_event(*args, **kwargs):
         """Function to be overridden by the child class.
@@ -645,13 +658,24 @@ class SagaDevice(TMSiDevice):
         raise NotImplementedError('method not available for this device')
 
     @LogPerformances
+    def get_file_channels(self, file_id):
+        """Gets the list of channels from the file.
+
+        :param file_id: id of the file
+        :type file_id: int
+        :return: The list of channels
+        :rtype: list[ApexChannel]
+        """
+        return self.get_device_active_channels()
+        
+    @LogPerformances
     def get_id(self) -> int:
         """Gets the device id.
 
         :return: the device id.
         :rtype: int
         """
-        return self.__info.get_id()
+        return id(self)
 
     def get_live_impedance(*args, **kwargs):
         """Function to be overridden by the child class.
@@ -718,7 +742,7 @@ class SagaDevice(TMSiDevice):
                 self.__info.get_id(),
                 self.__info.get_dr_interface().value
             )
-            if (self.__last_error_code == TMSiDeviceRetVal.TMSI_DS_DEVICE_ALREADY_OPEN):
+            if self.__last_error_code == TMSiDeviceRetVal.TMSI_DS_DEVICE_ALREADY_OPEN:
                 # The found device is available but in it's open-state: Close and re-open the connection
                 self.__last_error_code = TMSiCloseDevice(
                     self.__device_handle)
@@ -728,7 +752,7 @@ class SagaDevice(TMSiDevice):
                     self.__info.get_dr_interface().value
             )
 
-            if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+            if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
                     TMSiLoggerActivity().log("SAGA-API->>SAGA-SDK: open connection succeeded")
                     # The device is opened succesfully. Update the device information.
                     self.__info.set_state(DeviceState.connected)
@@ -739,7 +763,7 @@ class SagaDevice(TMSiDevice):
                 TMSiLoggerActivity().log("SAGA-API->>SAGA-SDK: open connection failed, device error")
                 raise TMSiError(
                     error_code = TMSiErrorCode.device_error, 
-                    dll_error_code = self.__last_error_code)
+                    dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
         else:
             TMSiLoggerActivity().log("SAGA-SDK->>TMSi-SDK: open connection failed, no device found")
             raise TMSiError(
@@ -784,12 +808,12 @@ class SagaDevice(TMSiDevice):
         if (self.__info.get_state() != DeviceState.sampling):
             raise TMSiError(TMSiErrorCode.api_invalid_command)
         self.__last_error_code = TMSiResetDeviceDataBuffer(self.__device_handle)
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             return
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     def reset_device_event_buffer(*args, **kwargs):
         """Function to be overridden by the child class.
@@ -799,8 +823,16 @@ class SagaDevice(TMSiDevice):
         raise NotImplementedError('method not available for this device')
 
     @LogPerformances
+    def reset_masks(self):
+        """Reset masks"""
+        self.apply_mask(n_channels = [], masks = [])
+
+    @LogPerformances
     def reset_to_factory_default(self):
-        """Resets the device to default configuration.
+        """Resets the device to default configuration. 
+        To fully complete the progress, please :
+        1. close the connection with the device, 
+        2. undock your data recorder and remove batteries.
 
         :raises TMSiError: TMSiErrorCode.device_error if reset fails.
         :raises TMSiError: TMSiErrorCode.device_not_connected if not connected.
@@ -862,14 +894,25 @@ class SagaDevice(TMSiDevice):
         self.__load_config_from_device()
 
     @LogPerformances
-    def set_device_backup_logging(self, prefix_filename):
+    def set_device_backup_logging(self, enable = True, prefix_filename : str = None):
+        """Set the backup logging during acquisition
+
+        :param enable: True if enabled, False otherwise, defaults to True
+        :type enable: bool, optional
+        :param prefix_filename: Prefix for the file name to save on the device card, defaults to None
+        :type prefix_filename: str, optional
+        """
         cfg = self.get_card_recording_config()
-        max_len = len(prefix_filename)
-        prefix_filename = bytearray(prefix_filename, 'utf-8')
-        converted_str = bytearray(SagaStringLengths.PrefixFileName.value)
-        converted_str[:max_len] = prefix_filename[:max_len]
-        cfg.PrefixFileName[:] = converted_str
-        cfg.StartControl = SagaStartCardRecording.Remote.value
+        if enable:
+            cfg.StartControl = SagaStartCardRecording.Remote.value
+        else:
+            cfg.StartControl = SagaStartCardRecording.Off.value
+        if prefix_filename is not None:
+            max_len = len(prefix_filename)
+            prefix_filename = bytearray(prefix_filename, 'utf-8')
+            converted_str = bytearray(SagaStringLengths.PrefixFileName.value)
+            converted_str[:max_len] = prefix_filename[:max_len]
+            cfg.PrefixFileName[:] = converted_str
         self.set_card_recording_config(cfg)
     
     @LogPerformances
@@ -931,7 +974,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def set_device_impedance_request(self, measurement_request: TMSiDevImpReq):
@@ -948,12 +991,12 @@ class SagaDevice(TMSiDevice):
             self.__device_handle,
             pointer(measurement_request)
         )
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             return
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def set_device_interface(self, device_interface):
@@ -966,10 +1009,11 @@ class SagaDevice(TMSiDevice):
         """
         if not isinstance(device_interface, DeviceInterfaceType):
             raise ValueError("device_interface must be DeviceInterfaceType class")
-        not_allowed_device_interfaces = [
-            DeviceInterfaceType.usb,
-            DeviceInterfaceType.network]
-        if device_interface in not_allowed_device_interfaces:
+        allowed_device_interfaces = [
+            DeviceInterfaceType.docked,
+            DeviceInterfaceType.optical,
+            DeviceInterfaceType.wifi]
+        if device_interface not in allowed_device_interfaces:
             raise TMSiError(error_code = TMSiErrorCode.api_incompatible_configuration, 
                             message = "interface not allowed")
         self.__config.set_configured_interface(device_interface)
@@ -1028,6 +1072,11 @@ class SagaDevice(TMSiDevice):
         channel_divider = allowed_dividers.index(channel_divider) - 1
         if channel_type is not None:
             self.__set_device_channel_sample_rates(channel_type, channel_divider)
+        if base_sample_rate is not None:
+            # when base sample rate changes, a check on the sync out pulse must be done.
+            if self.__config.get_dr_sync_out_divider() != 0:
+                sync_freq = self.__config.get_sample_rate() / self.__config.get_dr_sync_out_divider()
+                self.__config.set_dr_sync_out_divider(round(base_sample_rate.value / sync_freq))
         self.__set_device_config(base_sample_rate = base_sample_rate)
         self.__load_config_from_device()
 
@@ -1046,13 +1095,13 @@ class SagaDevice(TMSiDevice):
         self.__last_error_code = TMSiSetDeviceSampling(
             self.__device_handle, 
             pointer(measurement_request))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             return
         else:
             TMSiLoggerActivity().log("SAGA-API->>SAGA-SDK: start failed with error {}".format(self.__last_error_code))
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def set_device_sync_out_config(self, marker = False, frequency = None, duty_cycle = None):
@@ -1074,7 +1123,7 @@ class SagaDevice(TMSiDevice):
             if frequency:
                 self.__config.set_dr_sync_out_divider(round(self.__config.get_sample_rate() / frequency))
             if duty_cycle:
-                self.__config.set_dr_sync_out_duty_cycle(duty_cycle = duty_cycle * 10)
+                self.__config.set_dr_sync_out_duty_cycle(duty_cycle = int(duty_cycle * 10))
         self.__set_device_config()
         self.__load_config_from_device()        
         
@@ -1157,7 +1206,12 @@ class SagaDevice(TMSiDevice):
         if self.__info.get_state() != DeviceState.sampling:
             raise TMSiError(error_code = TMSiErrorCode.api_invalid_command)
         TMSiLoggerActivity().log("TMSi-SDK->>{}: stop".format(self.__measurement.get_name()))
-        self.__measurement.stop()
+        try:
+            self.__measurement.stop()
+        except TMSiError as e:
+            TMSiLogger().warning(message = "stop_download_file failed with error:\n{}\nDevice state moved to connected to allow the device to close.".format(str(e)))
+            self.__info.set_state(DeviceState.connected)
+            raise e    
         self.__info.set_state(DeviceState.connected)
 
     @LogPerformances
@@ -1172,7 +1226,12 @@ class SagaDevice(TMSiDevice):
         if self.__info.get_state() != DeviceState.sampling:
             raise TMSiError(error_code = TMSiErrorCode.api_invalid_command)
         TMSiLoggerActivity().log("TMSi-SDK->>{}: stop".format(self.__measurement.get_name()))
-        self.__measurement.stop()
+        try:
+            self.__measurement.stop()
+        except TMSiError as e:
+            TMSiLogger().warning(message = "stop_measurement failed with error:\n{}\nDevice state moved to connected to allow the device to close.".format(str(e)))
+            self.__info.set_state(DeviceState.connected)
+            raise e    
         self.__info.set_state(DeviceState.connected)
     
     @LogPerformances
@@ -1226,7 +1285,7 @@ class SagaDevice(TMSiDevice):
             len(file_list),
             pointer(file_number)
             )
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             return_list = []
             for i in range(file_number.value):
                 return_list.append(file_list[i])
@@ -1234,7 +1293,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __get_device_card_file_metadata(self, file_id):
@@ -1255,7 +1314,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
         useless_1 = TMSiDevRecDetails()
         useless_2 = (TMSiDevImpReport*self.__info.get_num_active_imp_channels())()
         useless_2_len = self.__info.get_num_active_imp_channels()
@@ -1271,7 +1330,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __get_device_card_recording_config(self):
@@ -1284,7 +1343,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __get_device_configuration(self):
@@ -1292,7 +1351,7 @@ class SagaDevice(TMSiDevice):
         device_config = TMSiDevGetConfig()
         device_channel_list = (TMSiDevChDesc * n_channels)()
         self.__last_error_code = TMSiGetDeviceConfig(self.__device_handle, pointer(device_config), pointer(device_channel_list), n_channels)
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             self.__info.set_device_config(device_config = device_config)
             self.__config.set_device_config(device_config = device_config)
             channels = []
@@ -1306,7 +1365,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
         self.__get_device_sensors()
         return device_config
     
@@ -1323,7 +1382,7 @@ class SagaDevice(TMSiDevice):
                                                          _MAX_NUM_BATTERIES,
                                                          pointer(dev_time),
                                                          pointer(dev_storage_report))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             status = {}
             status["TotalSizeMB"] = dev_storage_report.TotalSizeMB
             status["UsedSizeMB"] = dev_storage_report.UsedSizeMB
@@ -1331,7 +1390,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __get_device_sensors(self):
@@ -1347,18 +1406,18 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __get_device_status(self):
         device_status_report = TMSiDevStatReport()
         self.__last_error_code = TMSiGetDeviceStatus(self.__device_handle, pointer(device_status_report))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSI_OK:
             self.__info.set_device_status_report(device_status_report = device_status_report)
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __load_config_from_device(self):
@@ -1367,12 +1426,17 @@ class SagaDevice(TMSiDevice):
 
     @LogPerformances
     def __reset_device_card(self):
-        self.__set_device_card_recording_config(
-            config = self.__get_device_card_recording_config())
-
+        config = self.__get_device_card_recording_config()
+        if config.StartControl != 4:
+            tmp = config.StartControl
+            config.StartControl = 4
+            self.__set_device_card_recording_config(config = config, reset = True)
+            config.StartControl = tmp
+        self.__set_device_card_recording_config(config, reset = True)
+        
     @LogPerformances
-    def __set_device_card_recording_config(self, config):
-        if config.StartControl != 0:
+    def __set_device_card_recording_config(self, config, reset = False):
+        if config.StartControl != 0 and not reset:
             bw_button = 2_000_000
             bw_requested = 0
             for channel in self.__config.get_active_channels():
@@ -1388,7 +1452,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
     
     @LogPerformances
     def __set_device_channel_names(self, names, indices):
@@ -1438,11 +1502,11 @@ class SagaDevice(TMSiDevice):
             dev_channel_list[idx].AltChanName[:max_len] = name[:max_len]
 
         self.__last_error_code = TMSiSetDeviceConfig(self.__device_handle, pointer(dev_set_config), pointer(dev_channel_list), self.__info.get_num_channels())
-        if (self.__last_error_code != TMSiDeviceRetVal.TMSI_OK):
+        if self.__last_error_code != TMSiDeviceRetVal.TMSI_OK:
             # Failure TMSiSetDeviceConfig()
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
         
     @LogPerformances
     def __set_device_factory_default(self):
@@ -1464,8 +1528,8 @@ class SagaDevice(TMSiDevice):
         dev_set_config.PerformFactoryReset = 1
 
         dev_set_channel = TMSiDevSetChCfg()
-        dev_set_channel.ChanNr = 0;
-        dev_set_channel.ChanDivider = -1;
+        dev_set_channel.ChanNr = 0
+        dev_set_channel.ChanDivider = -1
         
 
         self.__last_error_code = TMSiSetDeviceConfig(self.__device_handle, pointer(dev_set_config), pointer(dev_set_channel), 1)
@@ -1474,7 +1538,7 @@ class SagaDevice(TMSiDevice):
         else:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error, 
-                dll_error_code = self.__last_error_code)
+                dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
 
     @LogPerformances
     def __update_sensor_list(self, device_sensor_list, sensor_list_len):

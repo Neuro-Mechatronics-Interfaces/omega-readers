@@ -32,4 +32,5 @@ limitations under the License.
 from .channel_component import ChannelComponent
 from .dialogs.dialog_confirm import Dialog, DialogConfirm
 from .dialogs.dialog_discover import DialogDiscover
+from .dialogs.dialog_connect import DialogConnect
 from .table_impedance_values import TableImpedanceValues

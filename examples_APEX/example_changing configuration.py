@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ limitations under the License.
  * @brief This example shows how to change the device sampling configuration. 
  * The example shows how to change the sampling frequency, disable the 
  * live-impedance measurement and set an impedance limit for the headcap 
- * indicator
+ * indicator.
  * 
  */
 
@@ -43,7 +43,7 @@ sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
 from TMSiSDK.device import ApexEnums
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 
 
 try:

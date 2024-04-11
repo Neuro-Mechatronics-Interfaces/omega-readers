@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ limitations under the License.
 
 import sys
 from os.path import join, dirname, realpath
+from PySide2.QtWidgets import *
 Example_dir = dirname(realpath(__file__)) # directory of this file
 modules_dir = join(Example_dir, '..') # directory with all modules
 measurements_dir = join(Example_dir, '../measurements') # directory with all measurements
@@ -39,7 +40,8 @@ sys.path.append(modules_dir)
 
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
+from TMSiFrontend.components.dialog import Dialog
 
 
 try:
@@ -59,6 +61,15 @@ try:
         
         # Close the connection to the device
         dev.close()
+
+        # Check if there is already a plotter application in existence
+        app = QApplication.instance()
+        
+        # Initialise the plotter application if there is no other plotter application
+        if not app:
+            app = QApplication(sys.argv)
+            
+        Dialog(title='Repower device', message='To fully complete the process, please repower your device.').exec_()
     
 except TMSiError as e:
     print(e)

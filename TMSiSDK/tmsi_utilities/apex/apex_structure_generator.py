@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,6 +54,8 @@ class ApexStructureGenerator:
 
         :param device: device to pull the configuration from
         :type device: ApexDevice
+        :param start_control: how to start recording.
+        :type start_control: ApexEnums.ApexStartCardRecording
         :param prefix_file_name: prefix file name, defaults to None.
         :type prefix_file_name: str, optional
         :param start_time: datetime of the start, defaults to None.
@@ -67,7 +69,16 @@ class ApexStructureGenerator:
         :return: the structure containing provided information
         :rtype: ApexStructures.TMSiDevCardRecCfg
         """
-        
+
+        # data check before creating configuration
+        if start_time is not None and stop_time is not None:
+            if start_time > stop_time:
+                raise ValueError("Start time cannot be greater than stop time.")
+            if start_time == stop_time:
+                raise ValueError("Start time cannot be equal to stop time.")
+            if start_time < datetime.datetime.now():
+                raise ValueError("Start time cannot be in the past.")
+
         config = device.get_card_recording_config()
         config.StartControl = start_control.value
         if prefix_file_name is not None:

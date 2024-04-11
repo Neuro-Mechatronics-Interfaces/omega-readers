@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ from PySide2.QtWidgets import *
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiSDK.device.devices.saga.saga_API_enums import SagaBaseSampleRate
 from TMSiSDK.device import ChannelType
 
@@ -55,11 +55,13 @@ try:
 
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         
         # Set the sample rate of the BIP channel to 4000 Hz
         dev.set_device_sampling_config(base_sample_rate = SagaBaseSampleRate.Decimal,  channel_type = ChannelType.BIP, channel_divider = 1)
@@ -88,8 +90,8 @@ try:
         dev.set_device_active_channels(enable_channels, True)
         dev.set_device_active_channels(disable_channels, False)
         
-        # Initialise a file-writer class (Poly5-format) and state its file path
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"Example_envelope_plot.poly5"))
+        # Initialise a file-writer class (XDF-format) and state its file path
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"Example_envelope_plot.xdf"))
         
         # Initialise filter variables for the envelope
         # Initialise BandPass filter variables

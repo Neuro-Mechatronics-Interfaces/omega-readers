@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -102,8 +102,9 @@ class HeatmapChart(Chart):
         self._x_interpolate, self._y_interpolate = np.mgrid[0:self.__max_x:self._step,0:self.__max_y:self._step]
         self._electrode_positions = electrode_positions
         self._electrode_labels = electrode_labels
+        self.delete_all_labels()
         self.initialize_electrode_labels()
-        self.set_ranges([0,1],[0,1])
+        self.set_ranges([-0.1,1],[-0.1,1])
         if self._is_headcap:
             self.set_ranges([-self.__max_x * 0.1, self.__max_x * 1.1], [-self.__max_y * 0.1, self.__max_y * 1.1])
             corners = [[i,j] for i in range(0,self.__max_x+1,self.__max_x) for j in range(0,self.__max_y+1,self.__max_y)]
@@ -118,6 +119,12 @@ class HeatmapChart(Chart):
             t_item = pg.TextItem(text, (128, 128, 128), anchor=(0, 0))
             t_item.setPos(x[0] / self._step, x[1] / self._step)
             self._plotter_chart.window.addItem(t_item) 
+
+    def delete_all_labels(self):
+        """Delete all electrode labels on the chart"""
+        items_to_remove = [item for item in self._plotter_chart.window.items if isinstance(item, pg.TextItem)]
+        for item in items_to_remove:
+            self._plotter_chart.window.removeItem(item)
 
     def draw_headcap(self):
         """Draw head on the chart"""

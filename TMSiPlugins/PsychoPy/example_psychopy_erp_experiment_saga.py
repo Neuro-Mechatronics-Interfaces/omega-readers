@@ -1,5 +1,5 @@
 '''
-(c) 2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import os
 os.environ["PYQTGRAPH_QT_LIB"] = 'PySide2'
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiSDK.device.devices.saga.saga_API_enums import SagaBaseSampleRate
 from TMSiSDK.device import ChannelType
 from TMSiSDK.device.tmsi_device_enums import MeasurementType
@@ -116,14 +116,14 @@ try:
         print('\n  Please check if red and green LEDs are turned on ... \n')
 
         # Experiment settings
-        n_trials = 20
+        n_trials = 60
         interval = 1.5 
         duration = 0.05
         probability = 0.2
 
         # !! NOTE: Available options for the (non)target_value inputs are all numbers between 2 and 30 for APEX
         # Check COM_port on which the USB-TTL module can be found and change accordingly. 
-        experiment = PsychopyExperimentSetup(TMSiDevice="SAGA", COM_port = 'COM8', n_trials = n_trials, target_value = 17, nontarget_value= 1,
+        experiment = PsychopyExperimentSetup(TMSiDevice="SAGA", COM_port = 'COM5', n_trials = n_trials, target_value = 17, nontarget_value= 1,
                                              interval = interval, probability = probability, duration = duration)
         
         # Check if there is already a plotter application in existence
@@ -135,7 +135,7 @@ try:
         
         # Initialise the helper
         plotter_helper = ImpedancePlotterHelper(device=dev,
-                                                layout='head', 
+                                                is_head_layout=True, 
                                                 file_storage = join(measurements_dir,"Example_PsychoPy_ERP_experiment"))
         # Define the GUI object and show it 
         gui = Gui(plotter_helper = plotter_helper)
@@ -173,8 +173,8 @@ try:
             else:
                 break
         
-        # Initialise a file-writer class (Poly5-format) and state its file path
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"Example_PsychoPy_ERP_experiment.poly5"))
+        # Initialise a file-writer class (XDF-format) and state its file path
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"Example_PsychoPy_ERP_experiment.xdf"))
         
         # Check to see if the participant is ready for the experiment
         while True:

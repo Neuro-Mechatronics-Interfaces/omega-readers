@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,34 +36,50 @@ limitations under the License.
 from scipy import signal
 import numpy as np
 
-from TMSiFrontend.plotters.signal_plotter import SignalPlotter
-
 from TMSiBackend.data_consumer.consumer_thread import ConsumerThread
 from TMSiBackend.data_consumer.consumer import Consumer
 from TMSiBackend.buffer import Buffer
 from TMSiBackend.data_monitor.monitor import Monitor
 
 from TMSiSDK.tmsi_utilities.support_functions import array_to_matrix as Reshape
+from TMSiSDK.tmsi_sdk import ChannelType
 
 from .signal_plotter_helper import SignalPlotterHelper
+from .real_time_signal_plotter import RealTimeSignalPlotter
 
 
 class FilteredSignalPlotterHelper(SignalPlotterHelper):
-    def __init__(self,  device, grid_type = None, hpf = 0, lpf = 0, order = 1):
+    def __init__(self, device, grid_type = None, hpf = 0, lpf = 0, order = 1):
         # call super of SignalPlotterHelper
-        super(SignalPlotterHelper, self).__init__(device = device,monitor_class = Monitor, consumer_thread_class = FilteredConsumerThread)
-        self.main_plotter = SignalPlotter()
+        if device.get_device_type() == "APEX":
+            super(SignalPlotterHelper, self).__init__(device = device,
+                                                  monitor_class = Monitor, 
+                                                  consumer_thread_class = FilteredConsumerThreadApex)
+        else:    
+            super(SignalPlotterHelper, self).__init__(device = device,
+                                                  monitor_class = Monitor, 
+                                                  consumer_thread_class = FilteredConsumerThread)
+        self.main_plotter = RealTimeSignalPlotter()
+        self._current_window_size = self.main_plotter.window_size   
         
         self.grid_type = grid_type
         self.hpf = hpf
         self.lpf = lpf
         self.order = order
+    
+    def initialize(self):
+        super().initialize()
+        self.n_unfiltered_channels = 0
+        for ch in self.channels:
+            if ch.get_channel_type() != ChannelType.UNI and ch.get_channel_type() != ChannelType.BIP:
+                self.n_unfiltered_channels +=1
 
     def start(self):
         self.consumer = Consumer()
         self.consumer_thread = self.consumer_thread_class(
             consumer_reading_queue=self.consumer.reading_queue,
-            sample_rate=self.device.get_device_sampling_frequency()
+            sample_rate=self.device.get_device_sampling_frequency(), 
+            n_unfiltered = self.n_unfiltered_channels
         )
         # Initialize filter
         self.consumer_thread.initialize_filter(hpf = self.hpf, lpf = self.lpf, order = self.order)
@@ -76,15 +92,19 @@ class FilteredSignalPlotterHelper(SignalPlotterHelper):
         self.monitor = self.monitor_class(monitor_function = self.monitor_function, callback=self.callback, on_error=self.on_error)
         self.monitor.start()
 
-
     def monitor_function(self):
-        return self.consumer_thread.filtered_buffer.copy()
-
+        reading = {}
+        reading["status"] = 200
+        reading["buffer"] = self.consumer_thread.filtered_buffer.copy()
+        if self.device.get_device_type() == "APEX":
+            reading["live_impedances"] = self.consumer_thread.cycling_impedance
+        return reading
 
 class FilteredConsumerThread(ConsumerThread):
-    def __init__(self, consumer_reading_queue, sample_rate):
+    def __init__(self, consumer_reading_queue, sample_rate, n_unfiltered = 2):
         super().__init__(consumer_reading_queue, sample_rate)
         self.filtered_buffer = Buffer(sample_rate * 10)
+        self.n_unfiltered = n_unfiltered
     
     def initialize_filter(self, hpf = 0, lpf = 0, order = 1):
         """Initialize the filter to be applied.
@@ -134,9 +154,8 @@ class FilteredConsumerThread(ConsumerThread):
             self._z_sos1 = np.repeat(
                 self._z_sos[:, np.newaxis, :], np.shape(reshaped)[0], axis=1)
         filtered, self._z_sos1 = self.__filter(reshaped)
-        # Do not filter STATUS and COUNTER channel
-        filtered[-2] = reshaped[-2]
-        filtered[-1] = reshaped[-1]
+        # Do not filter last n_unfiltered channels (f.e. STATUS and COUNTER)
+        filtered[-self.n_unfiltered:] = reshaped[-self.n_unfiltered:]
         self.filtered_buffer.append(filtered)
 
     def __filter(self, reshaped):
@@ -144,4 +163,25 @@ class FilteredConsumerThread(ConsumerThread):
                 self._sos, reshaped, zi=self._z_sos1)
         return filtered, z_sos1
 
-    
+class FilteredConsumerThreadApex(FilteredConsumerThread):
+    def __init__(self, consumer_reading_queue, sample_rate, n_unfiltered = 2):
+        super().__init__(consumer_reading_queue = consumer_reading_queue, 
+                         sample_rate = sample_rate, 
+                         n_unfiltered = n_unfiltered)
+        self.cycling_impedance = dict()
+
+    def process(self, sample_data):
+        super().process(sample_data)
+        reshaped = np.array(Reshape(sample_data.samples, sample_data.num_samples_per_sample_set))
+        self.collect_cycling_impedances(reshaped=reshaped)
+
+    def collect_cycling_impedances(self, reshaped):
+        for idx in range(len(reshaped[-5,:])):
+                index = int(reshaped[-5,idx])+1
+                if index in self.cycling_impedance:
+                    self.cycling_impedance[index]["Re"] = reshaped[-4,idx]
+                    self.cycling_impedance[index]["Im"] = reshaped[-3,idx]
+                else:
+                    self.cycling_impedance[index] = dict()
+                    self.cycling_impedance[index]["Re"] = reshaped[-4,idx]
+                    self.cycling_impedance[index]["Im"] = reshaped[-3,idx]

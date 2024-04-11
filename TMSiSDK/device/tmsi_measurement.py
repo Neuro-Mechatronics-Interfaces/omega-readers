@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ class TMSiMeasurement():
         channels = self._dev.get_device_active_channels()
         TMSiLoggerActivity().log("{}-SDK->>{}: GET device channels response".format(self._dev.get_device_type(), self.get_name()))
         for i in range(len(channels)):
-            if channels[i].get_channel_format() == 0x0020:
+            if channels[i].get_channel_format() == 0x0020 or channels[i].get_channel_format() == 0x0120:
                 self._float_channels.append(i)
             else:
                 if (channels[i].get_channel_type().value == 3) and (channels[i].get_sensor_information() != None):

@@ -1,0 +1,810 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Tutorial 2: TMSi + WaveX experiment &#8212; TMSi Python Interface V5.2.0.0 Documentatation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/tutorial_WaveX_experiment';</script>
+    <link rel="icon" href="../_static/SAGA shape.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 3: TMSi + WaveX synchronization" href="tutorial_WaveX_synchronization.html" />
+    <link rel="prev" title="Tutorial 1: TMSi + WaveX installation" href="tutorial_WaveX_installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/TMSi_logo.png" class="logo__image only-light" alt="TMSi Python Interface V5.2.0.0 Documentatation - Home"/>
+    <script>document.write(`<img src="../_static/TMSi_logo.png" class="logo__image only-dark" alt="TMSi Python Interface V5.2.0.0 Documentatation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitlab.com/tmsi/tmsi-python-examples" title="Examples GitLab" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-square-gitlab fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Examples GitLab</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://knowledge.tmsi.com/" title="Knowledge Base" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src=".././_static/SAGA_kb.png" class="icon-link-image" alt="Knowledge Base"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.tmsi.com/distributors/?continent=18" title="Questions" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-solid fa-circle-question fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Questions</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/index_gs.html">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html">Installing the interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/features.html">Features</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_apex.html">Examples APEX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_saga.html">Examples SAGA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/examples_data.html">Examples reading and analyzing data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/plugins.html">Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/faq.html">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial_eeg_workflow.html">Tutorial EEG Workflow (APEX)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_emg_workflow.html">Tutorial HD-EMG Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_changing_configuration.html">Tutorial changing configuration (APEX)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="tutorial_plotters.html">Tutorial Plotters</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_filtered.html">Tutorial 1: Filtered data plotter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_heatmap.html">Tutorial 2: Heatmap plotter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_plotters_differential.html">Tutorial 3: Differential plotter</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="tutorial_ERP.html">Tutorial Event-Related Potentials</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ERP_experiment.html">Tutorial 1: ERP Experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_ERP_analysis.html">Tutorial 2: ERP Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="tutorial_WaveX.html">Tutorial WaveX integration</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tutorial_WaveX_installation.html">Tutorial 1: TMSi + WaveX installation</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Tutorial 2: TMSi + WaveX experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_WaveX_synchronization.html">Tutorial 3: TMSi + WaveX synchronization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes with respect to previous versions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_references.html">API References</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.html">TMSiFrontend</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.chart.html">TMSiFrontend.chart</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.chart.Chart.html"><code class="docutils literal notranslate"><span class="pre">Chart</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.charts.html">TMSiFrontend.charts</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.charts.heatmap_chart.html">TMSiFrontend.charts.heatmap_chart</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.charts.impedance_chart.html">TMSiFrontend.charts.impedance_chart</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.charts.signal_chart.html">TMSiFrontend.charts.signal_chart</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.components.html">TMSiFrontend.components</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.components.channel_component.html">TMSiFrontend.components.channel_component</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.components.designer.html">TMSiFrontend.components.designer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.components.dialog.html">TMSiFrontend.components.dialog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.components.dialogs.html">TMSiFrontend.components.dialogs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.components.table_impedance_values.html">TMSiFrontend.components.table_impedance_values</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_autosummary/TMSiFrontend.designer.html">TMSiFrontend.designer</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.legends.html">TMSiFrontend.legends</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.legends.impedance_legend.html">TMSiFrontend.legends.impedance_legend</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.plotter.html">TMSiFrontend.plotter</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.plotter.Plotter.html"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.plotters.html">TMSiFrontend.plotters</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.plotters.heatmap_plotter.html">TMSiFrontend.plotters.heatmap_plotter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.plotters.impedance_plotter.html">TMSiFrontend.plotters.impedance_plotter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.plotters.signal_plotter.html">TMSiFrontend.plotters.signal_plotter</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.utilities.html">TMSiFrontend.utilities</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.utilities.singleton.html">TMSiFrontend.utilities.singleton</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.utilities.tmsi_grids.html">TMSiFrontend.utilities.tmsi_grids</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.utilities.tmsi_headcaps.html">TMSiFrontend.utilities.tmsi_headcaps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.utilities.tmsi_style.html">TMSiFrontend.utilities.tmsi_style</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiFrontend.viewer.html">TMSiFrontend.viewer</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiFrontend.viewer.Viewer.html"><code class="docutils literal notranslate"><span class="pre">Viewer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_autosummary/TMSiSDK.html">TMSiSDK</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiSDK.device.html">TMSiSDK.device</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.devices.html">TMSiSDK.device.devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_channel.html">TMSiSDK.device.tmsi_channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_device.html">TMSiSDK.device.tmsi_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_device_enums.html">TMSiSDK.device.tmsi_device_enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_dongle.html">TMSiSDK.device.tmsi_dongle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_event_reader.html">TMSiSDK.device.tmsi_event_reader</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_impedance_channel.html">TMSiSDK.device.tmsi_impedance_channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_measurement.html">TMSiSDK.device.tmsi_measurement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.device.tmsi_thread.html">TMSiSDK.device.tmsi_thread</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiSDK.sample_data_server.html">TMSiSDK.sample_data_server</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.sample_data_server.event_data.html">TMSiSDK.sample_data_server.event_data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.sample_data_server.sample_data.html">TMSiSDK.sample_data_server.sample_data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.sample_data_server.sample_data_server.html">TMSiSDK.sample_data_server.sample_data_server</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_errors.html">TMSiSDK.tmsi_errors</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_errors.error.html">TMSiSDK.tmsi_errors.error</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_resources.html">TMSiSDK.tmsi_resources</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_sdk.html">TMSiSDK.tmsi_sdk</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_sdk.TMSiSDK.html"><code class="docutils literal notranslate"><span class="pre">TMSiSDK</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.html">TMSiSDK.tmsi_utilities</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.apex.html">TMSiSDK.tmsi_utilities.apex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.decorators.html">TMSiSDK.tmsi_utilities.decorators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.logger_filter.html">TMSiSDK.tmsi_utilities.logger_filter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.mask_type.html">TMSiSDK.tmsi_utilities.mask_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.saga.html">TMSiSDK.tmsi_utilities.saga</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.singleton.html">TMSiSDK.tmsi_utilities.singleton</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.support_functions.html">TMSiSDK.tmsi_utilities.support_functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_autosummary/TMSiSDK.tmsi_utilities.tmsi_logger.html">TMSiSDK.tmsi_utilities.tmsi_logger</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes V5.2.0.0</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://gitlab.com/tmsi/tmsi-python-interface/-/releases" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-gitlab"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Tutorial 2: TMSi + WaveX experiment</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-the-correct-directory-of-files">Adding the correct directory of files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-the-required-classes-and-functions">Importing the required classes and functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-a-connection-to-saga">Opening a connection to SAGA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-saga-configuration">Setting the SAGA configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-a-connection-to-wavex">Opening a connection to WaveX</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-wavex-configuration">Setting the WaveX configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-the-lsl-streams">Opening the LSL streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-acquisition">Data acquisition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closing-the-connections">Closing the connections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tutorial-2-tmsi-wavex-experiment">
+<span id="tmsi-wavex-tutorial"></span><h1>Tutorial 2: TMSi + WaveX experiment<a class="headerlink" href="#tutorial-2-tmsi-wavex-experiment" title="Permalink to this heading">#</a></h1>
+<p><em>Corresponding files for this tutorial: TMSiPlugins/WaveX/example_stream_lsl_wavex.py and TMSiPlugins/WaveX/wavex/wavex_device.py</em></p>
+<p>This tutorial provides a step-by-step guide, showing how to use the combined SAGA and WaveX example and learn how you can extend this for your use case.
+Please ensure that both devices are powered and connected to the PC with a USB cable.</p>
+<section id="adding-the-correct-directory-of-files">
+<h2>Adding the correct directory of files<a class="headerlink" href="#adding-the-correct-directory-of-files" title="Permalink to this heading">#</a></h2>
+<p>To use the TMSi Python interface folder, which is necessary for running the examples, your Python interpreter needs to know the corresponding path.
+Therefore, the first lines of code add this information. If you wish to store the recordings in a different folder than the default one,
+you can change the directory specified in the highlighted code line 37 below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">33</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos">34</span><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">realpath</span>
+<span class="linenos">35</span><span class="n">Plugin_dir</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="c1"># directory of this file</span>
+<span class="linenos">36</span><span class="n">modules_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span> <span class="c1"># directory with all modules</span>
+<span class="hll"><span class="linenos">37</span><span class="n">measurements_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;../../measurements&#39;</span><span class="p">)</span> <span class="c1"># directory with all measurements</span>
+</span><span class="linenos">38</span><span class="n">configs_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;../../TMSiSDK</span><span class="se">\\</span><span class="s1">tmsi_resources&#39;</span><span class="p">)</span> <span class="c1"># directory with configurations</span>
+<span class="linenos">39</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules_dir</span><span class="p">)</span>
+<span class="linenos">40</span><span class="n">repo_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">Plugin_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span> <span class="c1"># directory with repo</span>
+<span class="linenos">41</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">repo_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="importing-the-required-classes-and-functions">
+<h2>Importing the required classes and functions<a class="headerlink" href="#importing-the-required-classes-and-functions" title="Permalink to this heading">#</a></h2>
+<p>The next lines import all the libraries which are required for the example script to work.
+They are used for purposes such as handling errors, writing recording files on PC and setting device configurations for both SAGA and WaveX.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">45</span><span class="kn">from</span> <span class="nn">wavex.wavex_device</span> <span class="kn">import</span> <span class="n">WaveXDevice</span>
+<span class="linenos">46</span><span class="kn">from</span> <span class="nn">wavex.wavex_structures</span> <span class="kn">import</span> <span class="n">wavex_API_enums</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span><span class="kn">from</span> <span class="nn">TMSiSDK.tmsi_sdk</span> <span class="kn">import</span> <span class="n">TMSiSDK</span><span class="p">,</span> <span class="n">DeviceType</span><span class="p">,</span> <span class="n">DeviceInterfaceType</span><span class="p">,</span> <span class="n">DeviceState</span>
+<span class="linenos">49</span><span class="kn">from</span> <span class="nn">TMSiSDK.tmsi_errors.error</span> <span class="kn">import</span> <span class="n">TMSiError</span>
+<span class="linenos">50</span><span class="kn">from</span> <span class="nn">TMSiFileFormats.file_writer</span> <span class="kn">import</span> <span class="n">FileWriter</span><span class="p">,</span> <span class="n">FileFormat</span>
+<span class="linenos">51</span><span class="kn">from</span> <span class="nn">TMSiGui.gui</span> <span class="kn">import</span> <span class="n">Gui</span>
+<span class="linenos">52</span><span class="kn">from</span> <span class="nn">TMSiPlotterHelpers.filtered_signal_plotter_helper</span> <span class="kn">import</span> <span class="n">FilteredSignalPlotterHelper</span>
+<span class="linenos">53</span><span class="kn">from</span> <span class="nn">TMSiPlugins.WaveX.signal_plotter_helper_wave_x</span> <span class="kn">import</span> <span class="n">SignalPlotterHelperWaveX</span> 
+<span class="linenos">54</span><span class="kn">from</span> <span class="nn">TMSiSDK.device</span> <span class="kn">import</span> <span class="n">ChannelType</span>
+<span class="linenos">55</span><span class="kn">from</span> <span class="nn">TMSiSDK.device.devices.saga.saga_API_enums</span> <span class="kn">import</span> <span class="n">SagaBaseSampleRate</span>
+</pre></div>
+</div>
+</section>
+<section id="opening-a-connection-to-saga">
+<h2>Opening a connection to SAGA<a class="headerlink" href="#opening-a-connection-to-saga" title="Permalink to this heading">#</a></h2>
+<p>As it’s possible to have more than one SAGA connected, it’s necessary to specify the type of connected device as well as the interface via which the device
+is connected to the PC (line 64). The Data Recorder interface type for SAGA can be set to either <em>docked</em>, <em>optical</em> or <em>wifi</em> (line 64).
+Next, a list of connected devices is stored inside the variable <em>discoveryList</em>.</p>
+<p>The next line of code (line 67) is a check to ensure that at least one device has been discovered.
+The first discovered SAGA is selected and used for the remainder of the experiment, by storing it in the <em>SAGA</em> variable.
+Afterwards, the connection to SAGA is opened (line 73).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">63</span>    <span class="c1"># Execute a device discovery. This returns a list of device-objects for every discovered device.</span>
+<span class="linenos">64</span>    <span class="n">TMSiSDK</span><span class="p">()</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">dev_type</span> <span class="o">=</span> <span class="n">DeviceType</span><span class="o">.</span><span class="n">saga</span><span class="p">,</span> <span class="n">dr_interface</span> <span class="o">=</span> <span class="n">DeviceInterfaceType</span><span class="o">.</span><span class="n">docked</span><span class="p">,</span> <span class="n">ds_interface</span> <span class="o">=</span> <span class="n">DeviceInterfaceType</span><span class="o">.</span><span class="n">usb</span><span class="p">)</span>
+<span class="linenos">65</span>    <span class="n">discoveryList</span> <span class="o">=</span> <span class="n">TMSiSDK</span><span class="p">()</span><span class="o">.</span><span class="n">get_device_list</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">saga</span><span class="p">)</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span>    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">discoveryList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+<span class="linenos">68</span>        <span class="c1"># Get the handle to the first discovered device and open the connection.</span>
+<span class="linenos">69</span>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">discoveryList</span><span class="p">):</span>
+<span class="linenos">70</span>            <span class="n">SAGA</span> <span class="o">=</span> <span class="n">discoveryList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">71</span>            <span class="k">if</span> <span class="n">SAGA</span><span class="o">.</span><span class="n">get_dr_interface</span><span class="p">()</span> <span class="o">==</span> <span class="n">DeviceInterfaceType</span><span class="o">.</span><span class="n">docked</span><span class="p">:</span>
+<span class="linenos">72</span>                <span class="c1"># Open the connection to SAGA</span>
+<span class="linenos">73</span>                <span class="n">SAGA</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+<span class="linenos">74</span>                <span class="k">break</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-saga-configuration">
+<h2>Setting the SAGA configuration<a class="headerlink" href="#setting-the-saga-configuration" title="Permalink to this heading">#</a></h2>
+<p>The next step is to configure SAGA for a 2 kHz measurement, so that it uses the same sampling rate as WaveX’ EMG channels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">76</span>    <span class="c1"># Configure the SAGA sampling configuration</span>
+<span class="linenos">77</span>    <span class="n">SAGA</span><span class="o">.</span><span class="n">import_configuration</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">configs_dir</span><span class="p">,</span> <span class="s2">&quot;saga32_config_textile_grid_&quot;</span> <span class="o">+</span> <span class="n">grid_type</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">))</span>
+<span class="linenos">78</span>    <span class="n">SAGA</span><span class="o">.</span><span class="n">set_device_sampling_config</span><span class="p">(</span><span class="n">base_sample_rate</span> <span class="o">=</span> <span class="n">SagaBaseSampleRate</span><span class="o">.</span><span class="n">Decimal</span><span class="p">,</span> 
+<span class="linenos">79</span>                                    <span class="n">channel_type</span> <span class="o">=</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">all_types</span><span class="p">,</span> 
+<span class="linenos">80</span>                                    <span class="n">channel_divider</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="opening-a-connection-to-wavex">
+<h2>Opening a connection to WaveX<a class="headerlink" href="#opening-a-connection-to-wavex" title="Permalink to this heading">#</a></h2>
+<p>The connection to a WaveX device can be opened in two steps. First, the WaveX class is intialized by the code in line 82.
+The created variable is used throughout the remainder of the example to interact with WaveX.
+Secondly, the connection can be opened in similar fashion as SAGA’s connection, by using the code on line 85.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">82</span>    <span class="c1"># Get the handle to the first discovered device.</span>
+<span class="linenos">83</span>    <span class="n">WaveX</span> <span class="o">=</span> <span class="n">WaveXDevice</span><span class="p">()</span>    
+<span class="linenos">84</span>    <span class="c1"># Open a connection to the device</span>
+<span class="linenos">85</span>    <span class="n">WaveX</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-wavex-configuration">
+<h2>Setting the WaveX configuration<a class="headerlink" href="#setting-the-wavex-configuration" title="Permalink to this heading">#</a></h2>
+<p>Configuration of the WaveX system consists of two steps. First, the specific sensors used for the acquisition need to be configured. Secondly, the acquisition types
+need to be defined. The example does not show all the possibilities of the SDK, but does show the most important ones for setting up an acquisition using either
+EMG channels, IMU channels or a combination of both. The example uses the MiniX sensor type.
+For a full list of functionalities, please refer to the SDK documentation provided by Cometa.
+For the implemented functions in the Python wrapper, please take a look at the <em>wavex_device.py</em> code in the <em>wavex</em> folder.</p>
+<p>To configure a sensor, two examples are shown in the code below. In this example, sensors with numbers 3 and 4 are configured respectively. Both sensors are MiniX sensors.
+One of the MiniX sensors is set to EMG-mode, which ensures the sensors only outputs an EMG signal, whereas the other sensor is set to EMG-Inertial mode, which results in
+the sensor sending both an EMG signal and IMU data.
+For each sensor, the desired full-scale resolution can be configured. Please check the WaveX SDK documentation, or the <em>wavex_API_enums.py</em> function in the <em>wavex</em> folder,
+to review all the available options.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 87</span>    <span class="c1"># Configure the WaveX sensors</span>
+<span class="linenos"> 88</span>    <span class="n">WaveX</span><span class="o">.</span><span class="n">set_device_sensor_configuration</span><span class="p">(</span>
+<span class="linenos"> 89</span>        <span class="n">sensor_number</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> 
+<span class="linenos"> 90</span>        <span class="n">enable</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos"> 91</span>        <span class="n">mode</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">SensorMode</span><span class="o">.</span><span class="n">EMG</span><span class="p">,</span>
+<span class="linenos"> 92</span>        <span class="n">model</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">SensorModel</span><span class="o">.</span><span class="n">Mini_EmgImu</span><span class="p">,</span>
+<span class="linenos"> 93</span>        <span class="n">acc_full_scale</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">AccelerometerFullScale</span><span class="o">.</span><span class="n">g_8</span><span class="p">,</span>
+<span class="linenos"> 94</span>        <span class="n">gyr_full_scale</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">GyroscopeFullScale</span><span class="o">.</span><span class="n">dps_1000</span><span class="p">)</span>
+<span class="linenos"> 95</span>    <span class="n">WaveX</span><span class="o">.</span><span class="n">set_device_sensor_configuration</span><span class="p">(</span>
+<span class="linenos"> 96</span>        <span class="n">sensor_number</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> 
+<span class="linenos"> 97</span>        <span class="n">enable</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos"> 98</span>        <span class="n">mode</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">SensorMode</span><span class="o">.</span><span class="n">EMG_INERTIAL</span><span class="p">,</span>
+<span class="linenos"> 99</span>        <span class="n">model</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">SensorModel</span><span class="o">.</span><span class="n">Mini_EmgImu</span><span class="p">,</span>
+<span class="linenos">100</span>        <span class="n">acc_full_scale</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">AccelerometerFullScale</span><span class="o">.</span><span class="n">g_8</span><span class="p">,</span>
+<span class="linenos">101</span>        <span class="n">gyr_full_scale</span> <span class="o">=</span> <span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">GyroscopeFullScale</span><span class="o">.</span><span class="n">dps_1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What data is sent out by a specific sensor depends on the sampling configuration, shown in lines 102 to 106.
+Here, the acquisition types for the EMG, IMU and mixed EMG/IMU acquisitions can be set. In the example, the EMG data from sensor 3 (that was set to EMG SensorMode)
+will be sampled at 2 kHz. For sensor 4, the 3D raw Accelerometer, 3D Gyroscope and 3D Magnetometer data will be sampled at 100 Hz, together with the EMG signals at 2 kHz.
+Due to these acquisition type settings, the received data will consist of 1 channel for Sensor 3 and 10 channels for Sensor 4 (1 EMG + 3 Accelerometer + 3 Gyroscope + 3 Magnetometer).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">102</span>    <span class="n">WaveX</span><span class="o">.</span><span class="n">set_device_sampling_config</span><span class="p">(</span>
+<span class="linenos">103</span>        <span class="n">EMG_acq_type</span><span class="o">=</span><span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">EmgAcqXType</span><span class="o">.</span><span class="n">Emg_2kHz</span><span class="p">,</span>
+<span class="linenos">104</span>        <span class="n">EMG_IMU_acq_type</span><span class="o">=</span><span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">EmgImuAcqXType</span><span class="o">.</span><span class="n">Emg_2kHz_RawAccGyroMagData_100Hz</span><span class="p">,</span>
+<span class="linenos">105</span>        <span class="n">IMU_acq_type</span><span class="o">=</span><span class="n">wavex_API_enums</span><span class="o">.</span><span class="n">ImuAcqXType</span><span class="o">.</span><span class="n">Mixed6xData_200Hz</span><span class="p">,</span>
+<span class="linenos">106</span>        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="opening-the-lsl-streams">
+<h2>Opening the LSL streams<a class="headerlink" href="#opening-the-lsl-streams" title="Permalink to this heading">#</a></h2>
+<p>After successful configuration of both devices, the LSL streams can be created. Here, the LSL streams can be instantiated and opened by passing the device handle to it.
+Please note that both devices can be discovered on the network (i.e., LabRecorder) after the <em>open()</em> call has been done.
+For SAGA, the default delay is used that is set in the LSLStreamWriter, that can be found in the TMSiFileFormats folder. For WaveX, a different delay needs to be configured
+to correct for timestamping differences. The value has been empirically set to 0.04s.
+In LabRecorder the streams can be started from this point onwards, although no data will be available as the devices haven’t been set in measurement mode.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">108</span>    <span class="c1"># Initialise and open the SAGA LSL stream</span>
+<span class="linenos">109</span>    <span class="n">stream_SAGA</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="p">(</span><span class="n">FileFormat</span><span class="o">.</span><span class="n">lsl</span><span class="p">,</span> <span class="s2">&quot;SAGA&quot;</span><span class="p">)</span>
+<span class="linenos">110</span>    <span class="n">stream_SAGA</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">SAGA</span><span class="p">)</span>
+<span class="linenos">111</span>
+<span class="linenos">112</span>    <span class="c1"># Initialise and open the WaveX lsl-stream</span>
+<span class="linenos">113</span>    <span class="n">stream_WaveX</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="p">(</span><span class="n">FileFormat</span><span class="o">.</span><span class="n">lsl</span><span class="p">,</span> <span class="s2">&quot;WAVEX&quot;</span><span class="p">,</span> <span class="n">lsl_offset</span> <span class="o">=</span> <span class="mf">0.040</span><span class="p">)</span>
+<span class="linenos">114</span>    <span class="n">stream_WaveX</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">WaveX</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-acquisition">
+<h2>Data acquisition<a class="headerlink" href="#data-acquisition" title="Permalink to this heading">#</a></h2>
+<p>To collect data with LSL, both SAGA and WaveX should start acquiring data. In the example, the measurement is controlled using signal viewers. Once the viewer is opened, the
+device starts streaming its data to the LSL network. Closing the viewer subsequently stops the data acquisition and the sharing of data via LSL. Hence, the example
+controls the ability to send data to LSL, whereas the LabRecorder GUI can be used to store the acquired data to a file.</p>
+<p>LabRecorder can retrieve the available LSL streams from the network and select them for saving to a desired file. Here, the start and stop buttons can be used to save
+the streamed data to the PC. In post-processing, the acquired streams can be aligned so that they are synchronized.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">116</span>    <span class="c1"># Initialise the plotter application</span>
+<span class="linenos">117</span>    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="linenos">118</span>    <span class="n">plotter_helper_WaveX</span> <span class="o">=</span> <span class="n">SignalPlotterHelperWaveX</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">WaveX</span><span class="p">)</span>
+<span class="linenos">119</span>    <span class="n">plotter_helper_SAGA</span> <span class="o">=</span> <span class="n">FilteredSignalPlotterHelper</span><span class="p">(</span><span class="n">device</span> <span class="o">=</span> <span class="n">SAGA</span><span class="p">,</span> <span class="n">hpf</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">grid_type</span> <span class="o">=</span> <span class="n">grid_type</span><span class="p">)</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span>    <span class="c1"># Define the GUI object and show it </span>
+<span class="linenos">122</span>    <span class="n">gui_WaveX</span> <span class="o">=</span> <span class="n">Gui</span><span class="p">(</span><span class="n">plotter_helper</span> <span class="o">=</span> <span class="n">plotter_helper_WaveX</span><span class="p">)</span>
+<span class="linenos">123</span>    <span class="n">gui_SAGA</span> <span class="o">=</span> <span class="n">Gui</span><span class="p">(</span><span class="n">plotter_helper</span> <span class="o">=</span> <span class="n">plotter_helper_SAGA</span><span class="p">)</span>
+<span class="linenos">124</span>    
+<span class="linenos">125</span>    <span class="c1"># Enter the event loop</span>
+<span class="linenos">126</span>    <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The initialization of the measurements, using the GUIs, is shown in the lines of code above. Please note that it is also possible to start (and stop) measurements
+directly from code. In that case, please use a <em>start_measurement</em> call for each device respectively. Importantly, you should set an appropriate method or time to subsequently
+stop the measurement in advance. When using this strategy, please use the example code below as a starting point.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the measurement types from the SDK</span>
+<span class="kn">from</span> <span class="nn">wavex.measurements.measurement_type</span> <span class="kn">import</span> <span class="n">MeasurementTypeWaveX</span>
+<span class="kn">from</span> <span class="nn">TMSiSDK.device.tmsi_device_enums</span> <span class="kn">import</span> <span class="n">MeasurementType</span>
+
+<span class="c1"># Start a signal acquisition from SAGA</span>
+<span class="n">SAGA</span><span class="o">.</span><span class="n">start_measurement</span><span class="p">(</span><span class="n">MeasurementType</span><span class="o">.</span><span class="n">SAGA_SIGNAL</span><span class="p">)</span>
+
+<span class="c1"># Start a signal acquisition from WaveX</span>
+<span class="n">WaveX</span><span class="o">.</span><span class="n">start_measurement</span><span class="p">(</span><span class="n">MeasurementType</span><span class="o">.</span><span class="n">WAVEX_SIGNAL</span><span class="p">)</span>
+
+<span class="c1"># Perform the measurement for 30s</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="c1"># Stop the measurements on both devices</span>
+<span class="n">SAGA</span><span class="o">.</span><span class="n">stop_measurement</span><span class="p">()</span>
+<span class="n">WaveX</span><span class="o">.</span><span class="n">stop_measurement</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="closing-the-connections">
+<h2>Closing the connections<a class="headerlink" href="#closing-the-connections" title="Permalink to this heading">#</a></h2>
+<p>After stopping the measurement, both streams can be closed, as well as the communication to both devices. This is shown on the final lines of the example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">128</span>    <span class="c1"># Close the LSL stream after GUI termination</span>
+<span class="linenos">129</span>    <span class="n">stream_WaveX</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">130</span>    <span class="n">stream_SAGA</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">131</span>
+<span class="linenos">132</span>    <span class="c1"># Close the connection to the devices</span>
+<span class="linenos">133</span>    <span class="n">WaveX</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">134</span>    <span class="n">SAGA</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Permalink to this heading">#</a></h2>
+<p>To learn how to synchronize your acquired data, please refer to the tutorial for <a class="reference internal" href="tutorial_WaveX_synchronization.html#tmsi-wavex-sync-tutorial"><span class="std std-ref">synchronization</span></a>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tutorial_WaveX_installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorial 1: TMSi + WaveX installation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tutorial_WaveX_synchronization.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorial 3: TMSi + WaveX synchronization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-the-correct-directory-of-files">Adding the correct directory of files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-the-required-classes-and-functions">Importing the required classes and functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-a-connection-to-saga">Opening a connection to SAGA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-saga-configuration">Setting the SAGA configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-a-connection-to-wavex">Opening a connection to WaveX</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-the-wavex-configuration">Setting the WaveX configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-the-lsl-streams">Opening the LSL streams</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-acquisition">Data acquisition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closing-the-connections">Closing the connections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TMSi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, TMSi.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

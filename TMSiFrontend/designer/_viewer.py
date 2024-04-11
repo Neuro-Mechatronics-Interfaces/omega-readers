@@ -40,6 +40,7 @@ class Ui_Viewer(object):
 
         self.time_scrollbar = QScrollBar(Viewer)
         self.time_scrollbar.setObjectName(u"time_scrollbar")
+        self.time_scrollbar.setMinimumSize(QSize(0, 50))
         self.time_scrollbar.setOrientation(Qt.Horizontal)
 
         self.verticalLayout_2.addWidget(self.time_scrollbar)

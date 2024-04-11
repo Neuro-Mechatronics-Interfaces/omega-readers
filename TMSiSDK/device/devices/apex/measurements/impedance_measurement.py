@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -119,11 +119,11 @@ class ImpedanceMeasurement(TMSiMeasurement):
         """
         measurement_request = TMSiDevImpedanceRequest()
         measurement_request.StartStop = ImpedanceControl.StopImpedance.value
-        TMSiLoggerActivity().log("{}->>APEX-SDK: set device impedance request OFF".format(self.get_name()))
-        self._dev.set_device_impedance_request(measurement_request)
         TMSiLoggerActivity().log("{}->>Sampling Thread: stop".format(self.get_name()))
         self._sampling_thread.stop()
         self._sampling_thread.join()
         TMSiLoggerActivity().log("{}->>Conversion Thread: stop".format(self.get_name()))
         self._conversion_thread.stop()
         self._conversion_thread.join()
+        TMSiLoggerActivity().log("{}->>APEX-SDK: set device impedance request OFF".format(self.get_name()))
+        self._dev.set_device_impedance_request(measurement_request)

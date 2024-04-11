@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -153,10 +153,17 @@ class TMSiSynchronisation():
         # Loop over all channels and all streams
         for n_signal in range(len(self.master_file.time_stamps)):
             for n_channel in range(len(self.master_file.data[n_signal].ch_names)):
-                # Create a cubic spline interpolation function based on the original data
-                f=interpolate.interp1d(
-                    self.master_file.time_stamps[n_signal], 
-                    self.master_file.data[n_signal][n_channel][0][0], kind='cubic')
+                
+                if 'TRIGGER' in self.master_file.data[n_signal].ch_names[n_channel] or 'STATUS' in self.master_file.data[n_signal].ch_names[n_channel]:
+                    # Create a nearest neighbour spline interpolation function based on the original data
+                    f=interpolate.interp1d(
+                        self.master_file.time_stamps[n_signal], 
+                        self.master_file.data[n_signal][n_channel][0][0], kind='nearest')
+                else:
+                    # Create a cubic spline interpolation function based on the original data
+                    f=interpolate.interp1d(
+                        self.master_file.time_stamps[n_signal], 
+                        self.master_file.data[n_signal][n_channel][0][0], kind='cubic')
                 
                 # Retrieve new data based on the interpolation function and created timestamps
                 self.samples_synced[signal_counter,:] = f(self.master_timestamps)

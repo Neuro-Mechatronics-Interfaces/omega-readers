@@ -52,19 +52,19 @@ class FileWriter:
             filename : <string> The path and name of the file, into which the
             measurement-data must be written.
     """
-    def __init__(self, data_format_type, filename, add_ch_locs=False, download = False):
+    def __init__(self, data_format_type, filename, add_ch_locs=False, download = False, download_file_id = None, lsl_offset = 0.0335):
         if (data_format_type == FileFormat.poly5):
             from .file_formats.poly5_file_writer import Poly5Writer
             self._data_format_type = data_format_type
-            self._file_writer = Poly5Writer(filename, download)
+            self._file_writer = Poly5Writer(filename, download, download_file_id)
         elif (data_format_type == FileFormat.xdf):
             from .file_formats.xdf_file_writer import XdfWriter
             self._data_format_type = data_format_type
-            self._file_writer = XdfWriter(filename, add_ch_locs)
+            self._file_writer = XdfWriter(filename, add_ch_locs, download_file_id)
         elif (data_format_type == FileFormat.lsl):
             from .file_formats.lsl_stream_writer import LSLWriter
             self._data_format_type = data_format_type
-            self._file_writer = LSLWriter(filename)
+            self._file_writer = LSLWriter(filename, download_file_id, lsl_offset)
         else:
             print("Unsupported data format")
             raise TMSiError(TMSiErrorCode.api_incorrect_argument)

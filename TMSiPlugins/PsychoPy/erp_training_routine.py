@@ -1,5 +1,5 @@
 '''
-(c) 2023, 2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ limitations under the License.
    #     #     #  #####    #
 
 /**
- * @file ${experiment_psychopy.py} 
+ * @file erp_training_routine.py
  * @brief This file provides an implementation to show the experimental 
  * paradigm without needing to interface with a device. This can be used to
  * familiarise a subject with the experimental protocol. 
@@ -32,8 +32,9 @@ limitations under the License.
 
 '''
 
-from psychopy import sound, visual, core
+from psychopy import sound
 import random
+import time
 
 class PsychopyTrainingSetup():
     """ A class that sets up a training for an auditory oddball experiment 
@@ -64,4 +65,4 @@ class PsychopyTrainingSetup():
         
         for stim in all_stimuli:
             stim.play()
-            core.wait(self.interval)
+            time.sleep(self.interval)

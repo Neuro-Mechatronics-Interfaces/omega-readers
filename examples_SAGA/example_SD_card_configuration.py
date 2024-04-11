@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ limitations under the License.
  * @file ${example_SD_card_configuration.py} 
  * @brief This example shows the functionality to get and set the 
  * configuration of the onboard memory of SAGA. The prefix file name is 
- * changed in the example.
+ * changed in the example. The card recording is configured to start with
+ * a button press. 
  *
  */
 
@@ -34,7 +35,6 @@ limitations under the License.
 
 import sys
 from os.path import join, dirname, realpath
-import datetime
 
 Example_dir = dirname(realpath(__file__))  # directory of this file
 modules_dir = join(Example_dir, '..')  # directory with all modules
@@ -42,7 +42,7 @@ sys.path.append(modules_dir)
 
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 from TMSiSDK.device import SagaStructureGenerator, SagaEnums
 
 try:
@@ -51,12 +51,25 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         
-        # Open a connection to the SAGA-system
-        dev.open()
-        
+        # Control if there are data saved on the device
+        file_list = dev.get_device_card_file_list()
+        if len(file_list) > 0:
+            import warnings
+            warnings.warn("\n\n!!! \nThere is/are recordings stored on the onboard memory. Changing the configuration will clear the device's SD card!\nDo you want to continue? ('yes'/'y' continue, all others abort opening)\n!!!\n", stacklevel = 1)
+            abort = input('Continue?\n')
+            if abort.lower() == 'yes' or abort.lower() == 'y':
+                pass
+            else:
+                raise TMSiError(error_code = TMSiErrorCode.general_error)
+
         # Disable backup logging of recordings to the SD card
         dev.set_device_repair_logging(enable_repair_logging = False)
         

@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ class SagaInfo():
         dr_interface = DeviceInterfaceType.none,
         ds_interface = DeviceInterfaceType.none):
         
+        self.__device_name = "Unknown"
         self.__ds_interface = ds_interface
         self.__ds_serial_number = ds_serial_number
         self.__dr_interface = dr_interface
@@ -115,6 +116,14 @@ class SagaInfo():
         """
         return self.__interface_bandwidth
     
+    def get_name(self):
+        """Get the name of the Saga
+
+        :return: name
+        :rtype: str
+        """
+        return self.__device_name
+    
     def get_num_active_channels(self):
         """Get the number of active channels.
 
@@ -174,6 +183,7 @@ class SagaInfo():
         self.__num_sensors = device_config.NrOfSensors
         self.__interface_bandwidth = device_config.InterFaceBandWidth * 1_000_000
         self.__available_recordings = device_config.AvailableRecordings
+        self.__device_name = device_config.DeviceName.decode("windows-1252")
     
     def set_dr_interface(self, dr_interface):
         """Set the dr interface of the dr.

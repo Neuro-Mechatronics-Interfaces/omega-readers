@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,14 +40,15 @@ import time
 import numpy as np
 
 from TMSiSDK.sample_data_server.sample_data_server import SampleDataServer 
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 
 _QUEUE_SIZE = 1000
 
 class Poly5Writer:
-    def __init__(self, filename, download = False):
+    def __init__(self, filename, download = False, download_file_id : int = None):
         self.q_sample_sets = queue.Queue(_QUEUE_SIZE)
         self.device = None
+        self._download_file_id = download_file_id
         
         fileparts = filename.split('.')
         if not download:
@@ -92,7 +93,13 @@ class Poly5Writer:
                                         0,
                                         0,
                                         self._date)
-            for (i, channel) in enumerate(self.device.get_device_active_channels()):
+            
+            if self.device.get_device_type() == "APEX" and self._download_file_id is not None:
+                channels = self.device.get_file_channels(file_id = self._download_file_id)
+            else:
+                channels = self.device.get_device_active_channels()
+            
+            for (i, channel) in enumerate(channels):
                 Poly5Writer._writeSignalDescription(self._fp, i, channel.get_channel_name(), channel.get_channel_unit_name())
                 
             fmt = 'f'*self._num_channels*self._num_sample_sets_per_sample_data_block 
@@ -230,7 +237,7 @@ class ConsumerThread(threading.Thread):
                
                 
                 try:
-                    for i in range(np.int(np.floor(n_samp/self._num_sample_sets_per_sample_data_block))):
+                    for i in range(int(np.floor(n_samp/self._num_sample_sets_per_sample_data_block))):
                         self._sample_sets_in_block = samples[i*self._num_sample_sets_per_sample_data_block*sd.num_samples_per_sample_set : (i+1)*self._num_sample_sets_per_sample_data_block*sd.num_samples_per_sample_set]
                         Poly5Writer._writeSignalBlock(self._fp,\
                                                         self._sample_set_block_index,\
@@ -260,7 +267,7 @@ class ConsumerThread(threading.Thread):
                             # Go back to end of file
                             self._fp.seek(0, os.SEEK_END)
                         
-                    i = np.int(np.floor(n_samp / self._num_sample_sets_per_sample_data_block))
+                    i = int(np.floor(n_samp / self._num_sample_sets_per_sample_data_block))
                     ind = np.arange(i*self._num_sample_sets_per_sample_data_block*sd.num_samples_per_sample_set, n_samp*sd.num_samples_per_sample_set)
                     if ind.any:
                         self._remaining_samples = samples[ind]

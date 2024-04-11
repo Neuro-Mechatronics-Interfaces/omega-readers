@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,7 +42,9 @@ class DifferentialSignalPlotterHelper(FilteredSignalPlotterHelper):
         super().__init__(device=device, grid_type=grid_type, hpf=hpf, lpf=lpf, order=order)
         self.plotter2 = SignalPlotter()
     
-    def callback(self, response):
+    def callback(self, callback_object):
+        super().callback(callback_object=callback_object)
+        response = callback_object["buffer"]
         pointer_data_to_plot = response.pointer_buffer
         data_to_plot = response.dataset
         # Wait untill data is coming in
@@ -50,20 +52,6 @@ class DifferentialSignalPlotterHelper(FilteredSignalPlotterHelper):
             return
         size_dataset = np.shape(data_to_plot)[1]
         n_channels = np.shape(data_to_plot)[0]
-        # add whitening zone 
-        if pointer_data_to_plot != size_dataset:
-            num_time_samples = self.sampling_frequency * self.main_plotter.window_size
-            whitening_zone = int(self.whitening_zone * num_time_samples)
-            space_to_fill = size_dataset - pointer_data_to_plot
-            if space_to_fill < whitening_zone:
-                data_to_plot[:, pointer_data_to_plot:] = \
-                    np.full((n_channels, space_to_fill), np.nan)
-            else:
-                data_to_plot[:, pointer_data_to_plot:pointer_data_to_plot+whitening_zone] = \
-                    np.full((n_channels, whitening_zone), np.nan)
-        # Send data to plotter and update chart
-        self.main_plotter.update_chart(data_to_plot = data_to_plot[self.channel_conversion_list], time_span=self.time_span)
-        
         # Update plotter2 depending on refresh rate
         if self.main_plotter_refresh_counter % self.plotter2_refresh_rate == 0:
             if size_dataset < response.size_buffer:
@@ -103,7 +91,6 @@ class DifferentialSignalPlotterHelper(FilteredSignalPlotterHelper):
             differential_signals.append(sig)
         # Initialize channel components
         self.plotter2.initialize_channels_components(differential_signals)
-
 
     def _get_grid_order(self):
         # Detect row and column number based on channel name 

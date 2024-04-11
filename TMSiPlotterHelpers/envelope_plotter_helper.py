@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ limitations under the License.
 from scipy import signal
 import numpy as np
 
-from TMSiFrontend.plotters.signal_plotter import SignalPlotter
 
 from TMSiBackend.data_consumer.consumer_thread import ConsumerThread
 from TMSiBackend.data_consumer.consumer import Consumer
@@ -41,9 +40,10 @@ from TMSiBackend.buffer import Buffer
 from TMSiBackend.data_monitor.monitor import Monitor
 
 from TMSiSDK.tmsi_utilities.support_functions import array_to_matrix as Reshape
+from TMSiSDK.tmsi_sdk import ChannelType
 
 from .signal_plotter_helper import SignalPlotterHelper
-
+from .real_time_signal_plotter import RealTimeSignalPlotter
 
 class EnvelopeSignalPlotterHelper(SignalPlotterHelper):
     """ Plotter helper class to plot the signals as envelopes in the viewer for EMG measurements
@@ -58,21 +58,31 @@ class EnvelopeSignalPlotterHelper(SignalPlotterHelper):
         :param order: order of the filters
         :type order: int, optional
     """
-    def __init__(self,  device, grid_type = None, bpf_fc1 = 10, bpf_fc2 = 500, lpf_fc = 10, order = 1):
+    def __init__(self, device, grid_type = None, bpf_fc1 = 10, bpf_fc2 = 500, lpf_fc = 10, order = 1):
         # call super of SignalAcquisitionHelper
         super(SignalPlotterHelper, self).__init__(device = device, monitor_class = Monitor, consumer_thread_class = EnvelopeConsumerThread)
-        self.main_plotter = SignalPlotter()
+        self.main_plotter = RealTimeSignalPlotter()
+        self._current_window_size = self.main_plotter.window_size   
+
         self.grid_type = grid_type
         self.bpf_fc1 = bpf_fc1
         self.bpf_fc2 = bpf_fc2
         self.lpf_fc = lpf_fc
         self.order = order
 
+    def initialize(self):
+        super().initialize()
+        self.n_unfiltered_channels = 0
+        for ch in self.channels:
+            if ch.get_channel_type() != ChannelType.UNI and ch.get_channel_type() != ChannelType.BIP:
+                self.n_unfiltered_channels +=1
+
     def start(self):
         self.consumer = Consumer()
         self.consumer_thread = self.consumer_thread_class(
             consumer_reading_queue=self.consumer.reading_queue,
-            sample_rate=self.device.get_device_sampling_frequency()
+            sample_rate=self.device.get_device_sampling_frequency(), 
+            n_unfiltered = self.n_unfiltered_channels
         )
         # Initialize filter
         self.consumer_thread.initialize_filter(bpf_fc1 = self.bpf_fc1, bpf_fc2 = self.bpf_fc2, lpf_fc = self.lpf_fc, order = self.order)
@@ -85,17 +95,19 @@ class EnvelopeSignalPlotterHelper(SignalPlotterHelper):
         self.monitor = self.monitor_class(monitor_function = self.monitor_function, callback=self.callback, on_error=self.on_error)
         self.monitor.start()
 
-
     def monitor_function(self):
-        return self.consumer_thread.filtered_buffer.copy()
-
+        reading = {}
+        reading["status"] = 200
+        reading["buffer"] = self.consumer_thread.filtered_buffer.copy()
+        return reading
 
 class EnvelopeConsumerThread(ConsumerThread):
     """ Class to process the data for the plotter
     """
-    def __init__(self, consumer_reading_queue, sample_rate):
+    def __init__(self, consumer_reading_queue, sample_rate, n_unfiltered = 2):
         super().__init__(consumer_reading_queue, sample_rate)
         self.filtered_buffer = Buffer(sample_rate * 10)
+        self.n_unfiltered = n_unfiltered
     
     def initialize_filter(self, bpf_fc1 = 10, bpf_fc2 = 500, lpf_fc = 10, order = 1):
         """Initializes the bandpass and lowpass filter to be applied.
@@ -138,19 +150,14 @@ class EnvelopeConsumerThread(ConsumerThread):
         
         # 1. Bandpass filter the data
         filtered_bpf, self._z_sos_bpf = self.__filter(reshaped, self._sos_bpf, self._z_sos_bpf)
-        # Do not filter STATUS and COUNTER channel
-        filtered_bpf[-2] = reshaped[-2]
-        filtered_bpf[-1] = reshaped[-1]
 
         # 2. Rectify the signal
         rectified_samples = np.abs(filtered_bpf)
-        rectified_samples[-2] = reshaped[-2]
-        rectified_samples[-1] = reshaped[-1]
 
         # 3. Smoothen envelope: low pass filter
         envelope, self._z_sos_lpf = self.__filter(rectified_samples, self._sos_lpf, self._z_sos_lpf)
-        envelope[-2] = reshaped[-2]
-        envelope[-1] = reshaped[-1]
+        # Do not envelope filter last n_unfiltered channels (f.e. STATUS and COUNTER)
+        envelope[-self.n_unfiltered:] = reshaped[-self.n_unfiltered:]
 
         # Store samples in the filtered buffer to show
         self.filtered_buffer.append(envelope)

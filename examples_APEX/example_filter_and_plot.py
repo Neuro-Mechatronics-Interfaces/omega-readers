@@ -1,5 +1,5 @@
 '''
-(c) 2022, 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ measurements_dir = join(Example_dir, '../measurements') # directory with all mea
 sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError
 
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 from TMSiGui.gui import Gui
@@ -61,8 +61,8 @@ try:
         # Open a connection to APEX
         dev.open()
         
-        # Initialise a file-writer class (Poly5-format) and state its file path
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"example_filter_and_plot.poly5"))
+        # Initialise a file-writer class (XDF-format) and state its file path
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_filter_and_plot.xdf"))
         
         # Define the handle to the device
         file_writer.open(dev)

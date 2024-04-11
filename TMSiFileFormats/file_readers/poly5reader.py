@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,6 +36,11 @@ import datetime
 import mne
 import tkinter as tk
 from tkinter import filedialog
+import pandas as pd
+
+from os.path import join, dirname, realpath
+Reader_dir = dirname(realpath(__file__)) # directory of this file
+modules_dir = join(Reader_dir, '../../') # directory with all modules
 
 class Poly5Reader: 
     def __init__(self, filename=None, readAll = True):
@@ -50,15 +55,14 @@ class Poly5Reader:
         print('Reading file ', filename)
         self._readFile(filename)
         
-    def read_data_MNE(self,) -> mne.io.RawArray:
+    def read_data_MNE(self, add_ch_locs = False,) -> mne.io.RawArray:
         """Return MNE RawArray given internal channel names and types
 
         Returns
         -------
         mne.io.RawArray
         """
-
-        
+     
         fs = self.sample_rate
         labels = self.ch_names
         units = self.ch_unit_names
@@ -94,8 +98,11 @@ class Poly5Reader:
 
         info = mne.create_info(ch_names=labels, sfreq=fs, ch_types=types_clean)
 
+        if add_ch_locs:
+            info=self._add_ch_locations(info)    
+
         # convert from microvolts to volts if necessary
-        scale = np.array([1e-6 if (u == "µVolt" or u == "uVolt") else 1 for u in units])
+        scale = np.array([1e-6 if (u == "µVolt" or u == "uVolt" or u == '\u03BCVolt') else 1 for u in units])
 
         raw = mne.io.RawArray(self.samples * np.expand_dims(scale, axis=1), info)
         return raw
@@ -239,6 +246,22 @@ class Poly5Reader:
         ch_names = [ch_names[i] for i in channel_conversion_list]
         
         return samples, ch_names
+    
+    def _add_ch_locations(self, info):
+        # add channel locations from txt file
+        chLocs=pd.read_csv(join(modules_dir,'TMSiSDK/tmsi_resources/EEGchannelsTMSi3D.txt'), sep="\t", header=None)
+        chLocs.columns=['default_name', 'eeg_name', 'X', 'Y', 'Z']
+        
+        # add locations and convert to head size of 95 mm
+        for idx, ch in enumerate(info['chs']):
+            try:
+                a=[i for i, e in (enumerate(chLocs['eeg_name'].values) or enumerate(chLocs['default_name'].values)) if e == ch['ch_name']]
+                info['chs'][idx]['loc'][0]=95*1e-3*chLocs['X'].values[a]
+                info['chs'][idx]['loc'][1]=95*1e-3*chLocs['Y'].values[a]
+                info['chs'][idx]['loc'][2]=95*1e-3*chLocs['Z'].values[a]  
+            except:
+                pass
+        return info
     
     def close(self):
         self.file_obj.close()

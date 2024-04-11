@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import os
 import time
 
 from ....tmsi_errors.error import TMSiError, TMSiErrorCode
-from ....tmsi_utilities.decorators import LogPerformances
+from ....tmsi_utilities.decorators import LogPerformances, Retry
 from ....tmsi_utilities.tmsi_logger import TMSiLoggerActivity, TMSiLogger
 
 from ...tmsi_device import TMSiDevice
@@ -49,6 +49,7 @@ from .apex_structures.apex_channel import ApexChannel
 from .apex_structures.apex_impedance_channel import ApexImpedanceChannel
 from .apex_API_structures import *
 from .apex_API_enums import *
+from .apex_API_lookup_table import DeviceErrorLookupTable
 from .apex_dongle import ApexDongle
 
 from .apex_API import *
@@ -239,7 +240,8 @@ class ApexDevice(TMSiDevice):
         TMSiLoggerActivity().log("TMSi-SDK->>APEX-SDK: import configuration")
         if self.__info.get_state() == DeviceState.connected:
             TMSiLoggerActivity().log("APEX-SDK->>APEX-API: import configuration")
-            if self.__config.import_from_xml(filename):
+            import_success, import_error = self.__config.import_from_xml(filename)
+            if import_success:
                 self.__set_device_channel_config(
                     [ch.get_channel_name() for ch in self.__config.get_channels()],
                     [i for i in range(len(self.__config.get_channels()))]
@@ -261,7 +263,7 @@ class ApexDevice(TMSiDevice):
                 return
             else:
                 TMSiLoggerActivity().log("APEX-API->>APEX-SDK: import failed general error")
-                raise TMSiError(error_code = TMSiErrorCode.general_error)
+                raise TMSiError(error_code = TMSiErrorCode.file_import_error, message = import_error)
         TMSiLoggerActivity().log("APEX-SDK->>TMSi-SDK: import failed device not connected")
         raise TMSiError(
             error_code = TMSiErrorCode.device_not_connected)
@@ -384,6 +386,7 @@ class ApexDevice(TMSiDevice):
                 channel.set_reference(device_reference_config[i].ChanRefStatus)
             else:
                 channel.set_reference(None)
+            channel.set_channel_index(i + 1)
             channels.append(channel)
         self.__config.set_channels(channels)
         self.__get_device_impedance_metadata()
@@ -528,6 +531,15 @@ class ApexDevice(TMSiDevice):
         return device_list
 
     @LogPerformances
+    def get_device_name(self):
+        """Get name of the device
+
+        :return: name of the device
+        :rtype: str
+        """
+        return self.__info.get_name()
+
+    @LogPerformances
     def get_device_power_status(self) -> TMSiDevPowerStatus:
         """Returns the power status of the device
 
@@ -666,7 +678,7 @@ class ApexDevice(TMSiDevice):
         if __last_error != TMSiDeviceRetVal.TMSiStatusOK:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error,
-                dll_error_code = __last_error)
+                dll_error = DeviceErrorLookupTable(__last_error))
         return version
     
     @LogPerformances
@@ -689,7 +701,7 @@ class ApexDevice(TMSiDevice):
         if __last_error != TMSiDeviceRetVal.TMSiStatusOK:
             raise TMSiError(
                 error_code = TMSiErrorCode.device_error,
-                dll_error_code = __last_error)
+                dll_error = DeviceErrorLookupTable(__last_error))
 
     @LogPerformances
     def get_event_buffer(POINTER_num_found_events):
@@ -701,13 +713,29 @@ class ApexDevice(TMSiDevice):
         return TMSiGetEventBuffered(POINTER_num_found_events)
 
     @LogPerformances
+    def get_file_channels(self, file_id):
+        """Gets the list of channels from the file.
+
+        :param file_id: id of the file
+        :type file_id: int
+        :return: The list of channels
+        :rtype: list[ApexChannel]
+        """
+        TMSiLoggerActivity().log("TMSi-SDK->>APEX-SDK: get file channels request")
+        channel_metadata = self.__get_card_file_channel_metadata(file_id=file_id)
+        channels = self.get_device_channels()
+        for i in range(len(channels)):
+            channels[i].set_channel_name(alternative_channel_name = channel_metadata[i].AltChanName.decode('windows-1252'))
+        return channels
+    
+    @LogPerformances
     def get_id(self) -> int:
         """Gets the device id.
 
         :return: the device id.
         :rtype: int
         """
-        return self.__info.get_id()
+        return id(self)
 
     @LogPerformances
     def get_live_impedance(self) -> bool:
@@ -774,6 +802,7 @@ class ApexDevice(TMSiDevice):
             ApexDevice.__initialize()
         return ApexDevice.__apex_sdk
     
+    @Retry(n_retry=3)
     @LogPerformances
     def open(self, dongle_id = ApexConst.TMSI_DONGLE_ID_NONE):
         """Opens the connection with the device.
@@ -793,7 +822,7 @@ class ApexDevice(TMSiDevice):
                 self.__info.get_id(),
                 self.__info.get_dr_interface().value
             )
-            if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusDrInterfaceAlreadyOpen):
+            if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusDrInterfaceAlreadyOpen:
                 # The found device is available but in it's open-state: Close and re-open the connection
                 self.__last_error_code = TMSiCloseInterface(
                     self.__device_handle, 
@@ -804,7 +833,7 @@ class ApexDevice(TMSiDevice):
                     self.__info.get_id(), 
                     self.__info.get_dr_interface().value)
 
-            if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+            if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
                     TMSiLoggerActivity().log("APEX-API->>APEX-SDK: open connection succeeded")
                     # The device is opened succesfully. Update the device information.
                     self.__info.set_state(DeviceState.connected)
@@ -815,7 +844,7 @@ class ApexDevice(TMSiDevice):
                 TMSiLoggerActivity().log("APEX-API->>APEX-SDK: open connection failed, device error")
                 raise TMSiError(
                     error_code = TMSiErrorCode.device_error,
-                    dll_error_code = self.__last_error_code)
+                    dll_error = DeviceErrorLookupTable(dll_response = self.__last_error_code))
         else:
             TMSiLoggerActivity().log("APEX-SDK->>TMSi-SDK: open connection failed, no device found")
             raise TMSiError(
@@ -871,7 +900,7 @@ class ApexDevice(TMSiDevice):
         if (self.__info.get_state() != DeviceState.sampling):
             raise TMSiError(TMSiErrorCode.api_invalid_command)
         self.__last_error_code = TMSiResetDeviceDataBuffer(self.__device_handle)
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return
         else:
             raise TMSiError(
@@ -971,7 +1000,7 @@ class ApexDevice(TMSiDevice):
             self.__device_handle,
             pointer(file_request)
         )
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return
         else:
             raise TMSiError(
@@ -994,7 +1023,7 @@ class ApexDevice(TMSiDevice):
             self.__device_handle,
             pointer(measurement_request)
         )
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return
         else:
             TMSiLoggerActivity().log("APEX-API->>APEX-SDK: start failed with error {}".format(self.__last_error_code))
@@ -1103,7 +1132,7 @@ class ApexDevice(TMSiDevice):
         self.__last_error_code = TMSiSetDeviceSamplingRequest(
             self.__device_handle, 
             pointer(measurement_request))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return
         else:
             TMSiLoggerActivity().log("APEX-API->>APEX-SDK: start failed with error {}".format(self.__last_error_code))
@@ -1180,7 +1209,12 @@ class ApexDevice(TMSiDevice):
         if self.__info.get_state() != DeviceState.sampling:
             raise TMSiError(error_code = TMSiErrorCode.api_invalid_command)
         TMSiLoggerActivity().log("TMSi-SDK->>{}: stop".format(self.__measurement.get_name()))
-        self.__measurement.stop()
+        try:
+            self.__measurement.stop()
+        except TMSiError as e:
+            TMSiLogger().warning(message = "stop_download_file failed with error:\n{}\nDevice state moved to connected to allow the device to close.".format(str(e)))
+            self.__info.set_state(DeviceState.connected)
+            raise e    
         self.__info.set_state(DeviceState.connected)
 
     @LogPerformances
@@ -1192,7 +1226,12 @@ class ApexDevice(TMSiDevice):
         if self.__info.get_state() != DeviceState.sampling:
             raise TMSiError(error_code = TMSiErrorCode.api_invalid_command)
         TMSiLoggerActivity().log("TMSi-SDK->>{}: stop".format(self.__measurement.get_name()))
-        self.__measurement.stop()
+        try:
+            self.__measurement.stop()
+        except TMSiError as e:
+            TMSiLogger().warning(message = "stop_measurement failed with error:\n{}\nDevice state moved to connected to allow the device to close.".format(str(e)))
+            self.__info.set_state(DeviceState.connected)
+            raise e    
         self.__info.set_state(DeviceState.connected)
     
     @LogPerformances
@@ -1228,6 +1267,42 @@ class ApexDevice(TMSiDevice):
             raise TMSiError(TMSiErrorCode.file_writer_error)
     
     @LogPerformances
+    def __get_card_file_channel_metadata(self, file_id):
+        RecFileID = file_id
+        DevCardFileDetails = TMSiDevCardFileDetails()
+        ChannelMetadataList = (self.get_num_channels() * TMSiChannelMetadata)()
+        ChannelMetadataListLen = self.get_num_channels()
+        RetChannelMetadataListLen = (c_uint)(0)
+        CyclingStateMetadataList = (self.get_num_channels() * TMSiCyclingStateMetadata)()
+        CyclingStateMetadataListLen = self.get_num_channels()
+        RetCyclingStatMetadataListLen = (c_uint)(0)
+        ImpReportMetadata = TMSiDevImpReportMetadata()
+        ImpedanceReportList = (self.get_num_channels() * TMSiDevImpReport)()
+        ImpedanceReportListLen = self.get_num_channels()
+        RetImpedanceReportListLen = (c_uint)(0)
+        self.__last_error_code = TMSiGetDeviceCardFileMetadata(
+            self.__device_handle,
+            RecFileID,
+            pointer(DevCardFileDetails), 
+            pointer(ChannelMetadataList), 
+            ChannelMetadataListLen, 
+            pointer(RetChannelMetadataListLen), 
+            pointer(CyclingStateMetadataList), 
+            CyclingStateMetadataListLen, 
+            pointer(RetCyclingStatMetadataListLen), 
+            pointer(ImpReportMetadata),
+            pointer(ImpedanceReportList), 
+            ImpedanceReportListLen, 
+            pointer(RetImpedanceReportListLen)
+        )
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
+            return ChannelMetadataList[0:RetChannelMetadataListLen.value]
+        else:
+            raise TMSiError(
+                TMSiErrorCode.device_error,
+                self.__last_error_code)
+
+    @LogPerformances
     def __get_device_card_file_list(self):
         file_list = (2000 * TMSiDevCardFileInfo)()
         file_number = (c_uint)(0)
@@ -1237,7 +1312,7 @@ class ApexDevice(TMSiDevice):
             len(file_list),
             pointer(file_number)
             )
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return_list = []
             for i in range(file_number.value):
                 return_list.append(file_list[i])
@@ -1316,13 +1391,14 @@ class ApexDevice(TMSiDevice):
         self.__last_error_code = TMSiGetDeviceCardStatus(
             self.__device_handle,
             pointer(card_status))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return card_status
         else:
             raise TMSiError(
                 TMSiErrorCode.device_error,
                 self.__last_error_code)
 
+    @Retry(n_retry=3)
     @LogPerformances
     def __get_device_channel_config(self):
         device_channel_alt_name_list = (TMSiDevAltChName * self.get_num_channels())()
@@ -1334,7 +1410,7 @@ class ApexDevice(TMSiDevice):
             pointer(device_channel_alt_name_list),
             self.get_num_channels(),
             pointer(num_returned_items))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return device_channel_name_list, device_channel_alt_name_list
         else:
             raise TMSiError(
@@ -1345,12 +1421,12 @@ class ApexDevice(TMSiDevice):
     def __get_device_impedance_metadata(self):
         num_returned_items = (c_uint)(0)
         device_impedance_metadata_list = (TMSiImpedanceMetadata * self.get_num_impedance_channels())()
-        TMSiGetDeviceImpedanceMetadata(
+        self.__last_error_code = TMSiGetDeviceImpedanceMetadata(
                 self.__device_handle,
                 pointer(device_impedance_metadata_list),
                 self.get_num_impedance_channels(),
                 pointer(num_returned_items))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             impedance_metadata_list = []
             impedance_channels = []
             for i in range(num_returned_items.value):
@@ -1369,7 +1445,7 @@ class ApexDevice(TMSiDevice):
         self.__last_error_code = TMSiGetDeviceInfo(
             self.__device_handle, 
             pointer(device_info_report))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return device_info_report
         else:
             raise TMSiError(
@@ -1449,20 +1525,21 @@ class ApexDevice(TMSiDevice):
             self.__device_handle,
             self.__info.get_dr_interface().value,
             pointer(device_sampling_metadata_header))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return device_sampling_metadata_header
         else:
             raise TMSiError(
                 TMSiErrorCode.device_error,
                 self.__last_error_code)
     
+    @Retry(n_retry=3)
     @LogPerformances
     def __get_device_sample_metadata(self):
         device_channel_metadata = (TMSiChannelMetadata * self.get_num_channels())()
         device_cycling_state_metadata = (TMSiCyclingStateMetadata * self.get_num_channels())()
         num_returned_channels = (c_uint)(0)
         num_returned_cycling_states = (c_uint)(0)
-        TMSiGetDeviceSampleMetadata(
+        self.__last_error_code = TMSiGetDeviceSampleMetadata(
                 self.__device_handle,
                 self.__info.get_dr_interface().value,
                 pointer(device_channel_metadata),
@@ -1471,7 +1548,7 @@ class ApexDevice(TMSiDevice):
                 pointer(device_cycling_state_metadata),
                 self.get_num_channels(),
                 pointer(num_returned_cycling_states))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return_channels = []
             return_cycling_states = []
             for i in range(num_returned_channels.value):
@@ -1490,7 +1567,7 @@ class ApexDevice(TMSiDevice):
         self.__last_error_code = TMSiGetDeviceSamplingConfig(
             self.__device_handle, 
             pointer(device_sampling_config))
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return device_sampling_config
         else:
             raise TMSiError(
@@ -1509,7 +1586,7 @@ class ApexDevice(TMSiDevice):
     def __reset_device_card(self):
         self.__last_error_code = TMSiResetDeviceCard(
             self.__device_handle)
-        if (self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK):
+        if self.__last_error_code == TMSiDeviceRetVal.TMSiStatusOK:
             return
         else:
             raise TMSiError(

@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -88,16 +88,17 @@ class Poly5_to_EDF_Converter:
     def convertFile(self, filename):
         self._readData(filename)
         self._remove_empty_samples()
+        self._find_analogue()
         self._filter_data()
         self._write_edf_meta_data()
-        self._write_edf_data()
-      
+        self._write_edf_data()      
         
     def _readData(self, filename):
         self.data = Poly5Reader(filename)
         self.fs=self.data.sample_rate
         self.n_signals=len(self.data.samples) 
-        
+
+    def _find_analogue(self):
         self.n_analogue=0
         for chan in range(0, self.n_signals):
             if 'Volt' in self.data.ch_unit_names[chan]:

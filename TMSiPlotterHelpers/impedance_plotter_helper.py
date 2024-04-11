@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023,2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ measurements_dir = join(Plotter_dir, '../../measurements') # directory with all 
 modules_dir = normpath(join(Plotter_dir, '..')) # directory with all modules
 
 class ImpedancePlotterHelper(PlotterHelper):
-    def __init__(self,  device, layout = None, file_storage = None):
+    def __init__(self, device, grid_type = None, is_head_layout = False, file_storage = None):
         super().__init__(device=device, monitor_class = Monitor, consumer_thread_class = ConsumerThread)
         self._save_impedances = file_storage
 
@@ -62,23 +62,21 @@ class ImpedancePlotterHelper(PlotterHelper):
         if device.get_device_type() == 'SAGA':
             self.measurement_type = MeasurementType.SAGA_IMPEDANCE
             self.monitor_function = self.monitor_function_saga
-            if layout in self.conversion_data or layout == 'head':
-                self.layout = layout
-            else: 
-                self.layout = 'grid'
         elif device.get_device_type() == 'APEX':
             self.measurement_type = MeasurementType.APEX_IMPEDANCE
             self.monitor_function = self.monitor_function_apex
-            if layout != 'grid':
-                self.layout = 'head'
+
+        # check it is available at least one placing config, otherwise set default based on ch numbers
+        if not is_head_layout and grid_type is None:
+            if self.device.get_num_active_channels() >= 64:
+                grid_type = '8-8'
             else:
-                self.layout = layout
+                grid_type = '4-8'
 
         # Initialize plotter
-        if self.layout == 'head':
-            self.main_plotter = ImpedancePlotter(device_type = device.get_device_type(), is_headcap=True)
-        else:
-            self.main_plotter = ImpedancePlotter(device_type = device.get_device_type(), is_headcap=False)
+        self.head_layout = is_head_layout
+        self.grid_type = grid_type
+        self.main_plotter = ImpedancePlotter(device_type = device.get_device_type(), is_headcap=is_head_layout)
 
     def callback(self, response):
         # Get impedance values
@@ -229,7 +227,7 @@ class ImpedancePlotterHelper(PlotterHelper):
     
     def _get_coordinates(self):
         # Get electrode positions and channel conversion list 
-        if self.layout == 'head':
+        if self.head_layout:
             if len(self.channels_default) < 32:
                 coordinates = TMSiHeadcaps().headcaps["apex24"]
             elif len(self.channels_default) <64:
@@ -237,19 +235,19 @@ class ImpedancePlotterHelper(PlotterHelper):
             else:
                 coordinates = TMSiHeadcaps().headcaps["eeg64"]
         else:              
-            if self.layout in self.conversion_data:
-                self.conversion_list= np.array(self.conversion_data[self.layout]['channel_conversion'])
+            if self.grid_type in self.conversion_data:
+                self.conversion_list= np.array(self.conversion_data[self.grid_type]['channel_conversion'])
             if len(self.channels_default)<64:
-                if '6' in self.layout:
-                    if self.layout[-1]=='2':
+                if '6' in self.grid_type:
+                    if self.grid_type[-1]=='2':
                         coordinates = TMSiGrids().grids["6-11-2"]
                     else:
                         coordinates = TMSiGrids().grids["6-11-1"]
                 else:
                     coordinates = TMSiGrids().grids["4-8"]
             else:
-                if '6' in self.layout:
-                    if self.layout[-1]=='2':
+                if '6' in self.grid_type:
+                    if self.grid_type[-1]=='2':
                         coordinates = TMSiGrids().grids["6-11-2"]
                     else:
                         coordinates = TMSiGrids().grids["6-11"]

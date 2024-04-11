@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -95,15 +95,40 @@ class SagaConfig():
 
         :param filename: filename where to take the configuration from.
         :type filename: str
-        :return: True if succeded, False if failed.
+        :return: True if succeded, False if failed, error_message.
         :rtype: bool
         """
+        error_message = "Error during xml read."
         try:
             tree = ET.parse(filename)
             root = tree.getroot()
+            
+            # check device type
             if root.tag != "SagaConfig" and root.tag != "DeviceConfig":
-                TMSiLogger().warning("IMPOSSIBLE TO LOAD FILE! It is not a SAGA configuration file.")
-                return False
+                error_message = "IMPOSSIBLE TO LOAD FILE! It is not a SAGA configuration file."
+                TMSiLogger().warning(error_message)
+                return False, error_message
+            
+            # check if imported file has the correct number of channels
+            channel_counter = 0
+            for elem in root:
+                n_channels = len(self.__channels)
+                for subelem in elem:
+                    if elem.tag == "Channels" and subelem.tag == "Channel":
+                        channel_counter += 1
+            if channel_counter == 0:
+                # all good, configuring only the device
+                pass
+            elif channel_counter < n_channels:
+                error_message = "Configuration file loaded does not have the full list of channels."
+                TMSiLogger().warning(error_message)
+                return False, error_message
+            elif channel_counter > n_channels:
+                error_message = "Configuration file loaded is not compatible with the device in use, too many channels set."
+                TMSiLogger().warning(error_message)
+                return False, error_message
+            
+            # fill configuration structure
             for elem in root:
                 for subelem in elem:
                     if elem.tag == "Device":
@@ -137,9 +162,10 @@ class SagaConfig():
                                 divider = int(subelem.find("ChanDivider").text),
                                 base_sample_rate = self.__base_sample_rate
                             )
-            return True
-        except:
-            return False
+            return True, None
+        except Exception as e:
+            TMSiLogger().warning("{}".format(e))
+            return False, error_message
     
     def get_active_channels(self):
         """Get active channels of the device.

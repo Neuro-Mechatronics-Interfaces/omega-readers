@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -68,20 +68,22 @@ class Xdf_Reader:
                 self.stream_info[i] = stream["info"]
                 if stream is not None:
                   fs = float(stream["info"]["nominal_srate"][0])
-              
                   labels, types, units, impedances = self._get_ch_info(stream)
                   
                   # convert from microvolts to volts if necessary
-                  scale = np.array([1e-6 if (u == "µVolt" or u == "uVolt") else 1 for u in units])
+                  scale = np.array([1e-6 if (u == "µVolt" or u == "uVolt" or u == '\u03BCVolt') else 1 for u in units])
                   samples = (stream["time_series"] * scale).T
                   samples, labels = self._reorder_grid(samples, labels)
-                  
                   type_options=["ecg", "bio", "stim", "eog", "misc", "seeg", "dbs", "ecog", "mag", "eeg", "ref_meg", "grad", "emg", "hbr", "hbo"]
                   for ind, t in enumerate(types):
                       if t=="EEG":
                           types[ind]="eeg"
                       elif not t in type_options:
-                          types[ind]="misc"
+                          if 'V' in units[ind]:
+                            types[ind] = 'eeg'
+                          else:  
+                            types[ind]="misc"
+                            
                   info = mne.create_info(ch_names=labels, sfreq=fs, ch_types=types)   
                   info=self._get_ch_locations(stream, info)
                   if self.add_ch_locs:
@@ -89,7 +91,6 @@ class Xdf_Reader:
                  
                   raw = mne.io.RawArray(samples, info)
                   raw.impedances=impedances
-                  
                   
                   if raw is not None:
                       print(raw, end="\n\n")
@@ -100,14 +101,14 @@ class Xdf_Reader:
                       else:
                           if i == 0:
                               output_data = (copy.copy(raw),)
-                              output_timestamps = (copy.copy(stream['time_stamps']),)
+                              output_timestamps = (copy.copy(stream['time_stamps']) - float(self.stream_info[i]['desc'][0]['synchronization'][0]['offset_mean'][0]) ,)
                           elif i == num_streams - 1:
                               output_data = output_data + (copy.copy(raw),)
-                              output_timestamps = output_timestamps + (copy.copy(stream['time_stamps']),)
+                              output_timestamps = output_timestamps + (copy.copy(stream['time_stamps'])  - float(self.stream_info[i]['desc'][0]['synchronization'][0]['offset_mean'][0]) ,)
                               return output_data, output_timestamps
                           else:
                               output_data = output_data + (copy.copy(raw),)
-                              output_timestamps = output_timestamps + (copy.copy(stream['time_stamps']),)
+                              output_timestamps = output_timestamps + (copy.copy(stream['time_stamps'])  - float(self.stream_info[i]['desc'][0]['synchronization'][0]['offset_mean'][0]) ,)
         except Exception as e:
             print('Reading data failed because of the following error:\n')
             raise

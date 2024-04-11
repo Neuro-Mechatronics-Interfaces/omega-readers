@@ -1,6 +1,7 @@
 
 a:link {
     color: #FF8200;
+    text-decoration: none;
 }
 
 a:visited {
@@ -11,8 +12,18 @@ a:hover {
     color: #FC4C02;
 }
 
+a:hover>code {
+    color: #FC4C02;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 a:active {
     color: #FC4C02;
+}
+
+a {
+    text-decoration: none;
 }
 
 h1 {
@@ -32,10 +43,19 @@ p[data-theme=dark] {
     color: #FFFFFF
 }
 
+
 nav.bd-links .active:hover>a, nav.bd-links .active>a {
     color: #FC4C02;
     font-weight: 600;
+    text-decoration: none;
 }
+
+a:hover>code {
+    color: #FC4C02;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 
 .nav {
     --bs-nav-link-color: #FC4C02 !important;
@@ -45,14 +65,34 @@ nav.bd-links .active:hover>a, nav.bd-links .active>a {
 
 .navbar-nav li a:hover {
     color: #FC4C02;
+    text-decoration: none;
 }
 
-html[data-theme=dark], html[data-theme=light] {
-    --bs-link-color:  #FC4C02 !important;
+.prev-next-area a p.prev-next-title {
+    text-decoration: none;
+}
+
+html[data-theme=light] {
+    --bs-link-color:  #FF8200 !important;
     --bs-link-hover-color: #FC4C02 !important;
     --pst-color-text-base: #24272A !important;
-    --pst-color-primary:  #FC4C02 !important;
+    --pst-color-primary:  #FF8200 !important;
     --pst-color-inline-code: #FC4C02 !important;
+    --pst-color-link: #FF8200 !important;
+    --pst-color-link-hover: #FC4C02 !important;
+    --pst-color-secondary: #FC4C02 !important;
+    --pst-color-inline-code-links: #FF8200 !important;
 }
 
 
+html[data-theme=dark]{
+    --bs-link-color:  #FF8200 !important;
+    --bs-link-hover-color: #FC4C02 !important;
+    --pst-color-text-base: #b2b4b6 !important;
+    --pst-color-primary:  #FF8200 !important;
+    --pst-color-inline-code: #FC4C02 !important;
+    --pst-color-link: #FF8200 !important;
+    --pst-color-link-hover: #FC4C02 !important;
+    --pst-color-secondary: #FC4C02 !important;
+    --pst-color-inline-code-links: #FF8200 !important;
+}

@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -107,6 +107,7 @@ class ImpedancePlotter(Plotter):
         self.table_impedance_values.set_values(values = reordered_values)
 
     def _local_setup_ui(self):
+        super()._local_setup_ui()
         self.group_amplitude.setVisible(False)
         self.btn_freeze.setVisible(False)
         self.group_channels.setVisible(False)

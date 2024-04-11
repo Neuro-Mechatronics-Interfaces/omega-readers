@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,12 +30,10 @@ limitations under the License.
 
 '''
 
-from ..device.devices.apex.apex_API_structures import TMSiEvent
-
 class EventData:
     """Class to handle the event data.
     """
-    def __init__(self, event: TMSiEvent):
+    def __init__(self, event: "TMSiEvent"):
         """Initialize the Event data.
 
         :param event: event

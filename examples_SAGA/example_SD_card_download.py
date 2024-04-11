@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ measurements_dir = join(Example_dir, '../measurements') # directory with all mea
 sys.path.append(modules_dir)
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 
@@ -50,14 +50,27 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
     
+        # Control if there are data saved on the device
+        file_list = dev.get_device_card_file_list()
+        if len(file_list) > 0:
+            import warnings
+            warnings.warn("\n\n!!! \nThere is/are recordings stored on the onboard memory. Changing the configuration will clear the device's SD card!\nDo you want to continue? ('yes'/'y' continue, all others abort opening)\n!!!\n", stacklevel = 1)
+            abort = input('Continue?\n')
+            if abort.lower() == 'yes' or abort.lower() == 'y':
+                pass
+            else:
+                raise TMSiError(error_code = TMSiErrorCode.general_error)
+
         # Create a file writer object to download the onboard recording (if there is any)
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"example_SD_card_download.poly5"))
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"example_SD_card_download.xdf"))
         file_writer.open(dev)
         
         # Get a list of all available recordings

@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -111,6 +111,7 @@ class SagaStructureGenerator:
         if pre_measeurement_imp_seconds is not None:
             config.PreImpSec = pre_measeurement_imp_seconds
         return config
+
 
     def from_qdatetime_to_tmsitime(qdatetime, tmsi_time):
         """Convert QDateTime to TMSiTime.

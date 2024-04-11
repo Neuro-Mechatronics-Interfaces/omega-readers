@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,18 +37,18 @@ class TMSiGrids(metaclass = Singleton):
         """Initializes the object."""
         self.grids = {}
         self.reorder = {}
-        self.grids["3-8"] = {"0": (0.125, -0.7), "25": (-0.125, -0.7)}
-        self.grids["4-8"] = {"0": (0.125, -0.7), "33": (-0.125, -0.7)}
-        self.grids["8-8"] = {"0": (0.125, -0.7), "65": (-0.125, -0.7)}
-        self.grids["6-11"] = {"0": (0.125, -0.7), "65": (-0.125, -0.7)}
-        self.grids["6-11-1"] = {"0": (0.125, -0.7), "33": (-0.125, -0.7)}
-        self.grids["6-11-2"] = {"0": (0.125, -0.7), "33": (-0.125, -0.7)}
+        self.grids["3-8"] = {"0": (-0.125, -0.7), "25": (0.125, -0.7)}
+        self.grids["4-8"] = {"0": (-0.125, -0.7), "33": (0.125, -0.7)}
+        self.grids["8-8"] = {"0": (-0.125, -0.7), "65": (0.125, -0.7)}
+        self.grids["6-11"] = {"0": (-0.125, -0.7), "65": (0.125, -0.7)}
+        self.grids["6-11-1"] = {"0": (-0.125, -0.7), "33": (0.125, -0.7)}
+        self.grids["6-11-2"] = {"0": (-0.125, -0.7), "33": (0.125, -0.7)}
         for i in range(24):
-            self.grids["3-8"]["{}".format(i + 1)] = (float(i % 8) / 8.0 - 0.5 , -float(i // 8) / 8.0 + 0.5)
+            self.grids["3-8"]["{}".format(i + 1)] = (float(i % 8) / 7.0 - 0.5 , -float(i // 8) / 7.0 + 0.5)
         for i in range(32):
-            self.grids["4-8"]["{}".format(i + 1)] = (float(i % 8) / 8.0 - 0.5 , -float(i // 8) / 8.0 + 0.5)
+            self.grids["4-8"]["{}".format(i + 1)] = (float(i % 8) / 7.0 - 0.5 , -float((i + 16) // 8) / 7.0 + 0.5)
         for i in range(64):
-            self.grids["8-8"]["{}".format(i + 1)] = (float(i % 8) / 8.0 - 0.5, -float(i // 8) / 8.0 + 0.5)
+            self.grids["8-8"]["{}".format(i + 1)] = (float(i % 8) / 7.0 - 0.5, -float(i // 8) / 7.0 + 0.5)
             if i < 10:
                 j = i
             else:

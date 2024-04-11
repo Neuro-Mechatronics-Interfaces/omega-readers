@@ -1,5 +1,5 @@
 '''
-(c) 2022,2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import time
 from TMSiFileFormats.file_writer import FileWriter, FileFormat
 
 from TMSiSDK.tmsi_sdk import TMSiSDK, DeviceType, DeviceInterfaceType, DeviceState
-from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode, DeviceErrorLookupTable
+from TMSiSDK.tmsi_errors.error import TMSiError, TMSiErrorCode
 from TMSiSDK.device import ChannelType
 from TMSiSDK.device.devices.saga.saga_API_enums import SagaBaseSampleRate, RefMethod
 from TMSiSDK.device.tmsi_device_enums import MeasurementType
@@ -54,12 +54,25 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
     
     if (len(discoveryList) > 0):
-        # Get the handle to the first discovered device.
-        dev = discoveryList[0]
-        
-        # Open a connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.docked:
+                # Open the connection to SAGA
+                dev.open()
+                break
         print('Connected to SAGA via docked.')
+
+        # Control if there are data saved on the device
+        file_list = dev.get_device_card_file_list()
+        if len(file_list) > 0:
+            import warnings
+            warnings.warn("\n\n!!! \nThere is/are recordings stored on the onboard memory. Changing the configuration will clear the device's SD card!\nDo you want to continue? ('yes'/'y' continue, all others abort opening)\n!!!\n", stacklevel = 1)
+            abort = input('Continue?\n')
+            if abort.lower() == 'yes' or abort.lower() == 'y':
+                pass
+            else:
+                raise TMSiError(error_code = TMSiErrorCode.general_error)
 
         # Set sample rate to 500 Hz
         dev.set_device_sampling_config(base_sample_rate = SagaBaseSampleRate.Decimal,  channel_type = ChannelType.UNI, channel_divider =8)
@@ -91,21 +104,23 @@ try:
     discoveryList = TMSiSDK().get_device_list(DeviceType.saga)
 
     if (len(discoveryList) > 0):
-        # Create the device object to interface with the SAGA-system.
-        dev = discoveryList[-1]
-        
-        # Find and open the connection to the SAGA-system
-        dev.open()
+        # Get the handle to the first discovered device and open the connection.
+        for i,_ in enumerate(discoveryList):
+            dev = discoveryList[i]
+            if dev.get_dr_interface() == DeviceInterfaceType.optical:
+                # Open the connection to SAGA
+                dev.open()
+                break
         print('Connected to SAGA via optical')
    
         # Before the measurement starts first a file-writer-object must be created and opened.
         # Upon creation specify :
-        #   - the data-format 'poly5' to be used
+        #   - the data-format 'xdf' to be used
         #   - the filepath/name, where the file must be stored
         # then 'link' the file-writer-instance to the device.
         # The file-writer-object is now ready to capture the measurement-data and
         # write it to the specified file.
-        file_writer = FileWriter(FileFormat.poly5, join(measurements_dir,"switched_interface_type_measurement.poly5"))
+        file_writer = FileWriter(FileFormat.xdf, join(measurements_dir,"switched_interface_type_measurement.xdf"))
         file_writer.open(dev)
     
         # Start the measurement and wait 10 seconds. In the mean time the file-writer-instance

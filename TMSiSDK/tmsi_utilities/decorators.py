@@ -35,6 +35,7 @@ import os
 from functools import wraps
 
 from .tmsi_logger import TMSiLoggerPerformance
+from .tmsi_logger import TMSiLogger
 
 
 def LogPerformances(func):
@@ -55,3 +56,21 @@ def LogPerformances(func):
             response = func(*args, **kwargs)
         return response
     return performance_logger
+
+def Retry(n_retry : int):
+    def retry_decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for _ in range(n_retry):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as exec:
+                    last_exception = exec
+                    TMSiLogger().warning("Retry: {} - {}".format(func.__qualname__, exec))
+                time.sleep(0.5)
+            if last_exception:
+                raise last_exception
+            else:
+                raise ValueError("{} failed but no exception was raised.".format(func.__qualname__))
+        return wrapper
+    return retry_decorator

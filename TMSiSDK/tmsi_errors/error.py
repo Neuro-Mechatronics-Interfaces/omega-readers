@@ -1,5 +1,5 @@
 '''
-(c) 2023 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2023-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class TMSiErrorCode(Enum):
 
 class TMSiError(Exception):
     """Class to handle TMSi errors."""
-    def __init__(self, error_code, dll_error_code = None, message = ""):
+    def __init__(self, error_code, dll_error = None, message = ""):
         """Initialize TMSi error.
 
         :param error_code: error code
@@ -58,71 +58,22 @@ class TMSiError(Exception):
         :param dll_error_code: error code coming from the dll, defaults to None
         :type dll_error_code: TMSiDeviceRetVal, optional
         """
-        self.dll_error_code = None
+        self.dll_error =None
         self.error_code = error_code
         self.message = message
-        if dll_error_code:
-            self.dll_error_code = hex(dll_error_code.value)
+        self.dll_error = dll_error
         
     def __str__(self):
-        if self.dll_error_code:
-            return "Error code {}: {} \nDLL Error code {}: {}\n{}".format(
+        if self.dll_error:
+            return "TMSiSDK Error code {}: {} \nDLL {}\n{}".format(
                 self.error_code.value,
                 SdkErrorLookupTable(str(self.error_code.value)),
-                self.dll_error_code,
-                DeviceErrorLookupTable(self.dll_error_code),
+                self.dll_error,
                 self.message)
-        return "Error code {}: {}\n{}".format(
+        return "TMSiSDK Error code {}: {}\n{}".format(
                 self.error_code.value,
                 SdkErrorLookupTable(str(self.error_code.value)),
                 self.message)
-
-def DeviceErrorLookupTable(code):
-    """Translate code to string
-
-    :param code: code to translate
-    :type code: string
-    :return: code translated to string
-    :rtype: string
-    """
-    _lookup_table = {
-        '0x0000000': "",
-        '0x1010001': "DR reported 'Checksum error in received block'",
-        '0x2010001': "DS reported 'Checksum error in received block'",
-        '0x1010002': "DR reported 'Unknown command'",
-        '0x2010002': "DS reported 'Unknown command'",
-        '0x1010003': "DR reported 'Response timeout'",
-        '0x2010003': "DS reported 'Response timeout'",
-        '0x1010004': "DR reported 'Device busy try again in x msec'",
-        '0x2010004': "DS reported 'Device busy try again in x msec'",
-        '0x1010005': "DR reported 'Command not supported over current interface'",
-        '0x2010005': "DS reported 'Command not supported over current interface'",
-        '0x1010006': "DR reported 'Command not possible, device is recording'",
-        '0x1010007': "DR reported 'Device not available'",
-        '0x2010007': "DS reported 'Device not available'",
-        '0x2010008': "DS reported 'Interface not available'",
-        '0x2010009': "DS reported 'Command not allowed in current mode'",
-        '0x201000A': "DS reported 'Processing error'",
-        '0x201000B': "DS reported 'Unknown internal error'",
-        '0x1030001': "DR reported 'Command not supported by Channel'",
-        '0x1030002': "DR reported 'Illegal start control for ambulant recording",
-        '0x201000C': "DS reports that data request does not fit with one Device Api Packet",
-        '0x201000D': "DS reports that DR is already opened",
-        '0x3001000': "DLL Function is declared, but not yet implemented",
-        '0x3001001': "DLL Function called with invalid parameters",
-        '0x3001002': "Incorrect checksum of response message",
-        '0x3001003': "DLL Function failed because of header failure",
-        '0x3001004': "DLL Function failed because an underlying process failed",
-        '0x3001005': "DLL Function called with a too small buffer",
-        '0x3001006': "DLL Function called with a Handle that's not assigned to a device",
-        '0x3002000': "DLL Function failed becasue could not open selected interface",
-        '0x3002001': "DLL Function failed because could not close selected interface",
-        '0x3002002': "DLL Function failed because could not send command-data",
-        '0x3002003': "DLL Function failed because could not receive data",
-        '0x3002004': "DLL Function failed because commination timed out",
-        '0x3002005': "Lost connection to DS, USB / Ethernet disconnect"}    
-    
-    return _lookup_table[code]
 
 def SdkErrorLookupTable(code):
     """Translate code to string
@@ -144,6 +95,9 @@ def SdkErrorLookupTable(code):
         "202" : "api invalid command",
         "203" : "api incompatible configuration",
         "300" : "file writer error",
-        "301" : "file import error"
-    }
-    return _lookup_table[code]
+        "301" : "file import error"}
+    
+    try:
+        return _lookup_table[code]
+    except:
+        return "Unknown Error Code. Code {} not listed.".format(code)

@@ -1,5 +1,5 @@
 '''
-(c) 2022 Twente Medical Systems International B.V., Oldenzaal The Netherlands
+(c) 2022-2024 Twente Medical Systems International B.V., Oldenzaal The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import tkinter as tk
 from tkinter import filedialog
 import mne
 import pandas as pd
+import numpy as np
 
 from os.path import join, dirname, realpath
 Reader_dir = dirname(realpath(__file__)) # directory of this file
@@ -49,6 +50,9 @@ class Edf_Reader:
         # read raw edf-file
         # change channel type of COUNTER channel to misc
         mne_object=mne.io.read_raw_edf(filename, misc=[-2], preload=True)
+        if mne_object.ch_names[-5] == 'CYCL_IDX':
+            mne_object.set_channel_types({'CYCL_IDX': 'misc', 'CYCL_ST1': 'misc', 'CYCL_ST2': 'misc'})
+
         
         if add_ch_locs:
             # add channel locations from txt file
@@ -86,3 +90,72 @@ class Edf_Reader:
                     impedances.append(imp_df['impedance'][i_ch])
                     
         self.mne_object.impedances = impedances
+
+    def read_live_impedance(self):
+        """
+        This function reads the live measured impedances that are stored in the 
+        datafile. If no live impedances are stored in the file, the function will return before proceeding
+        
+        :return live_imp: real part of the impedances for all channels
+        :rtype: array
+        :return live_cap: imaginary part of the impedances for all channels
+        :rtype: array
+    """
+        # Parameters from class
+        samples = self.mne_object.get_data()
+        ch_names = self.mne_object.ch_names
+        # Parameter to define if there are live impedances stored in file
+        live_imp_in_file = False
+
+        # Define the number of channels in the data
+        num_channels = len(ch_names)
+
+        # Find the channels in which the information is stored
+        for i in range(len(ch_names)):
+            # Find channel with ID information
+            if ch_names[i] == 'CYCL_IDX':
+                cycl_idx_num = np.round(i)
+                live_imp_in_file = True
+            # In channel CYCL_ST1 the impedance vector is stored
+            elif ch_names[i] == 'CYCL_ST1':
+                cycl_imp_num = np.round(i)
+                live_imp_in_file = True
+            # In channel CYCL_ST2 the imaginary part of the impedance is stored
+            elif ch_names[i] == 'CYCL_ST2':
+                cycl_cap_num = np.round(i)
+                live_imp_in_file = True
+        
+        # Do not proceed with the rest of the code if there are no impedance values stored in the file
+        if not live_imp_in_file:
+            print('No live impedances were stored in this file')
+            live_imp = []
+            live_cap = []
+            return live_imp, live_cap
+                
+        # Cycle_idx channel defines the channel index of which the impedance information is stored in channels CYCL_ST1 and CYCL_ST2
+        # To find the amount of channels stored in the data, find the maximum value of the cycl_idx channel
+        maximum_cycl_idx = np.max(samples[cycl_idx_num,:])
+        
+        # Last index of the channel information is maximum_cylc_idx. So, channel indices range from 0 to this number. Therefore, length of stored info is one more (0 should be included)
+        length_stored_idx = int(maximum_cycl_idx+1)
+        
+        # Rounding is needed to resolve precision errors that occur in conversion to 16 bits
+        # cycl_idx channel stores the id of the channel of which the impedance is measured at that index
+        cycl_idx = np.round(samples[cycl_idx_num,:])
+        # cycl_imp stores the real part of the impedance value (resistance)
+        cycl_imp = np.round(samples[cycl_imp_num,:])
+        # cycl_cap stores the imaginary part of the impedance value (capacity)
+        cycl_cap = np.round(samples[cycl_cap_num,:])
+        
+        # Define the variables that store the live impedance and live cap per channel. By default, set the values to 1000
+        live_imp = np.ones((num_channels, len(samples[cycl_imp_num,:]))) * 1000
+        live_cap = np.ones((num_channels, len(samples[cycl_cap_num,:]))) * 1000
+        
+        
+        # Loop through the channels and store the values
+        for i in range(len(cycl_idx)):
+            # Values are measured once in every length_stored_idx channels, they are not updated for every sample
+            live_imp[int(cycl_idx[i]),i:i+length_stored_idx] = cycl_imp[i]
+            live_cap[int(cycl_idx[i]),i:i+length_stored_idx] = cycl_cap[i]
+
+        return live_imp[:,:], live_cap[:,:]        
