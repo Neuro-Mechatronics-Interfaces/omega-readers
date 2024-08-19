@@ -35,6 +35,7 @@ from tkinter import filedialog
 import mne
 import pandas as pd
 import numpy as np
+import locale
 
 from os.path import join, dirname, realpath
 Reader_dir = dirname(realpath(__file__)) # directory of this file
@@ -46,7 +47,7 @@ class Edf_Reader:
             root = tk.Tk()
             filename = filedialog.askopenfilename(title = 'Select edf-file', filetypes = (('edf-files', '*.edf'),('All files', '*.*')))
             root.withdraw()
-            
+        self.filename = filename
         # read raw edf-file
         # change channel type of COUNTER channel to misc
         mne_object=mne.io.read_raw_edf(filename, misc=[-2], preload=True)
@@ -72,7 +73,37 @@ class Edf_Reader:
         mne_object.apply_function(lambda x: x*1e-6, picks='eeg')
         
         self.mne_object=mne_object
+
+    def export_to_csv(self):
+        data = self.mne_object
         
+        # Extract samples, channel names and sample rate
+        samples = data.get_data(units = {'eeg':'uV'})
+        ch_names = data.ch_names
+        sample_rate = data.info['sfreq']
+        
+        # Add unit names to the column header
+        #ch_names = [ch_names[i] + ' (' + data.info[0]["desc"][0]["channels"][0]["channel"][i]["unit"][0] + ')' for i in range(len(ch_names))]
+        ch_names += ['Fs (Hz)']
+        
+        # Add Sample rate as a separate column to the samples vector
+        samples = np.vstack((samples, np.zeros((1,np.shape(samples)[1]))))
+        samples[-1,:] = sample_rate
+        
+        # Get decimal point representation (in local language settings)
+        langlocale = locale.getdefaultlocale()[0]
+        locale.setlocale(locale.LC_ALL, langlocale)
+        dp = locale.localeconv()['decimal_point']
+        
+        # Write to dataframe
+        df = pd.DataFrame(data = samples.T, columns = ch_names)
+        # Export dataframe to .csv
+        if self.filename.lower().endswith('.edf'):
+            save_name = self.filename.replace('.edf', '.csv')
+            df.to_csv(path_or_buf = save_name, sep = ';', decimal = dp, index = False, encoding = 'utf-16')
+            print('Exported to .csv successfully')
+        return
+
     def add_impedances(self, imp_filename=None):
         """Add impedances from .txt-file """
         if imp_filename==None:
@@ -90,6 +121,7 @@ class Edf_Reader:
                     impedances.append(imp_df['impedance'][i_ch])
                     
         self.mne_object.impedances = impedances
+
 
     def read_live_impedance(self):
         """

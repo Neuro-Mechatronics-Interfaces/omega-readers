@@ -61,7 +61,7 @@ class USB_TTL_device():
         if ports and not com_port:
             com_port = ports[0] 
         try:
-            self.ttl_device = serial.Serial(port=com_port, baudrate = 115200, timeout=0.0001)
+            self.ttl_device = serial.Serial(port=com_port, baudrate = 115200, timeout=1)
             # Serial reset, reset COM port
             self.ttl_device.reset_output_buffer()
             # Reset module. For robust use, multiple resets are required
@@ -70,7 +70,7 @@ class USB_TTL_device():
             
             # For robust use, close the port and reopen again
             self.ttl_device.close()
-            self.ttl_device = serial.Serial(port=com_port, baudrate = 115200, timeout=0.0001)
+            self.ttl_device = serial.Serial(port=com_port, baudrate = 115200, timeout=1)
             # Serial reset, reset COM port
             self.ttl_device.reset_output_buffer()
             print('Trigger event cable is ready!')
@@ -80,15 +80,15 @@ class USB_TTL_device():
             self.ttl_device.flush()
             self.ttl_device.write(b'RR')
             # Turn on red LED for 5 seconds
-            self.ttl_device.write(b'0xff')
+            self.ttl_device.write(b'ff')
             self.ttl_device.flush()
             time.sleep(5)
             if self.device.upper() == "SAGA":
                 # Write no bits as to get 0-baseline
-                self.ttl_device.write(b'0x00')
+                self.ttl_device.write(b'00')
             elif self.device.upper() == "APEX":
                 # Write all bits as to get 0-baseline
-                self.ttl_device.write(b'0xff')
+                self.ttl_device.write(b'ff')
         except:
             print('No Trigger event cable is found')
             raise TTLError("No trigger event cable is found")
@@ -101,7 +101,7 @@ class USB_TTL_device():
         """
         if self.device.upper() =="SAGA":
             # Convert the input value to a hexa-decimal format
-            ser_write = '0x' + hex(trigger_value)[2:].zfill(2)
+            ser_write = hex(trigger_value)[2:].zfill(2)
             # Convert to a byte format
             ser_write = bytes(ser_write, 'utf-8')
         elif self.device.upper() == "APEX":
@@ -109,7 +109,7 @@ class USB_TTL_device():
             trigger_value = trigger_value/2
             # Invert trigger value to get correct baseline
             trigger_value = (~int(trigger_value) & 0xff)
-            ser_write = '0x' + hex(trigger_value)[2:].zfill(2)
+            ser_write = hex(trigger_value)[2:].zfill(2)
             # Convert to a byte format
             ser_write = bytes(ser_write, 'utf-8')
         print(ser_write)
@@ -123,11 +123,10 @@ class USB_TTL_device():
         # End trigger writing, get baseline back to 0
         if self.device == "SAGA":
             # Reset all bits as to get 0-baseline
-            self.ttl_device.write(b'0x00')
+            self.ttl_device.write(b'00')
         elif self.device == "APEX":
             # Write all bits as to get 0-baseline
-            self.ttl_device.write(b'0xff')
-        time.sleep(duration)
+            self.ttl_device.write(b'ff')
         
     def read_trigger(self):
         """Function that reads the Trigger In lines of the USB-TTL module"""
@@ -149,11 +148,13 @@ class TTLError(Exception):
         
 if __name__ == '__main__':
     # Create the handle to the module
-    ttl_module = USB_TTL_device(com_port = 'COM7')
+    ttl_module = USB_TTL_device(com_port = 'COM4', TMSiDevice="SAGA")
 
     # Write 10 trigger events, and print the read value
-    for i in range(5):
-        ttl_module.write_trigger(trigger_value = 255 - i, duration = 0.5)
+    for i in range(10):
+        value = i*10
+        ttl_module.write_trigger(trigger_value = value, duration = 1)
         time.sleep(1)
 
     ttl_module.close()
+

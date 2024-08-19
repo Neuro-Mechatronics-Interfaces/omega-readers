@@ -37,6 +37,7 @@ from tkinter import filedialog
 import numpy as np
 import pandas as pd
 import copy
+import locale
 
 from os.path import join, dirname, realpath
 Reader_dir = dirname(realpath(__file__)) # directory of this file
@@ -55,7 +56,37 @@ class Xdf_Reader:
         self.add_ch_locs=add_ch_locs
         print('Reading file ', filename)
         self.data, self.time_stamps = self._readFile(filename)
+
+    def export_to_csv(self):
+        data = self.data[0]
         
+        # Extract samples, channel names and sample rate
+        samples = data.get_data(units = {'eeg':'uV'})
+        ch_names = data.ch_names
+        sample_rate = data.info['sfreq']
+        
+        # Add unit names to the column header
+        ch_names = [ch_names[i] + ' (' + self.stream_info[0]["desc"][0]["channels"][0]["channel"][i]["unit"][0] + ')' for i in range(len(ch_names))]
+        ch_names += ['Fs (Hz)']
+        
+        # Add Sample rate as a separate column to the samples vector
+        samples = np.vstack((samples, np.zeros((1,np.shape(samples)[1]))))
+        samples[-1,:] = sample_rate
+        
+        # Get decimal point representation (in local language settings)
+        langlocale = locale.getdefaultlocale()[0]
+        locale.setlocale(locale.LC_ALL, langlocale)
+        dp = locale.localeconv()['decimal_point']
+        
+        # Write to dataframe
+        df = pd.DataFrame(data = samples.T, columns = ch_names)
+        # Export dataframe to .csv
+        if self.filename.lower().endswith('.xdf'):
+            save_name = self.filename.replace('.xdf', '.csv')
+            df.to_csv(path_or_buf = save_name, sep = ';', decimal = dp, index = False, encoding = 'utf-16')
+            print('Exported to .csv successfully')
+        return
+    
     def _readFile(self, fname):
         try: 
             streams, header = load_xdf(fname)

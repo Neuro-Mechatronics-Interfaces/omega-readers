@@ -22,8 +22,8 @@ limitations under the License.
    #     #     #  #####    #
 
 /**
- * @file ${example_psychopy_erp_experiment_apex.py} 
- * @brief This example shows how to combine sending triggers to APEX with running a 
+ * @file ${example_psychopy_erp_experiment_saga.py} 
+ * @brief This example shows how to combine sending triggers to SAGA with running a 
  * pre-coded experiment with PsychoPy with the TTL trigger module
  *
  */
@@ -47,6 +47,7 @@ from TMSiSDK.tmsi_errors.error import TMSiError
 from TMSiSDK.device.devices.saga.saga_API_enums import SagaBaseSampleRate
 from TMSiSDK.device import ChannelType
 from TMSiSDK.device.tmsi_device_enums import MeasurementType
+from TMSiSDK.tmsi_utilities.mask_type import MaskType
 
 from PySide2.QtWidgets import *
 from TMSiGui.gui import Gui
@@ -121,7 +122,7 @@ try:
         duration = 0.05
         probability = 0.2
 
-        # !! NOTE: Available options for the (non)target_value inputs are all numbers between 2 and 30 for APEX
+        # !! NOTE: Available options for the (non)target_value inputs are all numbers between 0 and 255 for SAGA
         # Check COM_port on which the USB-TTL module can be found and change accordingly. 
         experiment = PsychopyExperimentSetup(TMSiDevice="SAGA", COM_port = 'COM5', n_trials = n_trials, target_value = 17, nontarget_value= 1,
                                              interval = interval, probability = probability, duration = duration)
@@ -145,6 +146,16 @@ try:
         # Pause for a while to properly close the GUI after completion
         time.sleep(1)
         
+        # Find the trigger channel index number
+        channels = dev.get_device_active_channels()
+        for i in range(len(channels)):   
+            if channels[i].get_channel_name() == 'TRIGGERS':
+                trigger_channel = i    
+
+        # Apply mask on trigger channel. This mask is applied because SAGA TRIGGER input has inverse logic. 
+        # By applying the mask, the baseline of the triggers is low again
+        dev.apply_mask([trigger_channel],[MaskType.REVERSE])
+
         # Set up background image 
         background_image_path = join(Plugin_dir, 'psychopy_resources', 'cross.png')
 
@@ -195,7 +206,7 @@ try:
         # Define thread to run the experiment
         thread = Thread(target=experiment.runExperiment)
         
-        # Start a measurement on APEX
+        # Start a measurement on SAGA
         dev.start_measurement(MeasurementType.SAGA_SIGNAL)
         
         # Start the PsychoPy thread
@@ -204,13 +215,13 @@ try:
         # Acquisition time, based on experiment timing (with some additional time at the end)
         time.sleep(n_trials * (interval + duration) + 10)
         
-        # Stop the measurement on APEX
+        # Stop the measurement on SAGA
         dev.stop_measurement()
 
         # Close the file writer after GUI termination
         file_writer.close()
         
-        # Close the connection to APEX
+        # Close the connection to SAGA
         dev.close()
         
 

@@ -37,6 +37,7 @@ import mne
 import tkinter as tk
 from tkinter import filedialog
 import pandas as pd
+import locale
 
 from os.path import join, dirname, realpath
 Reader_dir = dirname(realpath(__file__)) # directory of this file
@@ -106,7 +107,31 @@ class Poly5Reader:
 
         raw = mne.io.RawArray(self.samples * np.expand_dims(scale, axis=1), info)
         return raw
+
+    def export_to_csv(self):
         
+        # Add unit names to the column header
+        ch_names = [self.ch_names[i] + ' (' + self.ch_unit_names[i] + ')' for i in range(len(self.ch_names))]
+        ch_names += ['Fs (Hz)']
+        
+        # Add Sample rate as a separate column to the samples vector
+        samples = np.vstack((self.samples, np.zeros((1,np.shape(self.samples)[1]))))
+        samples[-1,:] = self.sample_rate
+        
+        # Get decimal point representation (in local language settings)
+        langlocale = locale.getdefaultlocale()[0]
+        locale.setlocale(locale.LC_ALL, langlocale)
+        dp = locale.localeconv()['decimal_point']
+        
+        # Write to dataframe
+        df = pd.DataFrame(data = samples.T, columns = ch_names)
+        # Export dataframe to .csv
+        if self.filename.lower().endswith('.poly5'):
+            save_name = self.filename.lower().replace('.poly5', '.csv')
+            df.to_csv(path_or_buf = save_name, sep = ';', decimal = dp, index = False, encoding = 'utf-16')
+            print('Exported to .csv successfully')
+        return
+
     def _readFile(self, filename):
         try:
             self.file_obj = open(filename, "rb")
